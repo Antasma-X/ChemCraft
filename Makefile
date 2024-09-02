@@ -16,4 +16,6 @@ executable/values.o: src/values.cpp
 clean:
 	rm *.o
 
+test:
+
 

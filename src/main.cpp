@@ -1,15 +1,22 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 #include "../includes/values.h"
 
+#define NUMBEROFSHELLS 7
 
 extern std::vector<std::string> symbols;
 extern std::vector<std::string> names;
 extern std::vector<double> masses;
+//Azimuthal Number
+extern std::map<char,int> subShell;
 
+struct Compound{
+	std::vector<Element> atoms;
+	std::map<Element,std::vector<Element*>> bonds;
+};
 
-//hashmap
 class Element{
 
 	std::string symbol;
@@ -18,8 +25,8 @@ class Element{
 	int atomicMass;
 	int electrons;
 	int charge;
-	std::vector<int> shells;
-	std::vector<Element&> bonds;
+	std::map<std::string,int> shells;
+	std::vector<Element*> bonds;
 
 	static int listofelements;
 	static int numberOfElements;
@@ -64,30 +71,113 @@ class Element{
 		return names[n-1];
 	}
 
-	static std::vector<int>& fillShells(int electrons){
-		//TODO
+	//Idk chemistry so im just doing stuff. change later
+	static std::map<std::string,int> fillShells(int electrons){
+		std::map<std::string,int> shells;
+
+		int i =0;
+
+		while(i < NUMBEROFSHELLS ){
+			std::vector<std::array<int,2>> combinations=findCombinations(i);
+
+			for (int j=0;j>0;j++){
+				shells[std::to_string(combinations[j][0])+std::to_string(subShell[combinations[j][1]])]=electronValue(electrons,subShell[combinations[j][1]]);
+			}
+			i++;
+			
+		}
+
+		return shells;
 	}
 
+	static int electronValue(int& electrons,int subShell){
+		int value=2 + subShell*4;
+		if (electrons>value){
+			electrons-=value;
+
+		}else{
+			value=electrons;
+			electrons=0;
+		}
+
+		return value;
+
+	}
+	static std::vector<std::array<int,2>> findCombinations(int n){
+		std::vector<std::array<int,2>> combs;
+
+
+		for(int i=0;i<=n;i++){
+            if (i<=n-i){
+                continue;
+            }
+			combs.push_back({i,n-i});
+		}
+        return combs;
+	}
+
+	//Futre when i figure out exceptions
+	static std::vector<int> fillShells(int electrons, int exceptionNumber){
+		std::vector<int> shells;
+
+
+	}
+
+	//ststaic check electron config
 	static double findMass(int n){
 		return masses[n-1];
 	}
 
-	static int isNobleGasConfig(Element& element){
-		//TODO
+	//im lazy (change later)
+	int isNobleGasConfig(){
+		if (shells["1s"]==2 && shells["2s"]==0){
+			return 1;
+		}
+		else if (shells["2p"]==6 && shells["3s"]==0){
+			return 1;
+		}
+		else if (shells["3p"]==6 && shells["4s"]==0){
+			return 1;
+		}
+		else if (shells["4p"]==6 && shells["5s"]==0){
+			return 1;
+		}
+		else if (shells["5p"]==6 && shells["6s"]==0){
+			return 1;
+		}
+		else if (shells["6p"]==6 && shells["7s"]==0){
+			return 1;
+		}
+		else if (shells["7p"]==6 && shells["8s"]==0){
+			return 1;
+		}
+		else{
+			return 0;
+
+		}
 	}
+
+	//covalent bond
+	//create remove bond later
+	//while i know noble gases can form compounds, im focussing on simpler compounds without exceptipns becase im stupid 
 	void operator ^ (Element& secondElement){
-		if (isNobleGasConfig(*this) && isNobleGasConfig(secondElement)){
+		if (isNobleGasConfig() || secondElement.isNobleGasConfig()){
 			//throw error or smth
 		}
 		else{
 			addElectrons(1);
 			secondElement.addElectrons(1);
+			bonds.push_back(&secondElement);
+			secondElement.bonds.push_back(this);
 		}
 
 	}
 
-	void addElectrons(int no){
-
+	//can be negative
+	void addElectrons(int n){
+		electrons+=n;
+		charge-=n;
+		fillShells(electrons);
 	}
 
 	public:
