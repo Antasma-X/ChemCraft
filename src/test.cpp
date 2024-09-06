@@ -1,27 +1,14 @@
 #include <vector>
 #include <array>
 #include <iostream>
+#include "../includes/element.h"
 
 
 
-std::vector<std::vector<int>> findCombinations(int n){
-		std::vector<std::vector<int>> combs;
+int main() {
+	std::cout << "Hi" << std::endl;
 
+	Element carbon(6);
 
-		for(int i=0;i<=n;i++){
-            if (i<=n-i){
-                continue;
-            }
-			combs.push_back({i,n-i});
-		}
-        return combs;
-	}
-
-int main(){
-
-    std::vector<std::vector<int>> combs= findCombinations(7);
-    for (int i = 0;i<combs.size();i++){
-        std::cout<<combs[i][0]<<","<<combs[i][1]<<std::endl;
-    }
-
+	std::cout << carbon.getName() << std::endl;
 }

@@ -1,3 +1,4 @@
-.vs
-executable/
+.vs/
+.vscode/
+build/
 a.out

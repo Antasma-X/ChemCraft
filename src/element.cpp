@@ -2,20 +2,12 @@
 #include <vector>
 #include <string>
 #include <map>
+
+#include "../includes/element.h"
 #include "../includes/values.h"
 
 #define NUMBEROFSHELLS 7
 
-extern std::vector<std::string> symbols;
-extern std::vector<std::string> names;
-extern std::vector<double> masses;
-//Azimuthal Number
-extern std::map<char,int> subShell;
-
-struct Compound{
-	std::vector<Element> atoms;
-	std::map<Element,std::vector<Element*>> bonds;
-};
 
 class Element{
 
@@ -25,43 +17,18 @@ class Element{
 	int atomicMass;
 	int electrons;
 	int charge;
+	//std::vector <int> valency;
 	std::map<std::string,int> shells;
 	std::vector<Element*> bonds;
 
-	static int listofelements;
-	static int numberOfElements;
+	// static int listofelements;
+	// static int numberOfElements;
 
-	//int valency number of bonds it wants
 	//make nomenclaature a seperate tab that only supports a few elements
 	//calculate total molecular mass
 	//select copy paste
 
-	Element(unsigned int number, double mass=0,int charge=0){
 
-		if (number<0 || number>118){
-			atomicNumber=number;
-			symbol=getSymbol(atomicNumber);
-			name=getName(atomicNumber);
-		}
-		else{
-			//do smth that causes glitch
-			//throw error when i learn how to
-		}
-
-		if (mass<=0){
-		
-			mass=findMass(atomicNumber);
-		}
-		atomicMass=mass;
-
-		this->charge=charge;
-
-		electrons=atomicNumber-charge;
-
-		shells=fillShells(electrons);
-
-		bonds={};
-	}
 
 	std::string getSymbol(int n){
 		return symbols[n-1];
@@ -117,11 +84,11 @@ class Element{
 	}
 
 	//Futre when i figure out exceptions
-	static std::vector<int> fillShells(int electrons, int exceptionNumber){
-		std::vector<int> shells;
+	// static std::vector<int> fillShells(int electrons, int exceptionNumber){
+	// 	std::vector<int> shells;
 
 
-	}
+	// }
 
 	//ststaic check electron config
 	static double findMass(int n){
@@ -129,6 +96,7 @@ class Element{
 	}
 
 	//im lazy (change later)
+	//combine with distance from noblegas config
 	int isNobleGasConfig(){
 		if (shells["1s"]==2 && shells["2s"]==0){
 			return 1;
@@ -157,21 +125,45 @@ class Element{
 		}
 	}
 
+
+	// std::vector<int> getValency(){
+	// 	if (isNobleGasConfig()){
+	// 		return {0,0};
+	// 	}
+
+	// 	std::string emptySubShell=findFirstEmptySubShell(shells);
+
+
+
+	// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//covalent bond
 	//create remove bond later
 	//while i know noble gases can form compounds, im focussing on simpler compounds without exceptipns becase im stupid 
-	void operator ^ (Element& secondElement){
-		if (isNobleGasConfig() || secondElement.isNobleGasConfig()){
-			//throw error or smth
-		}
-		else{
-			addElectrons(1);
-			secondElement.addElectrons(1);
-			bonds.push_back(&secondElement);
-			secondElement.bonds.push_back(this);
-		}
+	// void operator ^ (Element& secondElement){
+	// 	if (isNobleGasConfig() || secondElement.isNobleGasConfig()){
+	// 		//throw error or smth
+	// 	}
+	// 	else{
+	// 		addElectrons(1);
+	// 		secondElement.addElectrons(1);
+	// 		bonds.push_back(&secondElement);
+	// 		secondElement.bonds.push_back(this);
+	// 	}
 
-	}
+	// }
 
 	//can be negative
 	void addElectrons(int n){
@@ -181,6 +173,37 @@ class Element{
 	}
 
 	public:
+		Element(unsigned int number, double mass=0,int charge=0){
+
+		std::cout<<"hi";
+		if (number<1 || number>118){
+			//do smth that causes glitch
+			//throw error when i learn how to
+		}
+		else{
+
+
+			atomicNumber=number;
+			std::cout<<"hi";
+			symbol=getSymbol(atomicNumber);
+			name=getName(atomicNumber);
+		}
+
+		if (mass<=0){
+		
+			mass=findMass(atomicNumber);
+		}
+		atomicMass=mass;
+
+		this->charge=charge;
+
+		electrons=atomicNumber-charge;
+
+		shells=fillShells(electrons);
+
+		//valency=getValency();
+		//bonds={};
+	}
 		std::string getName(){
 			return name;
 		}
@@ -195,6 +218,3 @@ class Element{
 
 
 
-int main() {
-	std::cout << "Hi" << std::endl;
-}

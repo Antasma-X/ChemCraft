@@ -5,8 +5,13 @@
 #include <vector>
 #include <iostream>
 
-std::vector<std::string> symbols;
-std::vector<std::string> names;
-std::vector<double> masses;
+
+//weird segfaults happening so i pit extern
+extern std::vector<std::string> symbols;
+extern std::vector<std::string> names;
+extern std::vector<double> masses;
+
+//Azimuthal Number
+extern std::vector<int> subShell;
 
 #endif

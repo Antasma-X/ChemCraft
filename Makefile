@@ -1,20 +1,20 @@
-CC=g++
+CC=clang++
 Cflags= -Wall -g --std=c++11
 
 all: main
 
 
-main: executable/main.o executable/values.o
+main: build/main.o build/values.o
 	$(CC) $(Cflags) -o $@ $^
 
-executable/main.o: src/main.cpp
+build/main.o: src/main.cpp
 	$(CC) $(Cflags) -o $@ -c $^
 
-executable/values.o: src/values.cpp
+build/values.o: src/values.cpp
 	$(CC) $(Cflags) -o $@ -c $^
 
 clean:
-	rm *.o
+	rm build/*.o
 
 test:
 
