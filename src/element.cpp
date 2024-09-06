@@ -120,21 +120,7 @@ int Element::isNobleGasConfig(){
 
 
 
-	//covalent bond
-	//create remove bond later
-	//while i know noble gases can form compounds, im focussing on simpler compounds without exceptipns becase im stupid 
-	// void operator ^ (Element& secondElement){
-	// 	if (isNobleGasConfig() || secondElement.isNobleGasConfig()){
-	// 		//throw error or smth
-	// 	}
-	// 	else{
-	// 		addElectrons(1);
-	// 		secondElement.addElectrons(1);
-	// 		bonds.push_back(&secondElement);
-	// 		secondElement.bonds.push_back(this);
-	// 	}
 
-	// }
 
 
 
@@ -203,8 +189,28 @@ std::array <int,2> Element::getValency(){
 	return valency;
 }
 
+//covalent bond
+//create remove bond later
+//while i know noble gases can form compounds, im focussing on simpler compounds without exceptipns becase im stupid 
 
+int Element::operator ^ (Element& secondElement){
+	if (isNobleGasConfig() || secondElement.isNobleGasConfig()){
+		//throw error or smth
+		return 0;
+	}
+	else{
+		addElectrons(1);
+		secondElement.addElectrons(1);
+		bonds.push_back(&secondElement);
+		secondElement.bonds.push_back(this);
+		return 1;
+	}
 
+}
+
+	int Element::operator % (Element& secondElement){
+		
+	}
 
 
 

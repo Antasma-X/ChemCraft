@@ -78,6 +78,16 @@ class Element{
 
         std::array <int,2> getValency();
 
+		//creates bond between 2 atoms
+		//returns 1 if succesful
+		//if not successful returns 0
+		int operator ^ (Element& secondElement);
+
+		//removes bond between 2 atoms
+		//returns 1 if succesful
+		//if not successful returns 0
+		int operator % (Element& secondElement);
+
 
 
 

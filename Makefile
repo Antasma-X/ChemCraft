@@ -20,7 +20,7 @@ build/test.o: src/test.cpp
 	$(CC) $(Cflags) -o $@ -c $^
 
 clean:
-	rm build/*.o
+	rm build/*.o main
 
 test:
 
