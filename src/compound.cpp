@@ -3,10 +3,5 @@
 #include <string>
 #include <map>
 
+#include "../include/compound.h"
 
-
-
-struct Compound{
-	std::vector<Element> atoms;
-	std::map<Element,std::vector<Element*>> bonds;
-};
