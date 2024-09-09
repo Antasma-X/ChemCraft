@@ -16,6 +16,8 @@
 //compound group creator
 //functional group creator
 //way to group elemnts
+//its good till 2nd period
+//quit from 2nd period
 
 
 	//Futre when i figure out exceptions include in h file too
@@ -37,7 +39,7 @@ class Element{
 	int atomicMass;
 	int electrons;
 	int charge;
-	std::array <int,2> valency;
+	// std::array <int,2> valency;
 	std::map<std::string,int> shells;
 	std::vector<Element*> bonds;
 
@@ -60,6 +62,7 @@ class Element{
 
 	//can be negative
     void addElectrons(int n);
+
 
 	public:
 		Element(unsigned int number, double mass=0,int charge=0);

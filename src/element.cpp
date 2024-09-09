@@ -105,16 +105,9 @@ int Element::isNobleGasConfig(){
 
 
 
-	// std::vector<int> getValency(){
-	// 	if (isNobleGasConfig()){
-	// 		return {0,0};
-	// 	}
-
-	// 	std::string emptySubShell=findFirstEmptySubShell(shells);
 
 
 
-	// }
 
 
 
@@ -185,14 +178,14 @@ int Element::getCharge(){
 	return charge;
 }
 
-std::array <int,2> Element::getValency(){
-	return valency;
-}
+// std::array <int,2> Element::getValency(){
+// 	return valency;
+// }
 
 //covalent bond
 //create remove bond later
 //while i know noble gases can form compounds, im focussing on simpler compounds without exceptipns becase im stupid 
-
+//has to be changed to allow after 3rd period or odd stuff
 int Element::operator ^ (Element& secondElement){
 	if (isNobleGasConfig() || secondElement.isNobleGasConfig()){
 		//throw error or smth

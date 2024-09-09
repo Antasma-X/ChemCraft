@@ -4,7 +4,7 @@ Cflags= -Wall -g --std=c++11
 all: main
 
 
-main: build/element.o build/values.o build/test.o
+test: build/element.o build/values.o build/test.o
 	$(CC) $(Cflags) -o $@ $^
 
 build/element.o: src/element.cpp
@@ -16,11 +16,11 @@ build/values.o: src/values.cpp
 build/compound.o: src/compound.cpp
 	$(CC) $(Cflags) -o $@ -c $^
 
-build/test.o: src/test.cpp
+build/test.o: test/test.cpp
 	$(CC) $(Cflags) -o $@ -c $^
 
 clean:
-	rm build/*.o main
+	rm build/*.o main test
 
 test:
 
