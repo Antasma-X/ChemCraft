@@ -7,8 +7,7 @@
 #include <map>
 
 //smart pointers later
-	// static int listofelements;
-	// static int numberOfElements;
+
 
 	//make nomenclaature a seperate tab that only supports a few elements
 	//calculate total molecular mass
@@ -39,9 +38,15 @@ class Element{
 	int atomicMass;
 	int electrons;
 	int charge;
-	// std::array <int,2> valency;
+
 	std::map<std::string,int> shells;
 	std::vector<Element*> bonds;
+
+	static std::array <int,118> numberOfEachElement;
+	static std::array <std::vector<Element*>,118> elementList;
+
+
+
 
     std::string findSymbol(int n);
 
@@ -57,7 +62,6 @@ class Element{
     static std::vector<std::array<int,2>> findCombinations(int n);
 
 	//im lazy (change later)
-	//combine with distance from noblegas config
     int isNobleGasConfig();
 
 	//can be negative
@@ -71,6 +75,8 @@ class Element{
 	public:
 		Element(unsigned int number, double mass=0,int charge=0);
 
+		~Element();
+		
         int getAtomicNumber();
 
         std::string getSymbol();
@@ -104,6 +110,7 @@ class Element{
 
 	void printShells();
 
+	static int getNumberOfElements(int atomicNumber);
 
 };
 

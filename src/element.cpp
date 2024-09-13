@@ -7,6 +7,10 @@
 #include "../include/values.h"
 constexpr int NUMBEROFSHELLS=7;
 
+std::array<int,118> Element::numberOfEachElement={};
+std::array <std::vector<Element*>,118> Element::elementList={};
+
+
 
 std::string Element::findSymbol(int n){
 	return symbols[n-1];
@@ -29,11 +33,10 @@ std::map<std::string,int> Element::fillShells(int electrons){
 	while(i < NUMBEROFSHELLS ){
 		std::vector<std::array<int,2>> combinations=findCombinations(i);
 
-	// for(auto it = combinations.begin();it !=combinations.end();it++)
-	// std::cout<<(*it)[0]<<","<<(*it)[1]<<std::endl;
+
 
 		for (auto [j,k] : combinations){
-			std::cout<<j<<"  "<<k<<std::endl;
+			
 			shells[std::to_string(j)+subShell[k]]=electronValue(electrons,k);
 		}
 		i++;
@@ -107,32 +110,18 @@ int Element::isNobleGasConfig(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 void Element::addElectrons(int n){
 	electrons+=n;
 	charge-=n;
 
 	int valenceShell=findValenceShell();
-	std::cout<<valenceShell<<std::endl;
+	std::cout<<valenceShell;
 	int i =0;
 	while(true){
 		if (shells[std::to_string(valenceShell)+subShell[i]]==2+4*i){
 			i++;
 			continue;
 		}
-		shells[std::to_string(valenceShell)+subShell[i]]+=n;
 		break;
 	}
 
@@ -155,39 +144,26 @@ void Element::addElectrons(int n){
 }
 
 
-//use iterator tbd
+
 int Element::findValenceShell(){
 	
-	// int i =0;
-	// int max =1;
-	// while(true){
-	// 	if(shells[std::to_string(i+1)+subShell[i]]==0){
-	// 		return max;
-	// 	}
-	// 	shells[std::to_string(i+1)+subShell[i]];
-	// 	i++;
-	// }
-
-	int max=1;
+	int maxShell=1;
 	for (auto [key,value] : shells){
-		if(value==0){
-			break;
-		}
-		std::cout<<key<<std::endl;
-		if(max<key[0]){
 
-			max=std::stoi(key);
+		if(maxShell<key[0]&&value !=0){
+
+			maxShell=std::stoi(key);
 			
 		}
 		
 	}
-			std::cout<<std::endl<<max<<std::endl;
-	return max;
+
+	return maxShell;
 }
 	
 Element::Element(unsigned int number, double mass,int charge){
 
-	std::cout<<'l';
+
 	if (number<1 || number>118){
 		//do smth that causes glitch
 		//throw error when i learn how to
@@ -212,10 +188,13 @@ Element::Element(unsigned int number, double mass,int charge){
 
 	shells=fillShells(electrons);
 
-	//valency=getValency();
+	numberOfEachElement[atomicNumber-1]++;
+	elementList[atomicNumber-1].emplace_back(this);
 
 }
-
+int Element::getNumberOfElements(int atomicNumber){
+	return numberOfEachElement[atomicNumber-1];
+}
 int Element::getAtomicNumber(){
 	return atomicNumber;
 }
@@ -238,12 +217,10 @@ int Element::getCharge(){
 	return charge;
 }
 
-// std::array <int,2> Element::getValency(){
-// 	return valency;
-// }
+
 
 //covalent bond
-//create remove bond later
+
 //while i know noble gases can form compounds, im focussing on simpler compounds without exceptipns becase im stupid 
 //has to be changed to allow after 3rd period or odd stuff
 int Element::operator ^ (Element& secondElement){
@@ -279,7 +256,9 @@ int Element::operator % (Element& secondElement){
 	int SecondElement_Index=secondElement.doesBondExist(this);
 
 	if (FirstElement_Index==-1 || SecondElement_Index==-1){
+		std::cout<<"hnjsfnjf";
 		return 0;
+
 		//throw erroes and stuff
 	}
 

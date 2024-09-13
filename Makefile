@@ -1,5 +1,6 @@
 CC=g++
 Cflags= -Wall -g --std=c++17
+LIB = build/imgui.o
 
 all: main
 
@@ -21,8 +22,10 @@ build/compound.o: src/compound.cpp
 build/test.o: test/test.cpp
 	$(CC) $(Cflags) -o $@ -c $^
 
+build/imgui.o: lib/imgui/src/imgui_demo.cpp lib/imgui/src/imgui_draw.cpp lib/imgui/src/imgui/imgui_impl_glfw.cpp lib/imgui/src/imgui_opengl3.cpp lib/imgui/src/imgui_tables.cpp lib/imgui/src/imgui_widgets.cpp lib/imgui/src/imgui.cpp
+	$(CC) $(Cflags) -o $@ -c $^
 clean:
-	rm build/*.o main 
+	rm build/*.o main cute
 
 test:
 
