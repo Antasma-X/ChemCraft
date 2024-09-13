@@ -1,10 +1,12 @@
-CC=clang++
-Cflags= -Wall -g --std=c++11
+CC=g++
+Cflags= -Wall -g --std=c++17
 
 all: main
 
+main: build/element.o build/values.o build/main.o
+	$(CC) $(Cflags) -o $@ $^
 
-test: build/element.o build/values.o build/test.o
+cute: build/element.o build/values.o build/test.o
 	$(CC) $(Cflags) -o $@ $^
 
 build/element.o: src/element.cpp
@@ -20,7 +22,7 @@ build/test.o: test/test.cpp
 	$(CC) $(Cflags) -o $@ -c $^
 
 clean:
-	rm build/*.o main test
+	rm build/*.o main 
 
 test:
 

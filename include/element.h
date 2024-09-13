@@ -63,7 +63,11 @@ class Element{
 	//can be negative
     void addElectrons(int n);
 
+	int findValenceShell();
 
+	static int doesFollowOctet(int atomicNumber);
+
+	int doesBondExist(const Element* secondElement);
 	public:
 		Element(unsigned int number, double mass=0,int charge=0);
 
@@ -79,12 +83,15 @@ class Element{
 
         int getCharge();
 
-        std::array <int,2> getValency();
+
+
+        // std::array <int,2> getValency();
 
 		//creates bond between 2 atoms
 		//returns 1 if succesful
 		//if not successful returns 0
 		int operator ^ (Element& secondElement);
+
 
 		//removes bond between 2 atoms
 		//returns 1 if succesful
@@ -92,7 +99,10 @@ class Element{
 		int operator % (Element& secondElement);
 
 
+	//temp to check
+	void getNumberOfBonds();
 
+	void printShells();
 
 
 };

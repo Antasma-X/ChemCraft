@@ -6,8 +6,7 @@
 #include "../include/element.h"
 #include "../include/values.h"
 
-//constexpr later
-#define NUMBEROFSHELLS 7
+constexpr int NUMBEROFSHELLS=7;
 
 
 std::string Element::findSymbol(int n){
@@ -26,13 +25,14 @@ double Element::findMass(int n){
 std::map<std::string,int> Element::fillShells(int electrons){
 	std::map<std::string,int> shells;
 
-	int i =0;
+	int i =1;
 
 	while(i < NUMBEROFSHELLS ){
 		std::vector<std::array<int,2>> combinations=findCombinations(i);
-
-		for (int j=0;j>0;j++){
+	std::cout<<"sjhfuesjfhujefggf"<<std::endl;
+		for (int j=0;j<i;j++){
 			shells[std::to_string(combinations[j][0])+std::to_string(subShell[combinations[j][1]])]=electronValue(electrons,subShell[combinations[j][1]]);
+			std::cout<<subShell[combinations[j][1]]<<std::endl;
 		}
 		i++;
 		
@@ -121,13 +121,66 @@ int Element::isNobleGasConfig(){
 void Element::addElectrons(int n){
 	electrons+=n;
 	charge-=n;
-	fillShells(electrons);
+
+	int valenceShell=findValenceShell();
+	
+	int i =0;
+	while(true){
+		if (shells[std::to_string(valenceShell)+subShell[i]]==2+4*i){
+			continue;
+		}
+		shells[std::to_string(valenceShell)+subShell[i]]+=n;
+		break;
+	}
+
+	while(true){
+		if(i>=valenceShell){
+			valenceShell++;
+		}
+		if(shells[std::to_string(valenceShell)+subShell[i]]+n>2+4*i){
+
+			n-=(2+4*i)-(shells[std::to_string(valenceShell)+subShell[i]]);
+			shells[std::to_string(valenceShell)+subShell[i]]=2+4*i;
+			
+			i++;
+		}else{
+			shells[std::to_string(valenceShell)+subShell[i]]+=n;
+			break;
+		}
+	}
+
 }
 
+
+//use iterator tbd
+int Element::findValenceShell(){
+	
+	// int i =0;
+	// int max =1;
+	// while(true){
+	// 	if(shells[std::to_string(i+1)+subShell[i]]==0){
+	// 		return max;
+	// 	}
+	// 	shells[std::to_string(i+1)+subShell[i]];
+	// 	i++;
+	// }
+
+	int max=1;
+	for (auto [key,value] : shells){
+		if(value==0){
+			break;
+		}
+		if(max<key[0]){
+			max=key[0];
+		}
+		
+	}
+	return max;
+}
 	
 Element::Element(unsigned int number, double mass,int charge){
 
-
+	std::cout<<'l';
 	if (number<1 || number>118){
 		//do smth that causes glitch
 		//throw error when i learn how to
@@ -150,6 +203,7 @@ Element::Element(unsigned int number, double mass,int charge){
 
 	electrons=atomicNumber-charge;
 
+	std::cout<<"hiiiiiii"<<charge;
 	shells=fillShells(electrons);
 
 	//valency=getValency();
@@ -187,11 +241,13 @@ int Element::getCharge(){
 //while i know noble gases can form compounds, im focussing on simpler compounds without exceptipns becase im stupid 
 //has to be changed to allow after 3rd period or odd stuff
 int Element::operator ^ (Element& secondElement){
-	if (isNobleGasConfig() || secondElement.isNobleGasConfig()){
+			std::cout<<"Hhd"<<std::endl;
+	if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )|| (secondElement.isNobleGasConfig() && secondElement.doesFollowOctet(secondElement.atomicNumber))){
 		//throw error or smth
 		return 0;
 	}
 	else{
+		std::cout<<"Hhd"<<std::endl;
 		addElectrons(1);
 		secondElement.addElectrons(1);
 		bonds.push_back(&secondElement);
@@ -199,11 +255,62 @@ int Element::operator ^ (Element& secondElement){
 		return 1;
 	}
 
+
 }
 
-	int Element::operator % (Element& secondElement){
-		
+
+int Element::doesFollowOctet(int atomicNumber){
+	if (atomicNumber>20){
+		return 0;
+	}
+	return 1;
+	
+}
+
+int Element::operator % (Element& secondElement){
+	
+	int FirstElement_Index=doesBondExist(&secondElement);
+	int SecondElement_Index=secondElement.doesBondExist(this);
+
+	if (FirstElement_Index==-1 || SecondElement_Index==-1){
+		return 0;
+		//throw erroes and stuff
 	}
 
 
 
+
+	addElectrons(-1);
+	secondElement.addElectrons(-1);
+
+	bonds.erase(bonds.begin() + FirstElement_Index);
+	secondElement.bonds.erase(secondElement.bonds.begin() + SecondElement_Index);
+	return 1;
+}
+
+
+int Element::doesBondExist(const Element* secondElement){
+
+	int index=-1;
+	for(auto it=bonds.begin();it !=bonds.end();it++){
+		if (*it==secondElement){
+			index++;
+			break;
+		}
+		index++;
+	}
+
+	return index;
+}
+
+
+void Element::getNumberOfBonds(){
+	std::cout<<bonds.size();
+}
+
+void Element::printShells(){
+
+	for(auto [key,value]: shells){
+		std::cout<<key<<":"<<value<<std::endl;
+	}
+}
