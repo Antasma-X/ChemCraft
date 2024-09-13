@@ -5,7 +5,6 @@
 
 #include "../include/element.h"
 #include "../include/values.h"
-
 constexpr int NUMBEROFSHELLS=7;
 
 
@@ -29,10 +28,13 @@ std::map<std::string,int> Element::fillShells(int electrons){
 
 	while(i < NUMBEROFSHELLS ){
 		std::vector<std::array<int,2>> combinations=findCombinations(i);
-	std::cout<<"sjhfuesjfhujefggf"<<std::endl;
-		for (int j=0;j<i;j++){
-			shells[std::to_string(combinations[j][0])+std::to_string(subShell[combinations[j][1]])]=electronValue(electrons,subShell[combinations[j][1]]);
-			std::cout<<subShell[combinations[j][1]]<<std::endl;
+
+	// for(auto it = combinations.begin();it !=combinations.end();it++)
+	// std::cout<<(*it)[0]<<","<<(*it)[1]<<std::endl;
+
+		for (auto [j,k] : combinations){
+			std::cout<<j<<"  "<<k<<std::endl;
+			shells[std::to_string(j)+subShell[k]]=electronValue(electrons,k);
 		}
 		i++;
 		
@@ -123,10 +125,11 @@ void Element::addElectrons(int n){
 	charge-=n;
 
 	int valenceShell=findValenceShell();
-	
+	std::cout<<valenceShell<<std::endl;
 	int i =0;
 	while(true){
 		if (shells[std::to_string(valenceShell)+subShell[i]]==2+4*i){
+			i++;
 			continue;
 		}
 		shells[std::to_string(valenceShell)+subShell[i]]+=n;
@@ -170,11 +173,15 @@ int Element::findValenceShell(){
 		if(value==0){
 			break;
 		}
+		std::cout<<key<<std::endl;
 		if(max<key[0]){
-			max=key[0];
+
+			max=std::stoi(key);
+			
 		}
 		
 	}
+			std::cout<<std::endl<<max<<std::endl;
 	return max;
 }
 	
@@ -203,7 +210,6 @@ Element::Element(unsigned int number, double mass,int charge){
 
 	electrons=atomicNumber-charge;
 
-	std::cout<<"hiiiiiii"<<charge;
 	shells=fillShells(electrons);
 
 	//valency=getValency();
@@ -241,13 +247,13 @@ int Element::getCharge(){
 //while i know noble gases can form compounds, im focussing on simpler compounds without exceptipns becase im stupid 
 //has to be changed to allow after 3rd period or odd stuff
 int Element::operator ^ (Element& secondElement){
-			std::cout<<"Hhd"<<std::endl;
+
 	if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )|| (secondElement.isNobleGasConfig() && secondElement.doesFollowOctet(secondElement.atomicNumber))){
 		//throw error or smth
 		return 0;
 	}
 	else{
-		std::cout<<"Hhd"<<std::endl;
+
 		addElectrons(1);
 		secondElement.addElectrons(1);
 		bonds.push_back(&secondElement);

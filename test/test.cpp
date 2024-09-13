@@ -21,17 +21,18 @@ int main() {
 
 
 
-	auto i=findCombinations(1);
-	for(auto it = i.begin();it !=i.end();it++)
-	std::cout<<(*it)[0]<<","<<(*it)[1]<<std::endl;
+	// auto i=findCombinations(1);
+	// for(auto it = i.begin();it !=i.end();it++)
+	// std::cout<<(*it)[0]<<","<<(*it)[1]<<std::endl;
 
 	std::cout << "Hi" << std::endl;
 
 	Element carbon(6);
-	//carbon%oxygen;
+	Element oxygen(7);
+	carbon^oxygen;
 
-	carbon.printShells();
-	carbon.getNumberOfBonds();
+	// carbon.printShells();
+	// carbon.getNumberOfBonds();
 	std::cout << carbon.getName() << std::endl;
 
 }

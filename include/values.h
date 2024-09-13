@@ -12,6 +12,6 @@ extern std::vector<std::string> names;
 extern std::vector<double> masses;
 
 //Azimuthal Number
-extern std::vector<char> subShell;
+extern std::vector<std::string> subShell;
 
 #endif
