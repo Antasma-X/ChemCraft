@@ -4,10 +4,10 @@ LIB = build/imgui.o
 
 all: main
 
-main: build/element.o build/values.o build/main.o
+main: build/element.o build/values.o build/main.o build/compound.o
 	$(CC) $(Cflags) -o $@ $^
 
-cute: build/element.o build/values.o build/test.o
+cute: build/element.o build/values.o build/test.o build/compound.o
 	$(CC) $(Cflags) -o $@ $^
 
 build/element.o: src/element.cpp

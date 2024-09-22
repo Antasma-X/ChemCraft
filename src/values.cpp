@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <map>
+#include <set>
 
 #include "../include/values.h"
 
@@ -30,6 +31,8 @@ std::vector<double> masses={1,4,7,9.,10.81,12,14,16,19,20,23,24,27,28,31,32,35.5
 
 std::vector<std::string> subShell = {"s","p","d","f","g","h","i"};
 
+std::set<int> dBlockExceptions={24,29,41,42,44,45,46,47,78,79};
+std::set<int> fBlockExceptions={57,58,64,89,90,91,92,93,96};
 
 
 

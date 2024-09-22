@@ -1,8 +1,6 @@
 #ifndef COMPOUND_H
 #define COMPOUND_H
 
-
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -10,42 +8,38 @@
 
 #include "element.h"
 
+//i have o learn graphs and stuff
+
 class Compound{
-	std::vector<Element> atoms;
-	std::map<Element,std::vector<Element*>> bonds;
+	std::vector<Element*> atoms;
+	std::map<Element*,std::vector<Element*>> bonds;
+
+	bool isElementInCompound(Element* element);
+
+	void printCompoundUtil(Element* current,std::vector<Element*>& traversed);
+
+	Element* findTerminal();
 
 	public:
 
-	Compound(Element element){
-		atoms.emplace_back(element);
-		bonds[element];
-	}
+		Compound(Element* element);
 
-	int addElement(Element& firstElement, Element& secondElement, Compound& secondCompound){
+		Compound();
 
+		~Compound();
 
-		if((firstElement^secondElement)==0){
-			//throe and stuff
-			return 0;
-		}
-		//also if second element nit in secondcompoung get mad
+		int addElement(Element* firstElement, Element* secondElement, Compound& secondCompound);
 		
-		atoms.emplace_back(secondElement);
-		bonds[firstElement].emplace_back(&secondElement);
-		bonds[secondElement].emplace_back(&firstElement);
-	}
+		int addElement(Element* firstElement, Element* secondElement);
 
-	int addElement(Element& firstElement, Element& secondElement){
+		void printCompound();
 
+		double findMolecularMass();
 
-		if((firstElement^secondElement)==0){
-			//throe and stuff
-			return 0;
-		}
-		atoms.emplace_back(secondElement);
-		bonds[firstElement].emplace_back(&secondElement);
-		bonds[secondElement].emplace_back(&firstElement);
-	}
+		std::string findMolecularFormula();
+		
+		//remove element and split it
+		//
 };
 
 
