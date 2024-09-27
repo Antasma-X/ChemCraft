@@ -16,4 +16,7 @@ extern std::vector<std::string> subShell;
 
 extern std::set<int> dBlockExceptions;
 extern std::set<int> fBlockExceptions;
+
+extern std::array<std::string,3> BONDSYMBOL;
+extern std::map<std::string,std::string> subScripts;
 #endif

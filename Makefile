@@ -1,5 +1,5 @@
-CC=g++
-Cflags= -Wall -g --std=c++17
+CC=clang++
+Cflags= -Wall -g --std=c++17 -v
 LIB = build/imgui.o
 
 all: main

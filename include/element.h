@@ -9,8 +9,7 @@
 
 //smart pointers later
 //examples too
-
-//cleabage
+//make way to only add atomic number
 
 
 	//make nomenclaature a seperate tab that only supports a few elements
@@ -21,12 +20,13 @@
 //way to group elemnts
 //stable indicator
 //hydrogen filler
-
+//somehow check direvtion of ionic bond
 
 	//Futre when i figure out exceptions include in h file too
 	//indlude errors in comment
-
-
+	//null for bond in group
+		//remove element and split it
+//gotta figure out way to determine direction of ionic bond and store it
 class Element{ 
 
 	int atomicNumber;
@@ -42,6 +42,7 @@ class Element{
 	std::vector<Element*> ionicBonds;
 
 	//Valency will only be created if atomic number is less than or equal to 18
+	//exceptions ake later
 	std::array<int,2> valency;
 
 	//Static arrays of elements and addresses
@@ -198,7 +199,7 @@ class Element{
 		/*
 		This is not allowed(Check Definition)
 		*/
-		Element();
+		Element()=delete;
 
 		/*
 		Destructor for element
@@ -228,7 +229,7 @@ class Element{
 		Returns: 1 if bond removal is successful
 				 0 if bond removal isn't successful
 		*/
-		int operator % (Element& secondElement);
+		int operator / (Element& secondElement);
 
 		/*
 		Operator Overloading
@@ -250,7 +251,7 @@ class Element{
 		Returns: 1 if bond removal is successful
 				 0 if bond removal isn't successful
 		*/
-		int operator / (Element& secondElement);
+		int operator % (Element& secondElement);
 		//Getters:
 
 		/*

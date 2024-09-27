@@ -34,6 +34,7 @@ std::vector<std::string> subShell = {"s","p","d","f","g","h","i"};
 std::set<int> dBlockExceptions={24,29,41,42,44,45,46,47,78,79};
 std::set<int> fBlockExceptions={57,58,64,89,90,91,92,93,96};
 
+std::array<std::string,3> BONDSYMBOL={"-","=","\u2261"};
 
-
+std::map<std::string,std::string> subScripts={{"0","₀"},{"1","₁"},{"2","₂"},{"3","₃"},{"4","₄"},{"5","₅"},{"6","₆"},{"7","₇"},{"8","₈"},{"9","₉"}};
 

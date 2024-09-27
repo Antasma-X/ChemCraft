@@ -169,6 +169,10 @@ void Element::addElectrons(int n){
 		}
 	}
 
+	//to check
+	valency[0]-=n;
+	valency[1]+=n;
+	//std::cout<<valency[0]<<valency[1]<<std::endl;
 }
 
 int Element::findValenceShell(){
@@ -223,7 +227,7 @@ std::array<int,2> Element::findValency(int atomicNumber){
 
 	if(doesFollowOctet(atomicNumber)){
 		if (atomicNumber<2){
-			valency={1,1};
+			valency={1,-1};
 		}
 		else if(atomicNumber<10){
 			valency={atomicNumber-2,atomicNumber-10};
@@ -235,9 +239,9 @@ std::array<int,2> Element::findValency(int atomicNumber){
 	else{
 		valency={0,0};
 	}
+	//std::cout<<valency[1]<<"fjfj \n";
 	return valency;
 }
-
 	
 Element::Element(unsigned int atomicNumber, double atomicMass,int charge){
 
@@ -295,7 +299,6 @@ Element::Element(unsigned int atomicNumber, double atomicMass,int charge){
 
 }
 
-Element::Element()=delete;
 
 Element::~Element(){
 	numberOfEachElement[atomicNumber-1]--;
@@ -303,6 +306,10 @@ Element::~Element(){
 
 	for(auto bond: covalentBonds){
 		(*this)%(*bond);
+	}
+
+	for(auto bond: ionicBonds){
+		(*this)/(*bond);
 	}
 }
 
@@ -321,7 +328,7 @@ int Element::operator * (Element& secondElement){
 	}
 }
 
-int Element::operator % (Element& secondElement){
+int Element::operator / (Element& secondElement){
 	
 	int FirstElement_Index=doesCovalentBondExist(&secondElement);
 	int SecondElement_Index=secondElement.doesCovalentBondExist(this);
@@ -357,7 +364,7 @@ int Element::operator ^ (Element& secondElement){
 	}
 }
 
-int Element::operator / (Element& secondElement){
+int Element::operator % (Element& secondElement){
 	int FirstElement_Index=doesIonicBondExist(&secondElement);
 	int SecondElement_Index=secondElement.doesIonicBondExist(this);
 
