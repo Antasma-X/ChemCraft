@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 #include <algorithm>
-
+#include<queue>
 #include "../include/compound.h"
 #include "../include/values.h"
 
@@ -296,34 +296,86 @@ void Compound::printCompound(){
 
 std::vector<Compound> Compound::removeBond(Element& firstElement, Element& secondElement, int typeOfBond){
 
+	std::vector<Compound> newCompounds;
 	if(!isAtomInCompound(firstElement) || !isAtomInCompound(secondElement)){
-		return {};
+		return newCompounds;
 		//throw error and stuff
 	}
 
 	if(typeOfBond==0){
 		if(firstElement/secondElement==0){
-			return {};
+			return newCompounds;
 			//error
 		}
 	}
 	else if(typeOfBond==1){
 		if(firstElement%secondElement==0){
-			return {};
+			return newCompounds;
 			//error
 		}		
 	}
 	else{
-		return {};
+		return newCompounds;
 		//error
 	}
 
-	bonds[&firstElement].erase()
-	std::vector<Compound> newCompounds;
+	bonds[&firstElement].erase(std::find(bonds[&firstElement].begin(),bonds[&firstElement].end(),std::make_pair(&secondElement,typeOfBond)));
+	bonds[&secondElement].erase(std::find(bonds[&firstElement].begin(),bonds[&firstElement].end(),std::make_pair(&firstElement,typeOfBond)));
+
+	
+	if(isFullyConnected()){
+		newCompounds.emplace_back(*this);
+	}
+	else{
+
+		//makeNewCompoundFromElement()
+	}
 	
 
 }
 
-int Compound::isConnected(){
+bool Compound::isFullyConnected(){
 
+	std::vector<Element*> terminals=findTerminals();
+	for(Element* element1: terminals){
+		terminals.erase(terminals.begin());
+		for(Element* element2: terminals){
+			if (!isConnected(element1,element2)){
+				return false;
+			}
+		}
+	}
+
+	return true;
+
+
+}
+
+//basicallt copied
+//failed
+bool Compound::isConnected(Element* element1, Element* element2){
+	if(element1==element2){
+		return true;
+	}
+
+	std::vector<bool> visited(atoms.size(),false);
+
+	std::queue<int> q;
+
+	//check
+	int s=std::distance(atoms.begin(),std::find(atoms.begin(),atoms.end(),element1));
+	visited[s]=true;
+
+	q.push(s);
+
+	while(!q.empty()){
+		s=q.front();
+		q.pop();
+
+
+	}
+}
+
+Compound createCompoundFromElement(Element& element){
+	element.
 }

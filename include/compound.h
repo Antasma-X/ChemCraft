@@ -12,6 +12,7 @@
 //remove bond
 //does bond exist between them
 //ionic bond direction
+//remove atom too
 class Compound{
 	std::vector<Element*> atoms;
 	std::map<Element*,std::vector<std::pair<Element*,int>>> bonds;
@@ -171,9 +172,17 @@ class Compound{
 
 		std::vector<Compound> removeBond(Element& firstElement, Element& secondElement, int typeOfBond);
 
-		int isConnected();
+		bool isConnected(Element* element1, Element* element2);
+
+		std::vector<Compound> removeElement(Element& firstElement, Element& secondElement, int typeOfBond);
+
+		Compound createCompoundFromElement(Element& element);
+
+		bool isFullyConnected();
+
 		//quit
 		void printCompound();
+
 };
 
 #endif
