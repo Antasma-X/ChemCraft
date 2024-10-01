@@ -189,7 +189,7 @@ int Element::findValenceShell(){
 
 bool Element::doesFollowOctet(int atomicNumber){
 	
-	if (atomicNumber>18){
+	if (atomicNumber>10){
 		return false;
 	}
 	return true;
@@ -212,7 +212,7 @@ int Element::doesCovalentBondExist(const Element* secondElement){
 int Element::doesIonicBondExist(const Element* secondElement){
 	int index=-1;
 	for(auto it=ionicBonds.begin();it!=ionicBonds.end();it++){
-		if (*it==secondElement){
+		if ((*it).first==secondElement){
 			index++;
 			break;
 		}
@@ -305,11 +305,20 @@ Element::~Element(){
 	elementList[atomicNumber-1].erase(std::find(elementList[atomicNumber-1].begin(),elementList[atomicNumber-1].end(),this));
 
 	for(auto bond: covalentBonds){
-		(*this)%(*bond);
+		(*this)/(*bond);
 	}
 
 	for(auto bond: ionicBonds){
-		(*this)/(*bond);
+		if(bond.second==-1){
+			(*this)%(*bond.first);
+		}
+		else if(bond.second==1){
+			(*bond.first)%(*this);
+		}
+		else{
+			//error
+		}
+		
 	}
 }
 
@@ -358,8 +367,8 @@ int Element::operator ^ (Element& secondElement){
 		charge-=1;
 		secondElement.charge+=1;
 
-		ionicBonds.push_back(&secondElement);
-		secondElement.ionicBonds.push_back(this);
+		ionicBonds.push_back(std::make_pair(&secondElement,-1));
+		secondElement.ionicBonds.push_back(std::make_pair(this,+1));
 		return 1;
 	}
 }
@@ -416,12 +425,21 @@ int Element::getNumberOfCovalentBonds(){
 	return covalentBonds.size();
 }
 
-std::vector<Element*> Element::getCurrentIonicBonds(){
+std::vector<std::pair<Element*,int>> Element::getCurrentIonicBonds(){
 	return ionicBonds;
 }
 
 int Element::getNumberOfIonicBonds(){
 	return ionicBonds.size();
+}
+
+std::vector<Element*> Element::getCurrentBonds(){
+	std::vector<Element*> bonds= covalentBonds;
+	
+	for(auto ionicBond: ionicBonds){
+		bonds.emplace_back(ionicBond.first);
+	}
+	return bonds;
 }
 
 void Element::printShells(std::ofstream output){

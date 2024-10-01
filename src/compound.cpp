@@ -4,6 +4,7 @@
 #include <map>
 #include <algorithm>
 #include<queue>
+#include<stack>
 #include "../include/compound.h"
 #include "../include/values.h"
 
@@ -23,6 +24,27 @@ std::vector<Element*>Compound::findTerminals(){
 	}
 
 	return terminals;
+}
+
+void Compound::createCompoundFromElementUtil(Element& element,std::vector<Element*>& atoms,std::map<Element*,std::vector<std::pair<Element*,int>>>& bonds){
+	atoms.emplace_back(&element);
+	
+	std::vector<Element*> currentCovalentBonds=element.getCurrentCovalentBonds();
+	std::vector<std::pair<Element*,int>> currentBonds;
+
+	for(auto el: currentCovalentBonds){
+		currentBonds.emplace_back(std::make_pair(el,0));
+	}
+
+	std::vector<std::pair<Element*,int>> currentIonic=element.getCurrentIonicBonds();
+	currentBonds.insert(currentBonds.begin(),currentIonic.begin(),currentIonic.end());
+	bonds[&element]=currentBonds;
+
+	for(auto nextElement: currentBonds){
+		if(std::find(atoms.begin(),atoms.end(),nextElement.first)!=atoms.end()){
+			createCompoundFromElementUtil(*nextElement.first,atoms,bonds);
+		}
+	}
 }
 
 //fail
@@ -103,11 +125,11 @@ Compound::Compound(Element& element){
 	listOfCompounds.emplace_back(this);
 }
 
-Compound::Compound(int atomicNumber){
+Compound::Compound(int atomicNumber, double atomicMass, int charge){
 	//try combininjg
-	Element element(atomicNumber);
-	atoms.emplace_back(&element);
-	bonds[&element];
+	Element* element=new Element(atomicNumber,atomicMass,charge);
+	atoms.emplace_back(element);
+	bonds[element];
 
 	listOfCompounds.emplace_back(this);
 }
@@ -131,11 +153,17 @@ int Compound::addElement(Element& firstElement, Element& secondElement,int typeO
 			return 0;
 		}
 	}
-	else if(typeOfBond==1){
+	else if(typeOfBond==-1){
 		if((firstElement^secondElement)==0){
 			//throe and stuff
 			return 0;
 		}
+	}
+	else if(typeOfBond==1){
+		if((secondElement^firstElement)==0){
+			//throe and stuff
+			return 0;
+		}		
 	}
 	else{
 		return 0;
@@ -149,8 +177,8 @@ int Compound::addElement(Element& firstElement, Element& secondElement,int typeO
 }
 
 int Compound::addElement(Element& firstElement, int atomicNumber, int typeOfBond){
-	Element newElement(atomicNumber);
-	return addElement(firstElement,newElement,typeOfBond);
+	Element* newElement=new Element(atomicNumber);
+	return addElement(firstElement,*newElement,typeOfBond);
 }
 
 int Compound::addElement(Element& firstElement, Element& secondElement, Compound& secondCompound,int typeOfBond){
@@ -166,11 +194,17 @@ int Compound::addElement(Element& firstElement, Element& secondElement, Compound
 			return 0;
 		}
 	}
-	else if(typeOfBond==1){
+	else if(typeOfBond==-1){
 		if((firstElement^secondElement)==0){
 			//throe and stuff
 			return 0;
 		}
+	}
+	else if(typeOfBond==1){
+		if((secondElement^firstElement)==0){
+			//throe and stuff
+			return 0;
+		}		
 	}
 	else{
 		return 0;
@@ -186,6 +220,49 @@ int Compound::addElement(Element& firstElement, Element& secondElement, Compound
 	//~secondCompound(); idk how to
 }
 
+std::vector<Compound> Compound::removeElement(Element& firstElement){
+	std::vector<Compound> newCompounds;
+	std::vector<Element*> firstElementBonds=firstElement.getCurrentBonds();
+
+	atoms.erase(std::find(atoms.begin(),atoms.end(),firstElement));
+	bonds.erase(bonds.find(&firstElement));
+
+	if(!isAtomInCompound(firstElement)){
+		//error
+	}
+	
+	for(auto bond: firstElement.getCurrentCovalentBonds()){
+		(firstElement)/(*bond);
+	}
+
+	for(auto bond: firstElement.getCurrentIonicBonds()){
+		if(bond.second==-1){
+			(firstElement)%(*bond.first);
+		}
+		else if(bond.second==1){
+			(*bond.first)%(firstElement);
+		}
+		else{
+			//error
+		}
+	}
+
+	for(auto bond:firstElementBonds){
+		bonds[bond].erase(std::find(bonds[bond].begin(),bonds[bond].end(),firstElement));
+	}
+
+	if(isFullyConnected()){
+		newCompounds.emplace_back(*this);
+	}
+	else{
+		for(auto bond: firstElementBonds){
+			newCompounds.emplace_back(createCompoundFromElement(*bond));
+		}
+	}
+
+	return newCompounds;
+}
+
 int Compound::createBond(Element& firstElement, Element& secondElement,	int typeOfBond){
 	if(!isAtomInCompound(firstElement) || !isAtomInCompound(secondElement)){
 		return 0;
@@ -198,11 +275,17 @@ int Compound::createBond(Element& firstElement, Element& secondElement,	int type
 			return 0;
 		}
 	}
-	else if(typeOfBond==1){
+	else if(typeOfBond==-1){
 		if((firstElement^secondElement)==0){
 			//throe and stuff
 			return 0;
 		}
+	}
+	else if(typeOfBond==1){
+		if((secondElement^firstElement)==0){
+			//throe and stuff
+			return 0;
+		}		
 	}
 	else{
 		return 0;
@@ -214,6 +297,64 @@ int Compound::createBond(Element& firstElement, Element& secondElement,	int type
 	return 1;
 }
 
+std::vector<Compound> Compound::removeBond(Element& firstElement, Element& secondElement, int typeOfBond){
+	std::vector<Compound> newCompounds;
+
+	if(!isAtomInCompound(firstElement) || !isAtomInCompound(secondElement)){
+		return newCompounds;
+		//throw error and stuff
+	}
+
+	if(typeOfBond==0){
+		if(firstElement/secondElement==0){
+			return newCompounds;
+			//error
+		}
+	}
+	else if(typeOfBond==1){
+		if(firstElement%secondElement==0){
+			return newCompounds;
+			//error
+		}		
+	}
+	else if(typeOfBond==-1){
+		if((secondElement%firstElement)==0){
+			//throe and stuff
+			return newCompounds;
+		}		
+	}
+	else{
+		return newCompounds;
+		//error
+	}
+
+	bonds[&firstElement].erase(std::find(bonds[&firstElement].begin(),bonds[&firstElement].end(),std::make_pair(&secondElement,typeOfBond)));
+	bonds[&secondElement].erase(std::find(bonds[&firstElement].begin(),bonds[&firstElement].end(),std::make_pair(&firstElement,typeOfBond)));
+	
+	if(isFullyConnected()){
+		newCompounds.emplace_back(*this);
+	}
+	else{
+		newCompounds.emplace_back(createCompoundFromElement(firstElement));
+		newCompounds.emplace_back(createCompoundFromElement(secondElement));
+	}
+	
+	return newCompounds;
+}
+
+Compound Compound::createCompoundFromElement(Element& element){
+	std::vector<Element*> atoms;
+	std::map<Element*,std::vector<std::pair<Element*,int>>> bonds;
+
+	createCompoundFromElementUtil(element,atoms,bonds);
+
+	Compound newCompound(*atoms[0]);
+	newCompound.atoms=atoms;
+	newCompound.bonds=bonds;
+
+	return newCompound;
+}
+
 int Compound::isStable(){
 
 	for(auto atom: atoms){
@@ -222,6 +363,71 @@ int Compound::isStable(){
 		}
 	}
 	return 1;
+}
+
+bool Compound::isFullyConnected(){
+	// std::vector<Element*> terminals=findTerminals();
+	// for(Element* element1: terminals){
+	// 	terminals.erase(terminals.begin());
+	// 	for(Element* element2: terminals){
+	// 		if (!isConnected(element1,element2)){
+	// 			return false;
+	// 		}
+	// 	}
+	// }
+
+	Element* current=atoms[0];
+
+	std::vector<Element*> visited;
+	visited.emplace_back(current);
+
+	std::queue<Element*> q;
+	q.push(current);
+
+	while(!q.empty()){
+		current=q.front();
+		q.pop();
+
+		for(auto node: current->getCurrentBonds()){
+			if(std::find(visited.begin(),visited.end(),node) !=visited.end()){
+				q.push(node);
+				visited.emplace_back(node);
+			}
+		}
+	}
+
+	return visited.size()==atoms.size();
+}
+
+bool Compound::isConnected(Element* element1, Element* element2){
+
+	if(element1==element2){
+		return true;
+	}
+
+	Element* current=element1;
+	std::stack<Element*> s;
+	s.push(current);
+
+	std::vector<Element*> visited;
+	visited.emplace_back(current);
+
+	while(!s.empty()){
+		current=s.top();
+		s.pop();
+
+		for(auto node: current->getCurrentBonds()){
+			if(std::find(visited.begin(),visited.end(),node) !=visited.end()){
+				if(node==element2){
+					return true;
+				}
+
+				s.push(node);
+				visited.emplace_back(node);
+			}
+		}
+	}
+	return false;
 }
 
 double Compound::getMolecularMass(){
@@ -273,6 +479,16 @@ std::map<Element*,std::vector<std::pair<Element*,int>>> Compound::getBonds(){
 	return bonds;
 }
 
+std::vector<Element*> Compound::getUnstableAtoms(){
+
+	std::vector<Element*> unstableAtoms;
+	for(auto atom:atoms){
+		if(atom->getValency()[0]!=0 && atom->getValency()[1]!=0){
+			unstableAtoms.emplace_back(atom);
+		}
+	}
+}
+
 std::vector<Compound*> Compound::getListOfCompounds(){
 	return listOfCompounds;
 }
@@ -291,91 +507,4 @@ void Compound::printCompound(){
 	for(auto line: structure){
 		std::cout<<line<<std::endl;
 	}
-}
-
-
-std::vector<Compound> Compound::removeBond(Element& firstElement, Element& secondElement, int typeOfBond){
-
-	std::vector<Compound> newCompounds;
-	if(!isAtomInCompound(firstElement) || !isAtomInCompound(secondElement)){
-		return newCompounds;
-		//throw error and stuff
-	}
-
-	if(typeOfBond==0){
-		if(firstElement/secondElement==0){
-			return newCompounds;
-			//error
-		}
-	}
-	else if(typeOfBond==1){
-		if(firstElement%secondElement==0){
-			return newCompounds;
-			//error
-		}		
-	}
-	else{
-		return newCompounds;
-		//error
-	}
-
-	bonds[&firstElement].erase(std::find(bonds[&firstElement].begin(),bonds[&firstElement].end(),std::make_pair(&secondElement,typeOfBond)));
-	bonds[&secondElement].erase(std::find(bonds[&firstElement].begin(),bonds[&firstElement].end(),std::make_pair(&firstElement,typeOfBond)));
-
-	
-	if(isFullyConnected()){
-		newCompounds.emplace_back(*this);
-	}
-	else{
-
-		//makeNewCompoundFromElement()
-	}
-	
-
-}
-
-bool Compound::isFullyConnected(){
-
-	std::vector<Element*> terminals=findTerminals();
-	for(Element* element1: terminals){
-		terminals.erase(terminals.begin());
-		for(Element* element2: terminals){
-			if (!isConnected(element1,element2)){
-				return false;
-			}
-		}
-	}
-
-	return true;
-
-
-}
-
-//basicallt copied
-//failed
-bool Compound::isConnected(Element* element1, Element* element2){
-	if(element1==element2){
-		return true;
-	}
-
-	std::vector<bool> visited(atoms.size(),false);
-
-	std::queue<int> q;
-
-	//check
-	int s=std::distance(atoms.begin(),std::find(atoms.begin(),atoms.end(),element1));
-	visited[s]=true;
-
-	q.push(s);
-
-	while(!q.empty()){
-		s=q.front();
-		q.pop();
-
-
-	}
-}
-
-Compound createCompoundFromElement(Element& element){
-	element.
 }

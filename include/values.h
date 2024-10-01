@@ -19,4 +19,8 @@ extern std::set<int> fBlockExceptions;
 
 extern std::array<std::string,3> BONDSYMBOL;
 extern std::map<std::string,std::string> subScripts;
+
+extern std::map<std::string,int> molecules;
+extern std::map<int,int> atomicity;
+extern std::map<std::string,int> anions;
 #endif

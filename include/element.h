@@ -9,9 +9,9 @@
 
 //smart pointers later
 //examples too
-//make way to only add atomic number
-
-
+//benzene
+//find atoms that want bond compound
+//get total ionic bond
 	//make nomenclaature a seperate tab that only supports a few elements
 
 	//select copy paste
@@ -35,11 +35,13 @@ class Element{
 	double atomicMass;
 	int electrons;
 	int charge;
-	//int oxidationNumber;
 
 	std::map<std::string,int> shells;
 	std::vector<Element*> covalentBonds;
-	std::vector<Element*> ionicBonds;
+
+	//-1 means this elemnt took electron
+	//positve 1 means this elemt lost electron
+	std::vector<std::pair<Element*,int>> ionicBonds;
 
 	//Valency will only be created if atomic number is less than or equal to 18
 	//exceptions ake later
@@ -302,13 +304,17 @@ class Element{
 		/*
 		Returns: Copy of Vector of all current ionic bonds
 		*/
-		std::vector<Element*> getCurrentIonicBonds();
+		std::vector<std::pair<Element*,int>> getCurrentIonicBonds();
 
 		/*
 		Returns: Number of Ionic Bonds that atom has formed
 		*/
 		int getNumberOfIonicBonds();
 
+		/*
+		Returns: Vector of all the elements the atom is bonded to
+		*/
+		std::vector<Element*> Element::getCurrentBonds();
 		/*
 		Prints Number of Electrons in each sub shell of atom
 		*/
@@ -327,6 +333,8 @@ class Element{
 		Prints Number of each element
 		*/
 		static void printNumberOfEachElement(std::ofstream output);
+
+
 
 };
 

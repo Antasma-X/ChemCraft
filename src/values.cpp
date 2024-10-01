@@ -38,3 +38,36 @@ std::array<std::string,3> BONDSYMBOL={"-","=","\u2261"};
 
 std::map<std::string,std::string> subScripts={{"0","₀"},{"1","₁"},{"2","₂"},{"3","₃"},{"4","₄"},{"5","₅"},{"6","₆"},{"7","₇"},{"8","₈"},{"9","₉"}};
 
+
+std::map<std::string,int> molecules={
+    {"Water",1},
+    {"Carbon Dioxide",2},
+    {"Carbon Monoxide",3},
+    {"Hydrogen Peroxide",4},
+    {"Ozone",5},
+    {"Ammonia",6},
+    {"Nitrogen Dioxide", 7}
+};
+
+std::map<int,int> atomicity={
+    {1,2},{7,2},{8,2},{9,2},{17,2},{35,2},{53,2},
+    {15,4},
+    {16,8}
+};
+
+std::map<std::string,int> anions={
+   {"Fluoride",1},
+   {"Chloride",2},
+   {"Bromide",3},
+   {"Iodide",4},
+   {"Sulphate",5},
+   {"Sulphite",6},
+   {"Carbonate",7},
+   {"Bicarbonate",8},
+   {"Nitrate",9},
+   {"Nitrite",10},
+   {"Phosphate",11},
+   {"Phosphite",12},
+   {"Hydoxide",13}
+};
+
