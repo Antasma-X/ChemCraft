@@ -1,11 +1,5 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
-#include <algorithm>
-
 #include "../include/element.h"
-#include "../include/values.h"
+
 
 constexpr int NUMBEROFSHELLS=9;
 
@@ -189,7 +183,7 @@ int Element::findValenceShell(){
 
 bool Element::doesFollowOctet(int atomicNumber){
 	
-	if (atomicNumber>10){
+	if (atomicNumber>18){
 		return false;
 	}
 	return true;

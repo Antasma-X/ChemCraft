@@ -5,14 +5,13 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <algorithm>
+#include <queue>
+#include <stack>
 
+#include "values.h"
 #include "element.h"
 
-
-//does bond exist between them
-
-//remove atom too
-//find unstable and bond
 class Compound{
 	std::vector<Element*> atoms;
 

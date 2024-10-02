@@ -71,3 +71,9 @@ std::map<std::string,int> anions={
    {"Hydoxide",13}
 };
 
+std::vector<int> anionValencies={-1,-1,-1,-1,-2,-2,-2,-1,-1,-1,-3,-3,-1};
+
+std::map<std::string,int> cations={
+    {"Ammonium",200},
+    {"Hydronium",201}
+};

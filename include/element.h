@@ -6,12 +6,16 @@
 #include <string>
 #include <map>
 #include <fstream>
+#include <algorithm>
+
+#include "values.h"
 
 //smart pointers later
 //examples too
 //benzene
-//find atoms that want bond compound
-//get total ionic bond
+//nh4
+//coordinate bond?????? PO$ and stuff will do later
+//remove the coordinate bonds for now
 	//make nomenclaature a seperate tab that only supports a few elements
 
 	//select copy paste
@@ -20,13 +24,11 @@
 //way to group elemnts
 //stable indicator
 //hydrogen filler
-//somehow check direvtion of ionic bond
 
 	//Futre when i figure out exceptions include in h file too
 	//indlude errors in comment
 	//null for bond in group
-		//remove element and split it
-//gotta figure out way to determine direction of ionic bond and store it
+
 class Element{ 
 
 	int atomicNumber;
@@ -314,7 +316,7 @@ class Element{
 		/*
 		Returns: Vector of all the elements the atom is bonded to
 		*/
-		std::vector<Element*> Element::getCurrentBonds();
+		std::vector<Element*> getCurrentBonds();
 		/*
 		Prints Number of Electrons in each sub shell of atom
 		*/

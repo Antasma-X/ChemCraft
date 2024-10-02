@@ -1,12 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
-#include <algorithm>
-#include<queue>
-#include<stack>
 #include "../include/compound.h"
-#include "../include/values.h"
 
 std::vector<Compound*> Compound::listOfCompounds={};
 
@@ -224,7 +216,7 @@ std::vector<Compound> Compound::removeElement(Element& firstElement){
 	std::vector<Compound> newCompounds;
 	std::vector<Element*> firstElementBonds=firstElement.getCurrentBonds();
 
-	atoms.erase(std::find(atoms.begin(),atoms.end(),firstElement));
+	atoms.erase(std::find(atoms.begin(),atoms.end(),&firstElement));
 	bonds.erase(bonds.find(&firstElement));
 
 	if(!isAtomInCompound(firstElement)){
@@ -247,8 +239,14 @@ std::vector<Compound> Compound::removeElement(Element& firstElement){
 		}
 	}
 
+//fucking crybaby compiler
 	for(auto bond:firstElementBonds){
-		bonds[bond].erase(std::find(bonds[bond].begin(),bonds[bond].end(),firstElement));
+		for(int i=-1;i<2;i++){
+			auto it = std::find(bonds[bond].begin(),bonds[bond].end(),std::make_pair(&firstElement,i));
+			if(it !=bonds[bond].end()){
+				bonds[bond].erase(it);
+			}
+		}
 	}
 
 	if(isFullyConnected()){
@@ -460,7 +458,7 @@ std::string Compound::getMolecularFormula(){
 		}
 		else{
 			std::string temp = std::to_string(value);
-			for(int i =0;i<temp.length();i++){
+			for(std::size_t i =0;i<temp.length();i++){
 				//istg why is the compiler crying about string and char theyre the same thing
 				number=number+subScripts[temp.substr(i,1)];
 			}
@@ -487,6 +485,7 @@ std::vector<Element*> Compound::getUnstableAtoms(){
 			unstableAtoms.emplace_back(atom);
 		}
 	}
+	return unstableAtoms;
 }
 
 std::vector<Compound*> Compound::getListOfCompounds(){
