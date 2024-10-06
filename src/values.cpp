@@ -46,7 +46,8 @@ std::map<std::string,int> molecules={
     {"Hydrogen Peroxide",4},
     {"Ozone",5},
     {"Ammonia",6},
-    {"Nitrogen Dioxide", 7}
+    {"Nitrogen Dioxide", 7},
+    {"Benzene",8}
 };
 
 std::map<int,int> atomicity={

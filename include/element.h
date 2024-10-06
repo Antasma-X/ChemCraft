@@ -12,7 +12,11 @@
 
 //smart pointers later
 //examples too
-//benzene
+// verify errases
+// enums
+// move semantics
+
+//f stream stuff
 //nh4
 //coordinate bond?????? PO$ and stuff will do later
 //remove the coordinate bonds for now

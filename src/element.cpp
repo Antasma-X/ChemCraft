@@ -412,10 +412,12 @@ std::array<int,2> Element::getValency(){
 }
 
 std::vector<Element*> Element::getCurrentCovalentBonds(){
+	std::cout<<"hehehehe"<<std::endl;
 	return covalentBonds;
 }
 
 int Element::getNumberOfCovalentBonds(){
+	
 	return covalentBonds.size();
 }
 

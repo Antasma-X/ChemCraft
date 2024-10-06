@@ -249,6 +249,12 @@ class Compound{
 		//quit
 		void printCompound();
 
+
+//     Compound(Compound&& other);
+
+// Compound(const Compound& other);
+
+
 };
 
 #endif

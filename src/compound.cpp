@@ -21,19 +21,30 @@ std::vector<Element*>Compound::findTerminals(){
 void Compound::createCompoundFromElementUtil(Element& element,std::vector<Element*>& atoms,std::map<Element*,std::vector<std::pair<Element*,int>>>& bonds){
 	atoms.emplace_back(&element);
 	
-	std::vector<Element*> currentCovalentBonds=element.getCurrentCovalentBonds();
 	std::vector<std::pair<Element*,int>> currentBonds;
 
-	for(auto el: currentCovalentBonds){
-		currentBonds.emplace_back(std::make_pair(el,0));
-	}
+	std::cout<<"goddddddddddddddd"<<std::endl;
 
+	std::cout<<element.getNumberOfCovalentBonds()<<std::endl;
+	std::vector<Element*> currentCovalentBonds=element.getCurrentCovalentBonds();
+	
+	
+	
+	for(auto el: currentCovalentBonds){
+		
+		currentBonds.emplace_back(std::make_pair(el,0));
+		
+	}
+	
+	
 	std::vector<std::pair<Element*,int>> currentIonic=element.getCurrentIonicBonds();
 	currentBonds.insert(currentBonds.begin(),currentIonic.begin(),currentIonic.end());
 	bonds[&element]=currentBonds;
-
+	std::cout<<"goddddddddddddddd"<<std::endl;
 	for(auto nextElement: currentBonds){
-		if(std::find(atoms.begin(),atoms.end(),nextElement.first)!=atoms.end()){
+		if(std::find(atoms.begin(),atoms.end(),nextElement.first)==atoms.end()){
+			std::cout<<"manans"<<std::endl;
+			std::cout<<"godjdjdjddddd"<<std::endl;
 			createCompoundFromElementUtil(*nextElement.first,atoms,bonds);
 		}
 	}
@@ -128,8 +139,13 @@ Compound::Compound(int atomicNumber, double atomicMass, int charge){
 
 
 Compound::~Compound(){
-	listOfCompounds.erase(std::find(listOfCompounds.begin(),listOfCompounds.end(),this));
 
+	auto it=std::find(listOfCompounds.begin(),listOfCompounds.end(),this);
+	if (it != listOfCompounds.end()){
+		listOfCompounds.erase(it);
+	}
+	
+	std::cout<<"lets see"<<std::endl;
 	//desyory every element somehow idk
 }
 
@@ -254,10 +270,14 @@ std::vector<Compound> Compound::removeElement(Element& firstElement){
 	}
 	else{
 		for(auto bond: firstElementBonds){
-			newCompounds.emplace_back(createCompoundFromElement(*bond));
+			std::cout<<"mannnnnnnnnnnnnnnnnnnans"<<std::endl;
+			newCompounds.push_back(createCompoundFromElement(*bond));
+			std::cout<<"wwoweke"<<std::endl;
+			std::cout<<"lollll"<<std::endl<<std::endl;
 		}
 	}
 
+std::cout<<"iloveyou"<<std::endl;
 	return newCompounds;
 }
 
@@ -326,15 +346,22 @@ std::vector<Compound> Compound::removeBond(Element& firstElement, Element& secon
 		//error
 	}
 
+	std::cout<<"hihijihi<<"<<std::endl;
+	//erase stuff
 	bonds[&firstElement].erase(std::find(bonds[&firstElement].begin(),bonds[&firstElement].end(),std::make_pair(&secondElement,typeOfBond)));
-	bonds[&secondElement].erase(std::find(bonds[&firstElement].begin(),bonds[&firstElement].end(),std::make_pair(&firstElement,typeOfBond)));
+	std::cout<<"hihijihi<<"<<std::endl;
+	bonds[&secondElement].erase(std::find(bonds[&secondElement].begin(),bonds[&secondElement].end(),std::make_pair(&firstElement,typeOfBond)));
 	
+	std::cout<<"hshsh"<<std::endl;
 	if(isFullyConnected()){
 		newCompounds.emplace_back(*this);
 	}
 	else{
 		newCompounds.emplace_back(createCompoundFromElement(firstElement));
+		std::cout<<"mannnnnnnnnnnnnnnnnnnans"<<std::endl;
+		std::cout<<"lolllllllllllllll"<<std::endl;
 		newCompounds.emplace_back(createCompoundFromElement(secondElement));
+		std::cout<<"lolllllllllllllll"<<std::endl;
 	}
 	
 	return newCompounds;
@@ -345,10 +372,14 @@ Compound Compound::createCompoundFromElement(Element& element){
 	std::map<Element*,std::vector<std::pair<Element*,int>>> bonds;
 
 	createCompoundFromElementUtil(element,atoms,bonds);
+	std::cout<<"hakunah mata"<<std::endl;
 
 	Compound newCompound(*atoms[0]);
+	std::cout<<"mannnnnnnnnnnnnnnnnnnans"<<std::endl;
 	newCompound.atoms=atoms;
 	newCompound.bonds=bonds;
+	std::cout<<"balllll"<<std::endl;
+	std::cout<<atoms.size()<<std::endl;
 
 	return newCompound;
 }
@@ -507,3 +538,23 @@ void Compound::printCompound(){
 		std::cout<<line<<std::endl;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+// Compound::Compound(Compound&& other) {
+//         atoms=other.atoms;
+// 		bonds=other.bonds;
+//     }
+
+// Compound::Compound(const Compound& other){
+// 	atoms=other.atoms;
+// 	bonds=other.bonds;
+// }
