@@ -216,6 +216,19 @@ int Element::doesIonicBondExist(const Element* secondElement){
 	return index;
 }
 
+int Element::doesDativeBondExist(const Element* secondElement){
+	int index=-1;
+	for(auto it=dativeBonds.begin();it!=dativeBonds.end();it++){
+		if ((*it).first==secondElement){
+			index++;
+			break;
+		}
+		index++;
+	}
+
+	return index;
+}
+
 std::array<int,2> Element::findValency(int atomicNumber){
 	std::array<int,2> valency;
 
@@ -376,11 +389,52 @@ int Element::operator % (Element& secondElement){
 		//throw erroes and stuff
 	}
 
-	addElectrons(-1);
-	secondElement.addElectrons(1);
+	if(ionicBonds[FirstElement_Index].second==-1){
+		addElectrons(-1);
+		secondElement.addElectrons(1);
+	}
+	else{
+		addElectrons(1);
+		secondElement.addElectrons(-1);		
+	}
 
 	ionicBonds.erase(ionicBonds.begin() + FirstElement_Index);
 	secondElement.ionicBonds.erase(secondElement.ionicBonds.begin() + SecondElement_Index);
+	return 1;
+}
+
+int Element::operator && (Element& secondElement){
+	if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )|| (secondElement.isNobleGasConfig() && secondElement.doesFollowOctet(secondElement.atomicNumber))){
+		//throw error or smth
+		return 0;
+	}
+	else{
+		addElectrons(2);
+		
+		dativeBonds.push_back(std::make_pair(&secondElement,-2));
+		secondElement.dativeBonds.push_back(std::make_pair(this,2));
+		return 1;
+	}
+}
+
+int Element::operator || (Element& secondElement){
+	int FirstElement_Index=doesDativeBondExist(&secondElement);
+	int SecondElement_Index=secondElement.doesDativeBondExist(this);
+
+	if (FirstElement_Index==-1 || SecondElement_Index==-1){
+		return 0;
+		//throw erroes and stuff
+	}
+
+	if(dativeBonds[FirstElement_Index].second==2){
+		addElectrons(-2);
+	}
+	else{
+		secondElement.addElectrons(-2);
+	}
+
+	dativeBonds.erase(dativeBonds.begin() + FirstElement_Index);
+	secondElement.dativeBonds.erase(secondElement.dativeBonds.begin() + SecondElement_Index);
 	return 1;
 }
 
@@ -429,16 +483,28 @@ int Element::getNumberOfIonicBonds(){
 	return ionicBonds.size();
 }
 
+std::vector<std::pair<Element*,int>> Element::getCurrentDativeBonds(){
+	return dativeBonds;
+}
+
+int Element::getNumberOfDativeBonds(){
+	return dativeBonds.size();
+}
+
 std::vector<Element*> Element::getCurrentBonds(){
 	std::vector<Element*> bonds= covalentBonds;
 	
 	for(auto ionicBond: ionicBonds){
 		bonds.emplace_back(ionicBond.first);
 	}
+
+	for(auto dativeBond: dativeBonds){
+		bonds.emplace_back(dativeBond.first);
+	}
 	return bonds;
 }
 
-void Element::printShells(std::ofstream output){
+void Element::printShells(std::ostream output){
 
 	for(auto [key,value]: shells){
 		output<<key<<":"<<value<<std::endl;
@@ -449,7 +515,7 @@ int Element::getNumberOfElements(int atomicNumber){
 	return numberOfEachElement[atomicNumber-1];
 }
 
-void Element::printNumberOfEachElement(std::ofstream output){
+void Element::printNumberOfEachElement(std::ostream output){
 
 	for(int i=0;i<118;i++){
 		output<<"Number of Elements of "<<names[i]<<":"<<numberOfEachElement[i]<<std::endl;

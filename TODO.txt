@@ -1,0 +1,39 @@
+
+Element:
+Compound:
+
+Window:
+    Hydrogen filler button
+    Stable Indicator(red glow)
+    Copy Paste
+
+Documentation:
+    Include errors in h files
+    Show Examples
+
+Molecule Generation:
+    Implement PO5 and nh4
+    Hydrogen Filler
+
+Nomenclature:
+    Make nomenclaature a seperate tab that only supports a few elements
+    Functional Group Creator
+
+Tests:
+    test dative bond
+    test f tream stuff
+General Code:
+    Smart Pointera
+    Move semantics
+    Enums may be used
+    Implement Exceptions
+    Understand Stability
+    make tests
+
+Possible Ideas:
+    null for bond in group
+    compound group creator
+    way to group elemnts
+    Themes like in vscode
+    Saving compound in memory
+    valecny exceptions

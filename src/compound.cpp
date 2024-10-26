@@ -38,7 +38,9 @@ void Compound::createCompoundFromElementUtil(Element& element,std::vector<Elemen
 	
 	
 	std::vector<std::pair<Element*,int>> currentIonic=element.getCurrentIonicBonds();
+	std::vector<std::pair<Element*,int>> currentDative=element.getCurrentDativeBonds();
 	currentBonds.insert(currentBonds.begin(),currentIonic.begin(),currentIonic.end());
+	currentBonds.insert(currentBonds.begin(),currentDative.begin(),currentDative.end());
 	bonds[&element]=currentBonds;
 	std::cout<<"goddddddddddddddd"<<std::endl;
 	for(auto nextElement: currentBonds){
@@ -173,6 +175,18 @@ int Compound::addElement(Element& firstElement, Element& secondElement,int typeO
 			return 0;
 		}		
 	}
+	else if(typeOfBond==2){
+		if((firstElement&&secondElement)==0){
+			//throe and stuff
+			return 0;
+		}		
+	}
+	else if(typeOfBond==-2){
+		if((secondElement&&firstElement)==0){
+			//throe and stuff
+			return 0;
+		}		
+	}
 	else{
 		return 0;
 	}
@@ -214,6 +228,18 @@ int Compound::addElement(Element& firstElement, Element& secondElement, Compound
 			return 0;
 		}		
 	}
+	else if(typeOfBond==2){
+		if((firstElement&&secondElement)==0){
+			//throe and stuff
+			return 0;
+		}		
+	}
+	else if(typeOfBond==-2){
+		if((secondElement&&firstElement)==0){
+			//throe and stuff
+			return 0;
+		}		
+	}
 	else{
 		return 0;
 	}
@@ -249,6 +275,18 @@ std::vector<Compound> Compound::removeElement(Element& firstElement){
 		}
 		else if(bond.second==1){
 			(*bond.first)%(firstElement);
+		}
+		else{
+			//error
+		}
+	}
+
+	for(auto bond: firstElement.getCurrentDativeBonds()){
+		if(bond.second==2){
+			(firstElement)||(*bond.first);
+		}
+		else if(bond.second==-2){
+			(*bond.first)||(firstElement);
 		}
 		else{
 			//error
@@ -305,6 +343,18 @@ int Compound::createBond(Element& firstElement, Element& secondElement,	int type
 			return 0;
 		}		
 	}
+	else if(typeOfBond==2){
+		if((firstElement&&secondElement)==0){
+			//throe and stuff
+			return 0;
+		}		
+	}
+	else if(typeOfBond==-2){
+		if((secondElement&&firstElement)==0){
+			//throe and stuff
+			return 0;
+		}		
+	}
 	else{
 		return 0;
 	}
@@ -337,6 +387,18 @@ std::vector<Compound> Compound::removeBond(Element& firstElement, Element& secon
 	}
 	else if(typeOfBond==-1){
 		if((secondElement%firstElement)==0){
+			//throe and stuff
+			return newCompounds;
+		}		
+	}
+	else if(typeOfBond==2){
+		if((firstElement||secondElement)==0){
+			//throe and stuff
+			return newCompounds;
+		}		
+	}
+	else if(typeOfBond==-2){
+		if((secondElement||firstElement)==0){
 			//throe and stuff
 			return newCompounds;
 		}		

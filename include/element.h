@@ -10,29 +10,6 @@
 
 #include "values.h"
 
-//smart pointers later
-//examples too
-// verify errases
-// enums
-// move semantics
-
-//f stream stuff
-//nh4
-//coordinate bond?????? PO$ and stuff will do later
-//remove the coordinate bonds for now
-	//make nomenclaature a seperate tab that only supports a few elements
-
-	//select copy paste
-//compound group creator
-//functional group creator
-//way to group elemnts
-//stable indicator
-//hydrogen filler
-
-	//Futre when i figure out exceptions include in h file too
-	//indlude errors in comment
-	//null for bond in group
-
 class Element{ 
 
 	int atomicNumber;
@@ -46,11 +23,15 @@ class Element{
 	std::vector<Element*> covalentBonds;
 
 	//-1 means this elemnt took electron
-	//positve 1 means this elemt lost electron
+	//+1 means this elemt lost electron
 	std::vector<std::pair<Element*,int>> ionicBonds;
 
+	//+2 means this element gains 2 electrons from the bond
+	//-2 means this element donates 2 electrons to the bond
+	std::vector<std::pair<Element*,int>> dativeBonds;
+
 	//Valency will only be created if atomic number is less than or equal to 18
-	//exceptions ake later
+
 	std::array<int,2> valency;
 
 	//Static arrays of elements and addresses
@@ -182,6 +163,15 @@ class Element{
 	int doesIonicBondExist(const Element* secondElement);
 
 	/*
+	Checks if dative bond exists between element and element passed in
+	If bond exists it returns index of bond in dativeBonds vector of first element
+	Pass in: Second Element pointer
+	Returns: Index of bond in dativeBonds vector of first element if bond exists
+			-1 if bond doesn't exists
+	*/
+	int doesDativeBondExist(const Element* secondElement);
+
+	/*
 	Used in Constructor
 	Function finds the valencies of an atom as long as its element is less than or equal to 18
 	If the element is greater than 18 then the array returned is {0,0} 
@@ -262,6 +252,26 @@ class Element{
 		int operator % (Element& secondElement);
 		//Getters:
 
+/*
+		Operator Overloading
+		Creates Dative Bond between 2 atoms
+		If any of the atoms in the bond have acheived noble gas configuration and has an atomic number less than or equal to 18, then bond is not created
+		First atom gains 2 electron, and second atom donates 2 electrons to form dative bond
+
+		Returns: 1 if bond is successful
+				 0 if bond isn't successful
+		*/
+		int operator && (Element& secondElement);
+
+		/*
+		Operator Overloading
+		Removes Dative Bond between 2 atoms
+
+		Returns: 1 if bond removal is successful
+				 0 if bond removal isn't successful
+		*/
+		int operator || (Element& secondElement);
+
 		/*
 		Returns: Atomic Number of element
 		*/
@@ -318,13 +328,23 @@ class Element{
 		int getNumberOfIonicBonds();
 
 		/*
+		Returns: Copy of Vector of all current dative bonds
+		*/
+		std::vector<std::pair<Element*,int>> getCurrentDativeBonds();
+
+		/*
+		Returns: Number of Dative Bonds that atom has formed
+		*/	
+		int getNumberOfDativeBonds();
+		
+		/*
 		Returns: Vector of all the elements the atom is bonded to
 		*/
 		std::vector<Element*> getCurrentBonds();
 		/*
 		Prints Number of Electrons in each sub shell of atom
 		*/
-		void printShells(std::ofstream output);
+		void printShells(std::ostream output);
 
 
 		//static methods
@@ -338,8 +358,7 @@ class Element{
 		/*
 		Prints Number of each element
 		*/
-		static void printNumberOfEachElement(std::ofstream output);
-
+		static void printNumberOfEachElement(std::ostream output);
 
 
 };

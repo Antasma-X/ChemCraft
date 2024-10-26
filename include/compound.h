@@ -18,6 +18,8 @@ class Compound{
 	//0 is covalent
 	//-1 means current element took electron(anion)
 	//+1 means current element gave electron(cation)
+	//+2 means current element gains 2 electrons from the bond
+	//-2 means current element donates 2 electrons to the bond
 	std::map<Element*,std::vector<std::pair<Element*,int>>> bonds;
 
 	static std::vector<Compound*> listOfCompounds;
@@ -84,7 +86,9 @@ class Compound{
 		0 means covalent bond
 		+1 means ionic bond where first elemnt loses an electron
 		-1 means ionic bond where first elemnt gains an electron
-		
+		+2 means dative bond where first element gains 2 electrons
+		-2 means dative bond where first element donates 2 electrons
+
 		The first element passed in must be part of the compound
 		The second element passed in can not be part of any compound(including this one)
 		The second element bonds to the first element present in the compound
@@ -101,6 +105,8 @@ class Compound{
 		You pass in 1 element, an integer signifying atomic number and an integer signifying the type of bond
 		+1 means ionic bond where first elemnt loses an electron
 		-1 means ionic bond where first elemnt gains an electron
+		+2 means dative bond where first element gains 2 electrons
+		-2 means dative bond where first element donates 2 electrons
 
 		The first element passed in must be part of the compound
 		The atomic number will be used to create second element which is added to compound
@@ -118,6 +124,8 @@ class Compound{
 		You pass in 2 elements, a second compound and an integer signifying the type of bond
 		+1 means ionic bond where first elemnt loses an electron
 		-1 means ionic bond where first elemnt gains an electron
+		+2 means dative bond where first element gains 2 electrons
+		-2 means dative bond where first element donates 2 electrons
 
 		The first element passed in must be part of the compound on which the method is called
 		The second element passed in must be part of the compound passed in
@@ -163,6 +171,8 @@ class Compound{
 		0 means covalent bond
 		+1 means ionic bond where first elemnt loses an electron
 		-1 means ionic bond where first elemnt gains an electron
+		+2 means dative bond where first element gains 2 electrons
+		-2 means dative bond where first element donates 2 electrons
 
 		Since it's possible that the bond removal results in 2 seperate compounds forming, a vector of compounds is formed
 		Function uses isFullyConnected() to check if compound is still fully connected
@@ -212,6 +222,7 @@ class Compound{
 		Basically copied ngl
 		*/
 		bool isConnected(Element* element1, Element* element2);
+
 		/*
 		Returns: Total Molecular mass of compound
 		*/
@@ -249,6 +260,9 @@ class Compound{
 		//quit
 		void printCompound();
 
+		void saveCompoundToFile();
+
+		
 
 //     Compound(Compound&& other);
 

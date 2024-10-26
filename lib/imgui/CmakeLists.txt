@@ -1,0 +1,6 @@
+file(GLOB IMGUISOURCES "*.cpp")
+
+
+add_library(imgui ${IMGUISOURCES})
+
+target_include_directories(imgui INTERFACE include/)
