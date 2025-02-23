@@ -1,13 +1,7 @@
 #ifndef ELEMENT_H
 #define ELEMENT_H
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
-#include <fstream>
-#include <algorithm>
-
+#include "StdLibDependencies.h"
 #include "values.h"
 
 class Element{ 
@@ -179,7 +173,7 @@ class Element{
 	Pass in: Atomic Number of Element
 	Returns: Size 2 Array of valencies(First element is positive valency and second element is negative element)
 	*/
-	static std::array<int,2> findValency(int atomicNumber);
+	static std::array<int,2> findValency(int atomicNumber, int charge);
 
 	public:
 		

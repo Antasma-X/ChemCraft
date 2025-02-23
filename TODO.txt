@@ -1,3 +1,35 @@
+today:
+    try glow might be too complicated ngl
+    learning opengl
+    putting functionalit in buttons
+    auto list=Compound::getListOfCompounds(); change maybe no change since as long as render updates its fine
+
+    //left clivking gives info
+
+
+make a personal lib to use whenevr i need smth subscipt url
+
+
+edit topmenu
+
+
+fix higher level vlencies
+
+create custom themes
+tomorrow:
+    actual compound crreator
+
+tomorrow:
+    try nomenclature if will
+    otherwise skip
+
+ending:
+    clean up Code
+    build system
+    organize the files
+    try make salt again
+    config file
+finish by tuesday
 
 Element:
 Compound:
@@ -7,21 +39,19 @@ Window:
     Stable Indicator(red glow)
     Copy Paste
 
+
 Documentation:
     Include errors in h files
     Show Examples
 
 Molecule Generation:
     Implement PO5 and nh4
-    Hydrogen Filler
+    add Functional groups and ion filler
 
 Nomenclature:
     Make nomenclaature a seperate tab that only supports a few elements
     Functional Group Creator
 
-Tests:
-    test dative bond
-    test f tream stuff
 General Code:
     Smart Pointera
     Move semantics
@@ -35,5 +65,29 @@ Possible Ideas:
     compound group creator
     way to group elemnts
     Themes like in vscode
-    Saving compound in memory
+    exception handlong is terribel
     valecny exceptions
+
+
+Assets:
+    170 is font for gimp
+    2 sets
+    one single latter
+    one double letteer
+
+make shortcuts
+make a config file so that you can set the side where the menu us color etc
+
+
+
+
+
+
+
+
+
+figure out salt somehow
+
+//try invalid string
+
+		void savetofile();

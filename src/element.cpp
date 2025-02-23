@@ -1,4 +1,4 @@
-#include "../include/element.h"
+#include "element.h"
 
 
 constexpr int NUMBEROFSHELLS=9;
@@ -164,9 +164,10 @@ void Element::addElectrons(int n){
 	}
 
 	//to check
-	valency[0]-=n;
+	valency[0]+=n;
 	valency[1]+=n;
-	//std::cout<<valency[0]<<valency[1]<<std::endl;
+
+
 }
 
 int Element::findValenceShell(){
@@ -229,7 +230,7 @@ int Element::doesDativeBondExist(const Element* secondElement){
 	return index;
 }
 
-std::array<int,2> Element::findValency(int atomicNumber){
+std::array<int,2> Element::findValency(int atomicNumber,int charge){
 	std::array<int,2> valency;
 
 	if(doesFollowOctet(atomicNumber)){
@@ -242,11 +243,14 @@ std::array<int,2> Element::findValency(int atomicNumber){
 		else if(atomicNumber<18){
 			valency={atomicNumber-10,atomicNumber-18};
 		}
+		//check
+		valency[0]-=charge;
+		valency[1]-=charge;
 	}
 	else{
 		valency={0,0};
 	}
-	//std::cout<<valency[1]<<"fjfj \n";
+
 	return valency;
 }
 	
@@ -270,7 +274,7 @@ Element::Element(unsigned int atomicNumber, double atomicMass,int charge){
 	}
 	this->atomicMass=atomicMass;
 
-	valency=findValency(atomicNumber);
+	valency=findValency(atomicNumber, charge);
 
 	if(valency[0]-charge<0 || valency[1]+charge>0){
 		//error and stuff
@@ -404,13 +408,14 @@ int Element::operator % (Element& secondElement){
 }
 
 int Element::operator && (Element& secondElement){
-	if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )|| (secondElement.isNobleGasConfig() && secondElement.doesFollowOctet(secondElement.atomicNumber))){
+	//rule altered here because chmiestry
+	if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )){
 		//throw error or smth
 		return 0;
 	}
 	else{
-		addElectrons(2);
-		
+		addElectrons(1);
+		addElectrons(1);
 		dativeBonds.push_back(std::make_pair(&secondElement,-2));
 		secondElement.dativeBonds.push_back(std::make_pair(this,2));
 		return 1;
@@ -466,7 +471,6 @@ std::array<int,2> Element::getValency(){
 }
 
 std::vector<Element*> Element::getCurrentCovalentBonds(){
-	std::cout<<"hehehehe"<<std::endl;
 	return covalentBonds;
 }
 

@@ -1,127 +1,17 @@
-#include"../include/molecules.h"
+#include"molecules.h"
 
 
-Compound* makeMolecule(std::string name){
-    return makeMolecule(molecules[name]);
-}
-
-Compound* makeMolecule(int n){
-
-    Compound* newCompound=nullptr;
-    
-    if(n==1){
-        Element* H1=new Element(1);
-        Element* H2=new Element(1);
-        Element* O=new Element(8);
-
-        newCompound=new Compound(*H1);
-        newCompound->addElement(*H1,*O,0);
-        newCompound->addElement(*O,*H2,0);
-        
-    }
-    else if(n==2){
-        Element* O1=new Element(8);
-        Element* O2=new Element(8);
-        Element* C=new Element(6);            
-
-        newCompound=new Compound(*C);
-        newCompound->addElement(*C,*O1,0);
-        newCompound->addElement(*C,*O2,0);
-    }
-    else if(n==3){
-        Element* O=new Element(8);
-        Element* C=new Element(6);            
-
-        newCompound=new Compound(*C);
-        newCompound->addElement(*C,*O,0);
-    } 
-    else if(n==4){
-        Element* H1=new Element(1);
-        Element* H2=new Element(1);
-        Element* O1=new Element(8);
-        Element* O2=new Element(8);
-
-        newCompound=new Compound(*H1);
-        newCompound->addElement(*H1,*O1,0);
-        newCompound->addElement(*O1,*O2,0);
-        newCompound->addElement(*O2,*H2,0);
-    }
-    else if(n==5){
-        Element* O1=new Element(8);
-        Element* O2=new Element(8);
-        Element* O3=new Element(8);
-
-        newCompound=new Compound(*O1);
-        newCompound->addElement(*O1,*O2,0);
-        newCompound->addElement(*O2,*O3,0);
-        newCompound->createBond(*O1,*O3,0);
-    }
-    else if(n==6){
-        Element* N=new Element(7);
-        Element* H1=new Element(1);
-        Element* H2=new Element(1);
-        Element* H3=new Element(1);
-
-        newCompound=new Compound(*N);
-        newCompound->addElement(*N,*H1,0);
-        newCompound->addElement(*N,*H2,0);
-        newCompound->addElement(*N,*H3,0);
-    }
-    else if(n==7){
-        Element* N=new Element(7);
-        Element* O1=new Element(8);
-        Element* O2=new Element(8);
-
-        newCompound=new Compound(*N);
-        newCompound->addElement(*N,*O1,0);
-        newCompound->addElement(*N,*O2,0);
-        newCompound->createBond(*N,*O1,0);         
-    }
-    else if(n==8){
-        Element* C1=new Element(6);
-        Element* C2=new Element(6);
-        Element* C3=new Element(6);
-        Element* C4=new Element(6);
-        Element* C5=new Element(6);
-        Element* C6=new Element(6);
-
-        Element* H1=new Element(1);
-        Element* H2=new Element(1);
-        Element* H3=new Element(1);
-        Element* H4=new Element(1);
-        Element* H5=new Element(1);
-        Element* H6=new Element(1);
-
-        newCompound=new Compound(*C1);
-        newCompound->addElement(*C1,*C2,0);
-        newCompound->addElement(*C2,*C3,0);
-        newCompound->addElement(*C3,*C4,0);
-        newCompound->addElement(*C4,*C5,0);
-        newCompound->addElement(*C5,*C6,0);
-
-        newCompound->createBond(*C2,*C3,0);
-        newCompound->createBond(*C4,*C5,0);
-        newCompound->createBond(*C6,*C1,0);
-
-        newCompound->addElement(*C1,*H1,0);
-        newCompound->addElement(*C2,*H2,0);
-        newCompound->addElement(*C3,*H3,0);
-        newCompound->addElement(*C4,*H4,0);
-        newCompound->addElement(*C5,*H5,0);
-        newCompound->addElement(*C6,*H6,0);
-    }
-    else{
-        
-    }
+Compound* makeMolecule(std::string compoundString){
+    Compound* newCompound= new Compound(compoundString);
     return newCompound;
-    
 }
 
 Compound* generateMoleculeOfElement(int atomicNumber){
     if(atomicity.find(atomicNumber) == atomicity.end()){
         return nullptr;
         // error
-    }else{
+    }
+    else{
         std::vector<Element*> elements;
         
         for(int i=0;i<atomicity[atomicNumber];i++){
@@ -137,413 +27,370 @@ Compound* generateMoleculeOfElement(int atomicNumber){
     }
 }
 
-std::pair<Compound*,std::vector<std::pair<Element*,int>>> makeAnion(std::string name){
-    return makeAnion(anions[name]);
-}
 
-std::pair<Compound*,std::vector<std::pair<Element*,int>>> makeAnion(int n){
-    Compound* newCompound=nullptr;
-    std::vector<Element*> elements;
-    std::vector<int> valencies;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// std::array<std::string,3> splitSaltName(std::string name){
+//     std::string cation="";
+//     std::string anion ="";
+//     std::string stockString="";
+
+//     auto it=name.begin();
+//     for(;it!=name.end();it++){
+//         if(*it=='(' ){
+//             it++;
+//             for(;*it!=')';it++){
+//                 std::cout<<"skfjsijfsyoooooooooomaballs"<<std::endl;
+//                 stockString+=*it;
+//             }
+//             it+=2;
+//             break;
+//         }
+//         else if(*it==' '){
+//             it++;
+//             break;
+//         }
+//         cation+=*it;
+//         std::cout<<"skfjsijfsyoooooooooo"<<std::endl;
+//     }
+//     for(;it!=name.end();it++){
+//         anion+=*it;
+//     }
+//     std::cout<<cation<<stockString<<anion<<std::endl;
+//     // while (true){}
+//     std::array<std::string,3> arr={cation,stockString,anion};
+//     return arr;
+// }
+
+
+// int romanToDecimal(std::string& s)
+// {
+//     std::unordered_map<char, int> roman = {
+//         {'I', 1}, {'V', 5}, {'X', 10}, {'L', 50},
+//         {'C', 100}, {'D', 500}, {'M', 1000}
+//     };
     
-    if(n==1){
-        Element* F= new Element(9);
-
-        elements.emplace_back(F);
-        valencies.emplace_back(-1);
-
-        newCompound= new Compound(*F);
-    }
-    else if(n==2){
-        Element* Cl= new Element(17);
-
-        elements.emplace_back(Cl);
-        valencies.emplace_back(-1);
-
-        newCompound= new Compound(*Cl);
-    }
-    else if(n==3){
-        Element* Br= new Element(35);
-
-        elements.emplace_back(Br);
-        valencies.emplace_back(-1);
-
-        newCompound= new Compound(*Br);
-    }
-    else if(n==4){
-        Element* I= new Element(53);
-
-        elements.emplace_back(I);
-        valencies.emplace_back(-1);
-
-        newCompound= new Compound(*I);
-    }
-    else if(n==5){
-        Element* S = new Element(16);
-        Element* O1 = new Element(8);
-        Element* O2= new Element(8);
-        Element* O3 = new Element(8);
-        Element* O4 = new Element(8);
-
-        newCompound=new Compound(*S);
-        newCompound->addElement(*S,*O1,0);
-        newCompound->addElement(*S,*O2,0);
-        newCompound->addElement(*S,*O3,0);
-        newCompound->addElement(*S,*O4,0);
-
-        newCompound->createBond(*S,*O2,0);
-        newCompound->createBond(*S,*O4,0);
-
-        elements.emplace_back(O1);
-        valencies.emplace_back(-1);
-
-        elements.emplace_back(O3);
-        valencies.emplace_back(-1);
-    }
-    else if(n==6){
-        Element* S = new Element(16);
-        Element* O1 = new Element(8);
-        Element* O2= new Element(8);
-        Element* O3 = new Element(8);
-
-        newCompound=new Compound(*S);
-        newCompound->addElement(*S,*O1,0);
-        newCompound->addElement(*S,*O2,0);
-        newCompound->addElement(*S,*O3,0);
-
-        newCompound->createBond(*S,*O2,0);
-
-        elements.emplace_back(O1);
-        valencies.emplace_back(-1);
-
-        elements.emplace_back(O3);
-        valencies.emplace_back(-1);
+//     int total = 0;
+//     int prevValue = 0;
+    
+//     for (int i = s.size() - 1; i >= 0; --i) {
+//         int currValue = roman[s[i]];
         
-    }
-    else if(n==7){
-        Element* C = new Element(6);
-        Element* O1 = new Element(8);
-        Element* O2= new Element(8);
-        Element* O3 = new Element(8);
+//         if (currValue < prevValue) {
+//             total -= currValue;
+//         } else {
+//             total += currValue;
+//         }
+//         prevValue = currValue;
+//     }
+    
+//     return total;
 
-        newCompound=new Compound(*C);
-        newCompound->addElement(*C,*O1,0);
-        newCompound->addElement(*C,*O2,0);
-        newCompound->addElement(*C,*O3,0);
-        newCompound->createBond(*C,*O2,0);
+// }
+// Compound* makeSalt(std::string name){
+//     std::vector<Compound*> cationArray;
+//     std::vector<Compound*> anionArray;
 
-        elements.emplace_back(O1);
-        valencies.emplace_back(-1);
+//     std::array<std::string,3> sections=splitSaltName(name);
+//     std::cout<<sections[0]<<"jdwu"<<sections[1]<<"jdwu"<<sections[2]<<"jdwu"<<std::endl;
+//     int n;
+//     std::cout<<sections[1]<<std::endl;
+//     if(sections[1]==""){
+//         n=0;
+//     }
+//     else{
+//         n=romanToDecimal(sections[1]);
+//     }
+//     std::cout<<n<<std::endl;
+//     int anionNumber=anions[sections[2]];
+//     int anionValency=std::abs(anionValencies[sections[2]]);
 
-        elements.emplace_back(O3);
-        valencies.emplace_back(-1);
-    }
-    else if(n==8){
-        Element* C = new Element(6);
-        Element* O1 = new Element(8);
-        Element* O2= new Element(8);
-        Element* O3 = new Element(8);
-        Element* H = new Element(1);
+//         int cationValency;
+//     std::cout<<anionValencies[sections[2]]<<std::endl;
 
-        newCompound=new Compound(*C);
-        newCompound->addElement(*C,*O1,0);
-        newCompound->addElement(*C,*O2,0);
-        newCompound->addElement(*C,*O3,0);
-        newCompound->addElement(*O1,*H,0);
-        newCompound->createBond(*C,*O2,0);     
+   
+//     if(n==0){
+//         cationValency=cationValencies[sections[0]];
+//         std::cout<<cationValency<<std::endl;
+//         int cationNumber=cations[sections[0]];
+//         Compound* cationCompound;
 
-        elements.emplace_back(O3);
-        valencies.emplace_back(-1);
-    }
-    else if(n==9){
-        Element* N = new Element(7);
-        Element* O1 = new Element(8);
-        Element* O2= new Element(8);
-        Element* O3 = new Element(8);
+//         for(int i=0;i<int(std::lcm(cationValency,anionValency)/cationValency);i++){
+            
+        
+//         if(cationNumber==1){
 
-        newCompound=new Compound(*N);
-        newCompound->addElement(*N,*O1,0);
-        newCompound->addElement(*N,*O2,0);
-        newCompound->addElement(*N,*O3,0);
-        newCompound->createBond(*N,*O2,0);
+//             Element* N=new Element(7,14,1);
+//             Element* H1 = new Element(1);
+//             Element* H2 = new Element(1);
+//             Element* H3 = new Element(1);
+//             Element* H4 = new Element(1);
 
-        elements.emplace_back(O3);
-        valencies.emplace_back(-1);
-    }
-    else if(n==10){
-        Element* N = new Element(7);
-        Element* O1 = new Element(8);
-        Element* O2= new Element(8);
+//             cationCompound=new Compound(*N);
+//             cationCompound->addElement(*N,*H1,0);
+//             cationCompound->addElement(*N,*H2,0);
+//             cationCompound->addElement(*N,*H3,0);
+//             cationCompound->addElement(*N,*H4,0);
+//         }
+//         // else if(cationNumber==2){
+//         //     Element* O=new Element(8,16,1);
+//         //     Element* H1 = new Element(1);
+//         //     Element* H2 = new Element(1);
+//         //     Element* H3 = new Element(1);      
 
-        newCompound=new Compound(*N);
-        newCompound->addElement(*N,*O1,0);
-        newCompound->addElement(*N,*O2,0);
-        newCompound->createBond(*N,*O2,0);       
+//         //     cationCompound=new Compound(*O);
+//         //     cationCompound->addElement(*O,*H1,0);
+//         //     cationCompound->addElement(*O,*H2,0);
+//         //     cationCompound->addElement(*O,*H3,0);
+                      
+//         // }
+//         else if(cationNumber>=3 && cationNumber<=14){
+//             std::cout<<cationAtomicNumbers[sections[0]]<<std::endl;
+//             cationCompound=new Compound(cationAtomicNumbers[sections[0]]);
+//             std::cout<<"jcnsjdcbsjcbsjcbsjcbsblows"<<std::endl;
+//         }
+//         cationArray.emplace_back(cationCompound);
+//     }
+//     }
+//     else{
+//         int atomicNumber=transitionMetalAtomicNumbers[sections[0]];
+//         cationValency=n;
+//         std::cout<<n<<std::endl;
+        
+//         for(int i=0;i<int(std::lcm(cationValency,anionValency)/n);i++){
+//             cationArray.emplace_back(new Compound(atomicNumber));
+//         }
 
-        elements.emplace_back(O1);
-        valencies.emplace_back(-1);
-    }
-    else if(n==11){
-        Element* P = new Element(15);
-        Element* O1 = new Element(8);
-        Element* O2= new Element(8);
-        Element* O3 = new Element(8);
-        Element* O4= new Element(8);
+//     }
+//     std::cout<<anionValency<<std::endl;
+//     std::cout<<cationValency<<std::endl;
+//     std::cout<<"hsdvujbgvjdvbdjvbdhvbdvbhdhvb"<<"       "<<int(std::lcm(cationValency,anionValency)/anionValency)<<std::endl;
+//     for(int i=0;i<int(std::lcm(cationValency,anionValency)/anionValency);i++){
+//         Compound* anionCompound;
+//         if(anionNumber==1){
+//             anionCompound=new Compound(9);
+//         }
+//         else if(anionNumber==2){
+//             anionCompound=new Compound(17);
+//         }
+//         else if(anionNumber==3){
+//             anionCompound=new Compound(35);
+//         }
+//         else if(anionNumber==4){
+//             anionCompound=new Compound(53);
+//         }
+//         else if(anionNumber==5){
+//             Element* S=new Element(16);
+//             Element* O1=new Element(8);
+//             Element* O2=new Element(8);
+//             Element* O3=new Element(8);
+//             Element* O4=new Element(8);
+//             anionCompound=new Compound(*S);
+//             anionCompound->addElement(*S,*O1,0);
+//             anionCompound->addElement(*S,*O2,0);
+//             anionCompound->addElement(*S,*O3,0);
+//             anionCompound->addElement(*S,*O4,0);
 
-        newCompound=new Compound(*P);
-        newCompound->addElement(*P,*O1,0);
-        newCompound->addElement(*P,*O2,0);
-        newCompound->addElement(*P,*O3,0);
-        newCompound->addElement(*P,*O4,0);
-        newCompound->createBond(*P,*O4,0);           
+//             anionCompound->createBond(*S,*O2,0);
+//             anionCompound->createBond(*S,*O4,0);
 
-        elements.emplace_back(O1);
-        valencies.emplace_back(-1);
+//         }
+//         else if(anionNumber==6){
+//             Element* S=new Element(16);
+//             Element* O1=new Element(8);
+//             Element* O2=new Element(8);
+//             Element* O3=new Element(8);
 
-        elements.emplace_back(O2);
-        valencies.emplace_back(-1);
+//             anionCompound=new Compound(*S);
+//             anionCompound->addElement(*S,*O1,0);
+//             anionCompound->addElement(*S,*O2,0);
+//             anionCompound->addElement(*S,*O3,0);
 
-        elements.emplace_back(O3);
-        valencies.emplace_back(-1);
-    }
-    else if(n==12){
-        Element* P = new Element(15);
-        Element* O1 = new Element(8);
-        Element* O2= new Element(8);
-        Element* O3 = new Element(8);
+//             anionCompound->createBond(*S,*O2,0);
+//             anionCompound->createBond(*S,*O3,0);                
+//         }
+//         else if(anionNumber==7){
+//                 Element* C=new Element(6);
+//                 Element* O1= new Element(8);
+//                 Element* O2= new Element(8);
+//                 Element* O3= new Element(8);
+
+//                 anionCompound=new Compound(*C);
+//                 anionCompound->addElement(*C,*O1,0);
+//                 anionCompound->addElement(*C,*O2,0);
+//                 anionCompound->addElement(*C,*O3,0);
+//                 anionCompound->createBond(*C,*O1,0);
+//         }
+//         else if(anionNumber==8){
+//             Element* C=new Element(6);
+//             Element* O1= new Element(8);
+//             Element* O2= new Element(8);
+//             Element* O3= new Element(8);
+//             Element* H = new Element(1);
+
+//             anionCompound=new Compound(*C);
+//             anionCompound->addElement(*C,*O1,0);
+//             anionCompound->addElement(*C,*O2,0);
+//             anionCompound->addElement(*C,*O3,0);
+//             anionCompound->createBond(*C,*O1,0);
+//             anionCompound->addElement(*O2,*H,0);
+//         }
+//         else if(anionNumber==9){
+//             Element* N= new Element(7);
+//             Element* O1 = new Element(8);
+//             Element* O2 = new Element(8);
+//             Element* O3 = new Element(8);
+
+//             anionCompound=new Compound(*N);
+//             anionCompound->addElement(*N,*O1,0);
+//             anionCompound->addElement(*N,*O2,0);
+//             anionCompound->addElement(*N,*O3,-2);
+//             anionCompound->createBond(*N,*O1,2);
+//             //to be checkec
+//         }
+//         else if (anionNumber==10){
+//             Element* N= new Element(7);
+//             Element* O1 = new Element(8);
+//             Element* O2 = new Element(8);
 
 
-        newCompound=new Compound(*P);
-        newCompound->addElement(*P,*O1,0);
-        newCompound->addElement(*P,*O2,0);
-        newCompound->addElement(*P,*O3,0);
+//             anionCompound=new Compound(*N);
+//             anionCompound->addElement(*N,*O1,0);
+//             anionCompound->addElement(*N,*O2,-2);
+//             anionCompound->createBond(*N,*O1,2);             
+//             //N has unstable   
+//         }
+//         else if(anionNumber==11){
+//             Element* P=new Element(15);
+//             Element* O1=new Element(8);
+//             Element* O2=new Element(8);
+//             Element* O3=new Element(8);
+//             Element* O4=new Element(8);
+//             anionCompound=new Compound(*P);
+//             anionCompound->addElement(*P,*O1,0);
+//             anionCompound->addElement(*P,*O2,0);
+//             anionCompound->addElement(*P,*O3,0);
+//             anionCompound->addElement(*P,*O4,0);
+//             anionCompound->createBond(*P,*O2,0);
+//         }
+//         else if(anionNumber==12){
+//             Element* P=new Element(15);
+//             Element* O1=new Element(8);
+//             Element* O2=new Element(8);
+//             Element* O3=new Element(8);
 
-        elements.emplace_back(O1);
-        valencies.emplace_back(-1);
+//             anionCompound=new Compound(*P);
+//             anionCompound->addElement(*P,*O1,0);
+//             anionCompound->addElement(*P,*O2,0);
+//             anionCompound->addElement(*P,*O3,0);
 
-        elements.emplace_back(O2);
-        valencies.emplace_back(-1);
+//         }
+//         else if(anionNumber==13){
+//             Element* O=new Element(8);
+//             Element* H=new Element(1);
 
-        elements.emplace_back(O3);
-        valencies.emplace_back(-1);
-    }
-    else if(n==13){
-        Element* O = new Element(8);
-        Element* H = new Element(1);  
-        newCompound=new Compound(*O);
-        newCompound->addElement(*O,*H,0);         
+//             anionCompound=new Compound(*O);
+//             anionCompound->addElement(*O,*H,0);
+//         }
+//         else if(anionNumber==14){
+//             Element* O=new Element(8);
+//             anionCompound=new Compound(*O);
+//         }else{
+//             //error
+//         }
+//         anionArray.emplace_back(anionCompound);
 
-        elements.emplace_back(O);
-        valencies.emplace_back(-1);
-    }
-    else{
-        //error
-    }
+//     }
+//     std::cout<<anionArray.size()<<std::endl;
 
+//     std::vector<Element*> chargedAnions;
+//     std::vector<Element*> chargedCations;
 
     
-    std::pair<Compound*,std::vector<std::pair<Element*,int>>> info;
-    info.first=newCompound;
+// std::cout<<"shgugugsugudg"<<std::endl;
+//     auto it=cationArray.begin();
+//     std::cout<<cationArray.size()<<std::endl;
+//     std::cout<<"shgugugsugudg"<<std::endl;
 
-    for(std::size_t i=0;i<elements.size();i++){
-        info.second[i]=std::make_pair(elements[i],valencies[i]);
-    }
-    
-    return info;
-}
+//         std::cout<<anionArray.size()<<cationArray.size()<<std::endl;
+//     // while (true){}
+//     Compound* newCompound= new Compound(*anionArray[0]);
+//     chargedCations=(*it)->getChargedCations();
 
-std::pair<Compound*,std::vector<std::pair<Element*,int>>> makeCation(std::string name,int valency){
+//     std::cout<<chargedCations.size()<<std::endl;
+//     std::cout<<"shgugugsugudg"<<std::endl;
+//     auto it2=chargedCations.begin();
+//     std::cout<<"fuck"<<std::endl;
 
-    auto it=std::find(names.begin(),names.end(),name);
-    int n;
-    if(it==names.end()){
-        auto i=cations.find(name);
-        if(i == cations.end()){
-            n=0;
+//     for(auto anion: anionArray){
+//         chargedAnions=anion->getChargedAnions();
+//         std::cout<<"fuck"<<std::endl;
+//         std::cout<<chargedAnions.size()<<std::endl;
+//         std::cout<<chargedCations.size()<<"mwahhhh"<<std::endl;
+//         // while(true) {}
+//         for(auto chargedAnion: chargedAnions){
 
-        }
-        else{
-            n=std::distance(cations.begin(),i)+1;
-        }
-    }
-    else{
-        n=std::distance(names.begin(),it)+1;
+//             if(it2==chargedCations.end()){
+//                 it++;
+//                 std::cout<<"fuckher"<<std::endl;
+//                 chargedCations=(*it)->getChargedCations();
+//                 std::cout<<"fuckhim"<<std::endl;
+//                 std::cout<<chargedCations.size()<<std::endl;
 
-    }
-    return makeCation(n,valency);
-}
+//                 it2=chargedCations.begin();
+//             }
+//             std::cout<<"fuckme"<<std::endl;
+//             newCompound->addElement(*chargedAnion,**it2,**it,-1);
+//             std::cout<<"fuckyou"<<std::endl;
 
-std::pair<Compound*,std::vector<std::pair<Element*,int>>> makeCation(int n,int valency){
-    Compound* newCompound=nullptr;
-    std::vector<Element*> elements;
-    std::vector<int> valencies;
+//             if((((**it2).getValency()[0]==0 || (**it2).getValency()[1]==0) && (**it2).getAtomicNumber()<18)||(**it2).getAtomicNumber()>18 && ((**it2).getValency()[0]==cationValency || (**it2).getValency()[1]==cationValency)){
+//                 it2++;
+//             }
+            
+//         }
 
-    if(n>=1 && n<=118){
-        Element* element1=new Element(n);
-        newCompound=new Compound(*element1);
+        
 
-        elements.emplace_back(element1);
-        valencies.emplace_back(valency);
-    }
-    else{
-        // switch(n){
-        //     case 200:
-        //         //ammonium
-        //     case 201:
-        //     //hydronium
-        // }
-    }
-        std::pair<Compound*,std::vector<std::pair<Element*,int>>> info;
-    info.first=newCompound;
-
-    for(size_t i=0;i<elements.size();i++){
-        info.second[i]=std::make_pair(elements[i],valencies[i]);
-    }
-
-    
-    return info;
-}
-
-std::array<std::string,3> splitSaltName(std::string name){
-    std::array<std::string,3> sections;
-    int i =0;
-    std::string space=" ";
-    for(int j=0;j<3;j++){
-        while(name[i] !=' '){
-            sections[i]+=name[i];
-            i++;
-        }
-        i++;
-    }
-    return sections;
-}
-
-//yoink
-int value(char r)
-{
-    if (r == 'I')
-        return 1;
-    if (r == 'V')
-        return 5;
-    if (r == 'X')
-        return 10;
-    if (r == 'L')
-        return 50;
-    if (r == 'C')
-        return 100;
-    if (r == 'D')
-        return 500;
-    if (r == 'M')
-        return 1000;
- 
-    return -1;
-}
- 
-int romanToDecimal(std::string& str)
-{
-    // Initialize result
-    int res = 0;
- 
-    // Traverse given input
-    for (size_t i = 0; i < str.size(); i++) 
-    {
-        // Getting value of symbol s[i]
-        int s1 = value(str[i]);
- 
-        if (i + 1 < str.size()) 
-        {
-            // Getting value of symbol s[i+1]
-            int s2 = value(str[i + 1]);
- 
-            // Comparing both values
-            if (s1 >= s2) 
-            {
-                // Value of current symbol
-                // is greater or equal to
-                // the next symbol
-                res = res + s1;
-            }
-            else
-            {
-                // Value of current symbol is
-                // less than the next symbol
-                res = res + s2 - s1;
-                i++;
-            }
-        }
-        else {
-            res = res + s1;
-        }
-    }
-    return res;
-}
-
-
-Compound* makeSalt(std::string name){
-    std::array<std::string,3> sections=splitSaltName(name);
-    int n=romanToDecimal(sections[1]);
-
-    std::pair<Compound*,std::vector<std::pair<Element*,int>>> anion= makeAnion(sections[2]);
-    std::pair<Compound*,std::vector<std::pair<Element*,int>>> cation=makeCation(sections[0],n);
-
-    int totalAnionValency=0;
-    int totalCationValency=0;
-
-    for(auto el:anion.second){
-        totalAnionValency+=el.second;
-    }
-
-    for(auto el:cation.second){
-        totalCationValency+=el.second;
-    }
-
-    int lcm=std::lcm(abs(totalAnionValency),totalCationValency);
-
-    std::vector<std::pair<Compound*,std::vector<std::pair<Element*,int>>>> anions={anion};
-    std::vector<std::pair<Compound*,std::vector<std::pair<Element*,int>>>> cations={cation};
-
-    for(int i=0;i<(lcm/totalCationValency)-1;i++){
-        cations.emplace_back(makeCation(sections[0],n));
-    }
-
-    for(int i=0;i<(lcm/abs(totalAnionValency))-1;i++){
-        anions.emplace_back(makeAnion(sections[0]));
-    }
-
-
-    //code is built on hopes and prayers
-    int i=0;
-    int j=0;
-    size_t k=0;
-
-    for(auto anion:anions){
-        for(int l=0;l<abs(totalAnionValency);i++){
-            if(anion.second[i].second !=0){
-                
-                anion.second[i].second++;
-                cations[j].second[k].second--;
-                anion.first->addElement(*anion.second[i].first,*cations[j].second[k].first,*cations[j].first,-1);
-
-                while (true){
-                    if(cations[j].second[k].second==0){
-                        if(cations[j].second.size()==k-1){
-                            j++;
-                            k=0;
-                        }
-                        else{
-                            k++;
-                        }
-                    }
-                    else{
-                        break;
-                    }
-                }
-            }
-            else{
-                i++;
-            }
-        }
-    }
-
-    return anion.first;
-}
+//     }
+//     return newCompound;
+// }

@@ -1,14 +1,7 @@
 #ifndef COMPOUND_H
 #define COMPOUND_H
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <map>
-#include <algorithm>
-#include <queue>
-#include <stack>
-
+#include "StdLibDependencies.h"
 #include "values.h"
 #include "element.h"
 
@@ -18,8 +11,10 @@ class Compound{
 	//0 is covalent
 	//-1 means current element took electron(anion)
 	//+1 means current element gave electron(cation)
-	//+2 means current element gains 2 electrons from the bond
-	//-2 means current element donates 2 electrons to the bond
+	//might change ngl
+	//organize agin
+	//-2 means current element gains 2 electrons from the bond
+	//+2 means current element donates 2 electrons to the bond
 	std::map<Element*,std::vector<std::pair<Element*,int>>> bonds;
 
 	static std::vector<Compound*> listOfCompounds;
@@ -68,6 +63,14 @@ class Compound{
 		Pass in: Atomic Number of element to be first added to compound
 		*/
 		Compound(int atomicNumber,double atomicMass=0,int charge=0);
+
+		/*
+		Constructor for Compound
+		You pass in the Compound string for the compound and it creates the compounnd from that info
+
+		Pass in: Compound String of Compound to be Created
+		*/
+		Compound(std::string compound);
 
 		/*
 		This is not allowed
@@ -192,7 +195,14 @@ class Compound{
 		Returns: Compound object with the atoms and bonds variables filled with information gathered from element passed in
 		*/
 		static Compound createCompoundFromElement(Element& element);
-
+		
+		/*
+		Calls getUnstableAtoms()
+		Bonds all atoms to Hydrogen atoms till valencies are filled
+		For alkali and alkali earth metals it form ionic bonds
+		Otherwise forms covalent bonds only
+		*/
+		int hydrogenFiller();
 		/*
 		Checks if all the atoms in the compound have valecnies of 0 and are stable
 
@@ -238,6 +248,11 @@ class Compound{
 		std::string getMolecularFormula();
 
 		/*
+		Returns: Compound String for Compound. This Compound String can be used to create the same compound again
+		*/
+		std::string getCompoundString();
+
+		/*
 		Returns: Copy of vector of all atoms present in compound
 		*/
 		std::vector<Element*> getAtoms();
@@ -260,13 +275,6 @@ class Compound{
 		//quit
 		void printCompound();
 
-		void saveCompoundToFile();
-
-		
-
-//     Compound(Compound&& other);
-
-// Compound(const Compound& other);
 
 
 };

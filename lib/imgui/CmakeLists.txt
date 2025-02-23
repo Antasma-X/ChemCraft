@@ -1,6 +1,5 @@
 file(GLOB IMGUISOURCES "*.cpp")
 
+add_library(imgui STATIC ${IMGUISOURCES})
 
-add_library(imgui ${IMGUISOURCES})
-
-target_include_directories(imgui INTERFACE include/)
+target_include_directories(imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

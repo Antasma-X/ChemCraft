@@ -1,10 +1,4 @@
-#include <string>
-#include <vector>
-#include <iostream>
-#include <map>
-#include <set>
-
-#include "../include/values.h"
+#include "values.h"
 
 std::vector<std::string> symbols={"H","He","Li","Be","B","C","N","O","F","Ne","Na","Mg","Al","Si","P","S","Cl","Ar","K","Ca","Sc"
 ,"Ti","V","Cr","Mn","Fe","Co","Ni","Cu","Zn","Ga","Ge","As","Se","Br","Kr","Rb","Sr","Y","Zr","Nb","Mo","Tc","Ru","Rh","Pd","Ag",
@@ -38,17 +32,29 @@ std::array<std::string,3> BONDSYMBOL={"-","=","\u2261"};
 
 std::map<std::string,std::string> subScripts={{"0","₀"},{"1","₁"},{"2","₂"},{"3","₃"},{"4","₄"},{"5","₅"},{"6","₆"},{"7","₇"},{"8","₈"},{"9","₉"}};
 
+std::map<std::string,std::string> superScripts = {{"0", "⁰"}, {"1", "¹"}, {"2", "²"}, {"3", "³"}, {"4", "⁴"},{"5", "⁵"}, {"6", "⁶"}, {"7", "⁷"}, {"8", "⁸"}, {"9", "⁹"},{"+", "⁺"}, {"-", "⁻"}};
 
-std::map<std::string,int> molecules={
-    {"Water",1},
-    {"Carbon Dioxide",2},
-    {"Carbon Monoxide",3},
-    {"Hydrogen Peroxide",4},
-    {"Ozone",5},
-    {"Ammonia",6},
-    {"Nitrogen Dioxide", 7},
-    {"Benzene",8}
+std::map<std::string,std::string> molecules={
+    {"water","1&1.000000&0/8&16.000000&0/1&1.000000&0/;1&0)/0&0)2&0)/1&0)/"},
+    {"carbon dioxide","6&12.000000&0/8&16.000000&0/8&16.000000&0/;1&0)2&0)1&0)2&0)/0&0)0&0)/0&0)0&0)/"},
+    {"carbon monoxide","6&12.000000&0/8&16.000000&0/;1&0)1&0)1&-2)/0&0)0&0)0&2)/"},
+    {"hydrogen peroxide","1&1.000000&0/8&16.000000&0/8&16.000000&0/1&1.000000&0/;1&0)/0&0)2&0)/1&0)3&0)/2&0)/"},
+    {"ozone","8&16.000000&-1/8&16.000000&1/8&16.000000&0/;1&0)/0&0)2&0)2&0)/1&0)1&0)/"},
+    {"ammonia","7&14.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/;1&0)2&0)3&0)/0&0)/0&0)/0&0)/"},
+    {"nitrogen dioxide", "7&14.000000&1/8&16.000000&-1/8&16.000000&0/;1&0)2&0)2&0)/0&0)/0&0)0&0)/"},
+    {"benzene","6&12.000000&0/6&12.000000&0/6&12.000000&0/6&12.000000&0/6&12.000000&0/6&12.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/;1&0)5&0)5&0)6&0)/0&0)2&0)2&0)7&0)/1&0)3&0)1&0)8&0)/2&0)4&0)4&0)9&0)/3&0)5&0)3&0)10&0)/4&0)0&0)0&0)11&0)/0&0)/1&0)/2&0)/3&0)/4&0)/5&0)/"},
+    {"table salt","11&23.000000&0/17&35.500000&0/;1&1)/0&-1)/"},
+    {"vinegar","6&12.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/6&12.000000&0/8&16.000000&0/8&16.000000&0/1&1.000000&0/;1&0)2&0)3&0)4&0)/0&0)/0&0)/0&0)/0&0)5&0)5&0)6&0)/4&0)4&0)/4&0)7&0)/6&0)/"},
+    {"acetic acid","6&12.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/6&12.000000&0/8&16.000000&0/8&16.000000&0/1&1.000000&0/;1&0)2&0)3&0)4&0)/0&0)/0&0)/0&0)/0&0)5&0)5&0)6&0)/4&0)4&0)/4&0)7&0)/6&0)/"},
+    {"baking soda","6&12.000000&0/8&16.000000&0/8&16.000000&0/1&1.000000&0/8&16.000000&0/11&23.000000&0/;1&0)1&0)2&0)4&0)/0&0)0&0)/0&0)3&0)/2&0)/0&0)5&-1)/4&1)/"},
+    {"limestone","6&12.000000&0/8&16.000000&0/8&16.000000&0/8&16.000000&0/20&40.000000&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)4&-1)/2&1)3&1)/"},
+    {"bleach","17&35.500000&0/8&16.000000&0/11&23.000000&0/;1&0)/0&0)2&-1)/1&1)/"},
+    {"washing soda","6&12.000000&0/8&16.000000&0/8&16.000000&0/8&16.000000&0/11&23.000000&0/11&23.000000&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)5&-1)/2&1)/3&1)/"},
+    {"alcohol","6&12.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/6&12.000000&0/1&1.000000&0/1&1.000000&0/8&16.000000&0/1&1.000000&0/;1&0)2&0)3&0)4&0)/0&0)/0&0)/0&0)/0&0)5&0)6&0)7&0)/4&0)/4&0)/4&0)8&0)/7&0)/"}
+
 };
+
+std::vector<std::string> compoundNumbers={"water", "carbon dioxide", "carbon monoxide", "hydrogen peroxide", "ozone", "ammonia", "nitrogen dioxide", "benzene", "table salt", "vinegar", "acetic acid", "baking soda", "limestone", "bleach", "washing soda", "alcohol"};
 
 std::map<int,int> atomicity={
     {1,2},{7,2},{8,2},{9,2},{17,2},{35,2},{53,2},
@@ -69,12 +75,134 @@ std::map<std::string,int> anions={
    {"Nitrite",10},
    {"Phosphate",11},
    {"Phosphite",12},
-   {"Hydoxide",13}
+   {"Hydroxide",13},
+   {"Oxide",14}
 };
 
-std::vector<int> anionValencies={-1,-1,-1,-1,-2,-2,-2,-1,-1,-1,-3,-3,-1};
+std::map<std::string,int> anionValencies={
+    {"Fluoride",-1},
+    {"Chloride",-1},
+    {"Bromide",-1},
+    {"Iodide",-1},
+    {"Sulphate",-2},
+    {"Sulphite",-2},
+    {"Carbonate",-2},
+    {"Bicarbonate",-1},
+    {"Nitrate",-1},
+    {"Nitrite",-1},
+    {"Phosphate",-3},
+    {"Phosphite",-3},
+    {"Hydroxide",-1},
+    {"Oxide",-2}
+};
 
 std::map<std::string,int> cations={
-    {"Ammonium",200},
-    {"Hydronium",201}
+    {"Ammonium",1},
+    {"Hydronium",2},
+    {"Lithium", 3},  
+    {"Sodium", 4},  
+    {"Potassium", 5},  
+    {"Rubidium", 6},  
+    {"Cesium", 7},  
+    {"Francium", 8},  
+    {"Beryllium", 9},  
+    {"Magnesium", 10},  
+    {"Calcium", 11},  
+    {"Strontium", 12},  
+    {"Barium", 13},  
+    {"Radium", 14}  
+};
+
+std::map<std::string,int> cationValencies={
+    {"Ammonium",1},
+    {"Hydronium",1},
+    {"Lithium", 1},  
+    {"Sodium", 1},  
+    {"Potassium", 1},  
+    {"Rubidium", 1},  
+    {"Cesium", 1},  
+    {"Francium", 1},  
+    {"Beryllium", 2},  
+    {"Magnesium", 2},  
+    {"Calcium", 2},  
+    {"Strontium", 2},  
+    {"Barium", 2},  
+    {"Radium", 2}  
+};
+
+std::map<std::string,int> cationAtomicNumbers={
+    {"Lithium", 3},  
+    {"Sodium", 11},  
+    {"Potassium", 19},  
+    {"Rubidium", 37},  
+    {"Cesium", 55},  
+    {"Francium", 87},  
+    {"Beryllium", 4},  
+    {"Magnesium", 12},  
+    {"Calcium", 20},  
+    {"Strontium", 38},  
+    {"Barium", 56},  
+    {"Radium", 88}  
+};
+
+std::map<std::string,int> transitionMetalAtomicNumbers={
+    {"Scandium", 21},  
+    {"Titanium", 22},  
+    {"Vanadium", 23},  
+    {"Chromium", 24},  
+    {"Manganese", 25},  
+    {"Iron", 26},  
+    {"Cobalt", 27},  
+    {"Nickel", 28},  
+    {"Copper", 29},  
+    {"Zinc", 30},  
+    {"Yttrium", 39},  
+    {"Zirconium", 40},  
+    {"Niobium", 41},  
+    {"Molybdenum", 42},  
+    {"Technetium", 43},  
+    {"Ruthenium", 44},  
+    {"Rhodium", 45},  
+    {"Palladium", 46},  
+    {"Silver", 47},  
+    {"Cadmium", 48},  
+    {"Hafnium", 72},  
+    {"Tantalum", 73},  
+    {"Tungsten", 74},  
+    {"Rhenium", 75},  
+    {"Osmium", 76},  
+    {"Iridium", 77},  
+    {"Platinum", 78},  
+    {"Gold", 79},  
+    {"Mercury", 80},  
+    {"Rutherfordium", 104},  
+    {"Dubnium", 105},  
+    {"Seaborgium", 106},  
+    {"Bohrium", 107},  
+    {"Hassium", 108}  
+
+};
+std::vector<std::string> searchBar={
+
+        "h", "he", "li", "be", "b", "c", "n", "o", "f", "ne", "na", "mg", "al", "si", "p", "s", "cl", "ar", "k", "ca", "sc", "ti", "v", "cr", "mn", "fe", "co", "ni", "cu", "zn", "ga", "ge", "as", "se", "br", "kr", "rb", "sr", "y", "zr", "nb", "mo", "tc", "ru", "rh", "pd", "ag",
+        "cd", "in", "sn", "sb", "te", "i", "xe", "cs", "ba", "la", "ce", "pr", "nd", "pm", "sm", "eu", "gd", "tb", "dy", "ho", "er", "tm", "yb", "lu", "hf", "ta",
+        "w", "re", "os", "ir", "pt", "au", "hg", "tl", "pb", "bi", "po", "at", "rn", "fr", "ra", "ac", "th", "pa", "u", "np", "pu", "am", "cm", "bk", "cf", "es",
+        "fm", "md", "no", "lr", "rf", "db", "sg", "bh", "hs", "mt", "ds", "rg", "cn", "nh", "fl", "mc", "lv", "ts", "og",
+    
+        "hydrogen", "helium", "lithium", "beryllium", "boron", "carbon", "nitrogen", "oxygen", "fluorine", "neon", "sodium", "magnesium", "aluminum", "silicon", "phosphorus", "sulfur", "chlorine", "argon", "potassium", "calcium", "scandium",
+        "titanium", "vanadium", "chromium", "manganese", "iron", "cobalt", "nickel", "copper", "zinc", "gallium", "germanium", "arsenic",
+        "selenium", "bromine", "krypton", "rubidium", "strontium", "yttrium", "zirconium", "niobium", "molybdenum", "technetium", "ruthenium",
+        "rhodium", "palladium", "silver", "cadmium", "indium", "tin", "antimony", "tellurium", "iodine", "xenon", "cesium", "barium", "lanthanum",
+        "cerium", "praseodymium", "neodymium", "promethium", "samarium", "europium", "gadolinium", "terbium", "dysprosium", "holmium", "erbium",
+        "thulium", "ytterbium", "lutetium", "hafnium", "tantalum", "tungsten", "rhenium", "osmium", "iridium", "platinum", "gold", "mercury", "thallium",
+        "lead", "bismuth", "polonium", "astatine", "radon", "francium", "radium", "actinium", "thorium", "protactinium", "uranium", "neptunium", "plutonium",
+        "americium", "curium", "berkelium", "californium", "einsteinium", "fermium", "mendelevium", "nobelium", "lawrencium", "rutherfordium", "dubnium", "seaborgium",
+        "bohrium", "hassium", "meitnerium", "darmstadtium", "roentgenium", "copernicium", "nihonium", "flerovium", "moscovium", "livermorium", "tennessine", "oganesson",
+    
+        "water", "carbon dioxide", "carbon monoxide", "hydrogen peroxide", "ozone", "ammonia", "nitrogen dioxide", "benzene", "table salt", "acetic acid", "vinegar", "baking soda", "bleach", "limestone", "washing soda", "alcohol"    
+//    ,"Fluoride", "Chloride", "Bromide", "Iodide", "Sulphate", "Sulphite", "Carbonate", "Bicarbonate", "Nitrate", "Nitrite", "Phosphate", "Phosphite", "Hydoxide",
+
+//    "Ammonium", "Hydronium"
+
+
 };

@@ -4,22 +4,45 @@ project(Nomenclature)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(CMAKE_CXX_EXTENSIONS OFF)
-file(GLOB SOURCES "src/*.cpp")
 
+# add_compile_options(
+#     # -Wall
+#     # -Wextra
+#     # -Wpedantic
+#     # -Wshadow
+#     # -fsanitize=address
+#     # -O2
+# )
+
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})  
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+
+
+
+
+file(GLOB SOURCES "src/*.cpp")
 
 
 find_package(glfw3 3.3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
+add_subdirectory(lib/imgui)
+add_subdirectory(lib/nativefiledialog)
+add_subdirectory(lib/stb_image)
 
-add_executable(cute test/window.cpp ${SOURCES})
+add_executable(cute ${SOURCES})
 
 
-target_link_libraries(cute glfw)
-target_link_libraries(cute OpenGL::GL)
+target_link_libraries(cute PUBLIC glfw)
+target_link_libraries(cute PUBLIC OpenGL::GL)
 
 
-add_subdirectory(lib)
-target_link_libraries(cute imgui)
-target_include_directories(cute INTERFACE ../include)
+
+target_link_libraries(cute PRIVATE imgui)
+target_link_libraries(cute PRIVATE nativefiledialog)
+target_link_libraries(cute PRIVATE stb_image)
+
+
+target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include)
 

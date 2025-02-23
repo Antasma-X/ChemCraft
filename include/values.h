@@ -1,10 +1,7 @@
 #ifndef VALUES_H
 #define VALUES_H
 
-#include <string>
-#include <vector>
-#include <iostream>
-#include <set>
+#include "StdLibDependencies.h"
 
 //weird segfaults happening so i pit extern
 extern std::vector<std::string> symbols;
@@ -19,11 +16,21 @@ extern std::set<int> fBlockExceptions;
 
 extern std::array<std::string,3> BONDSYMBOL;
 extern std::map<std::string,std::string> subScripts;
+extern std::map<std::string,std::string> superScripts;
 
-extern std::map<std::string,int> molecules;
+extern std::map<std::string,std::string> molecules;
+extern std::vector<std::string> compoundNumbers;
 extern std::map<int,int> atomicity;
-extern std::map<std::string,int> anions;
-extern std::vector<int> anionValencies;
 
+
+
+extern std::map<std::string,int> anions;
+extern std::map<std::string,int> anionValencies;
 extern std::map<std::string,int> cations;
+extern std::map<std::string,int> cationValencies;
+extern std::map<std::string,int> cationAtomicNumbers;
+extern std::map<std::string,int> transitionMetalAtomicNumbers;
+
+extern std::vector<std::string> searchBar;
+
 #endif
