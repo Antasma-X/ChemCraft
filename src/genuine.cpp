@@ -1,71 +1,33 @@
 
 #include "UIGeneration.h"
-#include "compoundRender.h"
-
+#include "render.h"
+#include "shader.h"
+#include "management.h"
 #define GL_SILENCE_DEPRECATION
 
 
 
 
-// #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
-// #pragma comment(lib, "legacy_stdio_definitions")
-// #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-static void glfw_error_callback(int error, const char* description);
-
-
-
-int main(){
-
-    //GLFW Setup
-    glfwSetErrorCallback(glfw_error_callback);
-    if (!glfwInit()){
-        return 1;
-    }
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
-    if (window == nullptr){
-        std::cout<<"GLFW Window Could not Open"<<std::endl;
-        glfwTerminate();
-        return 1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-
-
-    //Imgui Setup
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   
-    ImGui::StyleColorsDark();
-
-    ImGuiStyle& style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        style.WindowRounding = 0.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
+int main(int argc, char* argv[]){
+//need quotes for space in path
+    if(argc>1){
+        if(argc>2){
+            std::cerr<<"Only First File will be counted"<<std::endl;
+        }
+        currentFile=argv[1];
+        Management::OpenFile();
     
+    }
+
+    //putting try here is useless
+    GLFWwindow* window= Management::SetUp();
+    if(window==nullptr){
+        return 1;
+    }
+
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     //Font Setup
-    //might chnahe font sizes entierly
     ImFont* windowSmallFont=io.Fonts->AddFontFromFileTTF(fontFile, windowSmallFontSize);
     ImFont* windowBigFont=io.Fonts->AddFontFromFileTTF(fontFile, windowLargeFontSize);
 
@@ -83,11 +45,20 @@ int main(){
     ImFont* compoundNameFont=io.Fonts->AddFontFromFileTTF(fontFile, compoundNameSize);
     ImFont* molecularFormulaFont=io.Fonts->AddFontFromFileTTF(molecularFormulaFontFile,molecularFormulaSize,nullptr, ranges);
 
-    //Idk why
-    const char* glsl_version = "#version 330";
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
-
+    try{
+        if(!Config()){
+            return 1;
+        }
+    }
+    catch(const nlohmann::json::out_of_range& e){
+        std::cout<<"One or more variables could not be found in either files"<<std::endl<<"Please Redownload original default config json file"<<std::endl;
+        return 1;
+    }
+    catch(const std::exception& e){
+        std::cout<<"Idk what happened"<<std::endl;
+        return 1;
+    }
+    
     //App Loop
     while (!glfwWindowShouldClose(window)){
 
@@ -106,7 +77,7 @@ int main(){
             continue;
         }
 
-
+ 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -127,9 +98,14 @@ int main(){
         UI::SideMenu(searchFontSmall,searchFontLarge,childWindowSmallFont,childWindowLargeFont, numberFont, symbolFont, nameFont,massFont,compoundNameFont,molecularFormulaFont);
         
         //Draws all elements to screen
-        // Render::DrawCompounds
+        Render::Render();
+
+        UI::ErrorPopUp();
 
         ImGui::PopFont();
+
+
+        //ImGui Render(Not my render, learnt that the hard way)
         ImGui::Render();
         
         //Imgui Ending Code
@@ -147,21 +123,12 @@ int main(){
 
     }
 
+    Management::CleanUp(window);
 
-    //ImGui Ending
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 
-    //GLFW Ending
-    glfwDestroyWindow(window);
-    glfwTerminate();
 }
 
-void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
-}
+
 
 
 

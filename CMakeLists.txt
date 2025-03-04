@@ -21,7 +21,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 
 
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "src/chemistry/*.cpp" "src/graphics/*.cpp" "src/render/*.cpp" "src/UI/*.cpp")
 
 
 find_package(glfw3 3.3 REQUIRED)
@@ -30,6 +30,7 @@ find_package(OpenGL REQUIRED)
 add_subdirectory(lib/imgui)
 add_subdirectory(lib/nativefiledialog)
 add_subdirectory(lib/stb_image)
+add_subdirectory(lib/json)
 
 add_executable(cute ${SOURCES})
 
@@ -42,7 +43,11 @@ target_link_libraries(cute PUBLIC OpenGL::GL)
 target_link_libraries(cute PRIVATE imgui)
 target_link_libraries(cute PRIVATE nativefiledialog)
 target_link_libraries(cute PRIVATE stb_image)
+target_link_libraries(cute PRIVATE json)
 
 
 target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include)
-
+target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/chemistry)
+target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/UI)
+target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/render)
+target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/graphics)

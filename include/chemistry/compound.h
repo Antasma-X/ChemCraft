@@ -60,6 +60,8 @@ class Compound{
 		Constructor for Compound (Calls Compound(Element& element) internally)
 		You pass in the atomic number that will be part of the compound(the compound will only consist of that element)
 
+		Throws Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid(from Element.h)
+
 		Pass in: Atomic Number of element to be first added to compound
 		*/
 		Compound(int atomicNumber,double atomicMass=0,int charge=0);
@@ -67,6 +69,12 @@ class Compound{
 		/*
 		Constructor for Compound
 		You pass in the Compound string for the compound and it creates the compounnd from that info
+
+		Throws std::invalid_argument("String is Invalid") when invalid characters are in string
+		Throws std::invalid_argument("Covalent Bond could not form") when any covalent bond is not formed
+		Throws std::invalid_argument("Ionic Bond could not form") when any ionic bond can not be formed
+		Throws std::invalid_argument("Dative Bond could not form") when any dative bond can not be found
+		Throws std::invalid_argument("Invalid Bond Type") when an invalid bond type number is in the string
 
 		Pass in: Compound String of Compound to be Created
 		*/
@@ -82,7 +90,7 @@ class Compound{
 		Removes Compound from listOfCompounds
 		*/
 		~Compound();
-
+ 
 		/*
 		Adds Element to Compound
 		You pass in 2 elements and an integer signifying the type of bond
@@ -115,6 +123,8 @@ class Compound{
 		The atomic number will be used to create second element which is added to compound
 		The second element bonds to the first element present in the compound
 
+		Throws Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid(from Element.h)
+
 		Function will add second element to list of elements and add to both atoms' bonds map
 		Pass in: First Element which is part of the compound, Atomic number of second element , Type of Bond(0 is covalent, 1 is ionic)
 		Returns: 0 if it isn't successful
@@ -136,6 +146,8 @@ class Compound{
 		This bond will be the link in which the 2 compounds will be joined
 		Then the second compound's atoms and bonds information will be merged into the first compound's
 
+		Note: Second Compound should be destroyed if bond is made
+
 		Pass in: First Element which is part of the compound, Second Element which is part of second compound, Second Compound Type of Bond(0 is covalent, 1 is ionic)
 		Returns: 0 if it isn't successful
 				 1 if it is successful
@@ -148,6 +160,8 @@ class Compound{
 
 		Since it's possible that the element removal results in multiple seperate compounds forming, a vector of compounds is created
 		Function uses isFullyConnected() to check if compound is still fully connected
+
+		Throws std::runtime_error("X Bond has invalid number. Compound is corrupted") where X is bond type when a wrong bond type is there. Compound should be destroyed if this exception is raised
 
 		Pass in: Element to be removed
 		Returns: Vector of Compounds that are formed from element removal if it is successful
@@ -201,6 +215,11 @@ class Compound{
 		Bonds all atoms to Hydrogen atoms till valencies are filled
 		For alkali and alkali earth metals it form ionic bonds
 		Otherwise forms covalent bonds only
+
+		Throws std::runtime_error("Unstable atoms contains Stable Atoms somehow")  This should not happen
+
+		Returns:0 if not successful
+				1 if successful
 		*/
 		int hydrogenFiller();
 		/*
@@ -248,6 +267,8 @@ class Compound{
 		std::string getMolecularFormula();
 
 		/*
+		Throws std::runtime_error("Invalid bond value. Compound Corrupted") when bonds map is corrupted and compound string can not be created
+
 		Returns: Compound String for Compound. This Compound String can be used to create the same compound again
 		*/
 		std::string getCompoundString();

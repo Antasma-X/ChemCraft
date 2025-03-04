@@ -3,29 +3,32 @@
 
 #include "StdLibDependencies.h"
 #include "GUIDependencies.h"
+#include "shader.h"
+
+#include "json.hpp"
 
 //Window
+
     extern const char* windowName;
-    extern ImVec4 windowColor;
+    extern ImVec4 windowColor; 
     extern int windowHeight;
     extern int windowWidth;
     extern int largeWindowHeight;
 
+    //what can i sa im laz
+    extern std::string fontFileString;
     extern const char* fontFile;
 
-    extern const ImWchar ranges[];
+    extern const ImWchar ranges[]; 
 
-    extern const char* molecularFormulaFontFile;
+    extern std::string molecularFormulaFontFileString; 
+    extern const char* molecularFormulaFontFile; 
 
-    extern double windowSmallFontSize;
-    extern double windowLargeFontSize;
-
-    extern double elementCompoundButtonFontSize;
- 
-
-
+    extern double windowSmallFontSize; 
+    extern double windowLargeFontSize; 
 
 //Top Menu 
+    extern std::string currentFile;
     extern ImVec4 topMenuButtonColor;
     extern ImVec4 topMenuHoveredButtonColor;
     extern ImVec4 topMenuActiveButtonColor;
@@ -55,13 +58,12 @@
     extern const char* helpLink;
 
     extern int topMenu_____Padding;
-    
-
 
 //Side Menu
     extern ImVec4 sideMenuColor;
     extern int minimumSideMenuWidth;
     extern double initialSideMenuWidthPerCent;
+
     //ElementCompound Child Windows
         extern double childWindowSmallFontSize;
         extern double childWindowLargeFontSize;
@@ -115,8 +117,6 @@
             extern ImU32 compoundNameColor;
             extern ImU32 molecularFormulaColor;
 
-
-
             extern ImVec4 compoundWindowColor;
             extern ImVec4 compoundWindowBorderColor;
             extern ImVec4 compoundWindowBorderShadowColor;
@@ -125,23 +125,15 @@
         extern const char* elementTitle;
         extern const char* compoundTitle;
 
-        //maybe black bakground
-
-
-
-
-
         extern ImU32 scrollBarColor;
-
-            //change c olors for window tomorrow
         extern double scrollBarCurve;
         
-        extern std::array<int,8> initialElements;
+        extern std::vector<int> initialElements;
 
         extern double initialElementHeightPerCent;
         extern double scrollerHeightPerCent;
-        extern double minimumWindowPerCent;
-        extern int offset;
+        extern double minimumChildWindowPerCent;
+        extern int adjustOffset;
         extern int elementCompound_____Padding;
         extern int IDKWhyOffset;
 
@@ -162,8 +154,82 @@
         extern const char* disallowedCharSearchBar;
         extern int search___padding;
 
+//Error
+extern bool isError;
+extern std::string errorMessage;
+extern int errorMessageOffsetX;
+extern int errorMessageOffsetY;
 
 
+//Render
+
+//Shader
+extern std::string elementVertShaderFilePath;
+extern std::string elementFragShaderFilePath;
+extern std::string electronVertShaderFilePath;
+extern std::string electronFragShaderFilePath;
+extern std::string numberVertShaderFilePath;
+extern std::string numberFragShaderFilePath;
+extern std::string signVertShaderFilePath;
+extern std::string signFragShaderFilePath;
+
+extern std::string covalentVertShaderFilePath;
+extern std::string covalentFragShaderFilePath;
+extern std::string ionicVertShaderFilePath;
+extern std::string ionicFragShaderFilePath;
+extern std::string dativeVertShaderFilePath;
+extern std::string dativeFragShaderFilePath;
+
+extern std::map<std::string,Shader> shaders;
+
+//Element Assets
+extern std::string elementFilePath1;
+extern std::string elementFilePath2;
+
+//Element PNG and Texture sizes
+extern GLfloat elementTextureHeight;
+extern GLfloat elementSingleTextureWidth;
+extern GLfloat elementDoubleTextureWidth;
+
+extern GLfloat electronDistanceDirect;
+extern GLfloat electronDistanceAdjust;
+
+extern glm::vec2 defaultSpawnLocation;
+
+extern GLfloat signLength;
+extern GLfloat bondThickness;
+extern GLfloat signThickness;
+
+
+//Values
+std::map<std::string,std::string> molecules;
+extern std::vector<std::string> compoundNumbers;
+extern std::vector<std::string> searchBar;
+
+ 
+//JSON Conversions
+void to_json(nlohmann::json& js, const ImVec4& vec);
+
+void from_json(nlohmann::json&js, ImVec4& vec);
+
+void to_json(nlohmann::json& js, const glm::vec2& vec);
+
+void from_json(nlohmann::json&js, glm::vec2& vec);
+
+void to_json(nlohmann::json& js, const ImU32& vec);
+
+void from_json(nlohmann::json& js, ImU32& vec);
+
+void to_json(nlohmann::json& js, const ImVec2& vec);
+
+void from_json(nlohmann::json&js, ImVec2& vec);
+
+//Config Setting
+int Config();
+
+template <typename T> void changeCustomJSON(std::string variable, T var);
+
+template <typename T> void restoreToDefault(std::string variable, T& var);
 
 
 

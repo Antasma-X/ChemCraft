@@ -1,10 +1,7 @@
 #include"molecules.h"
 
 
-Compound* makeMolecule(std::string compoundString){
-    Compound* newCompound= new Compound(compoundString);
-    return newCompound;
-}
+
 
 Compound* generateMoleculeOfElement(int atomicNumber){
     if(atomicity.find(atomicNumber) == atomicity.end()){
@@ -27,7 +24,10 @@ Compound* generateMoleculeOfElement(int atomicNumber){
     }
 }
 
-
+// Compound* makeMolecule(std::string compoundString){
+//     Compound* newCompound= new Compound(compoundString);
+//     return newCompound;
+// }
 
 
 

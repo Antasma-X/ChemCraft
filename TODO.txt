@@ -1,72 +1,64 @@
-today:
-    try glow might be too complicated ngl
-    learning opengl
-    putting functionalit in buttons
-    auto list=Compound::getListOfCompounds(); change maybe no change since as long as render updates its fine
+Main App:
 
-    //left clivking gives info
+Now:
+make ionobject part of it and ionic bond its own thing
+//where there is destructor you always use new and free
 
-
-make a personal lib to use whenevr i need smth subscipt url
-
-
-edit topmenu
+multiplatform
+reredner functions
+first do Zoom
+Zoom in and Out viewport stuff
+Prevent element from going outside
 
 
-fix higher level vlencies
+electron shiifting
+Write code to minimize bond size
+Bond Drawing
 
-create custom themes
-tomorrow:
-    actual compound crreator
-
-tomorrow:
-    try nomenclature if will
-    otherwise skip
-
-ending:
-    clean up Code
-    build system
-    organize the files
-    try make salt again
-    config file
-finish by tuesday
-
-Element:
-Compound:
-
-Window:
-    Hydrogen filler button
-    Stable Indicator(red glow)
-    Copy Paste
+Organize
+make an array for higher valencies
 
 
-Documentation:
-    Include errors in h files
-    Show Examples
 
-Molecule Generation:
-    Implement PO5 and nh4
-    add Functional groups and ion filler
+ 3   Element Moving
+    Compound Moving
+save compound to additonals
+you left click, then it asks for a name then it saves the compound using popup
+also updates compound buttons by appending
+//select variable for deleteion 
+  4  Compound Deletion( delete button)
+    Bond Creation
+    Bond Deletion
 
-Nomenclature:
-    Make nomenclaature a seperate tab that only supports a few elements
-    Functional Group Creator
+ 5   Hydrogen Filler
+    Stable Indicator
 
-General Code:
-    Smart Pointera
-    Move semantics
-    Enums may be used
-    Implement Exceptions
-    Understand Stability
-    make tests
+Post:
+open with
+ 6   Organize
+ cross platform ending
+    Recheck topmenu
+    make multiplatform
 
-Possible Ideas:
-    null for bond in group
-    compound group creator
-    way to group elemnts
-    Themes like in vscode
-    exception handlong is terribel
-    valecny exceptions
+    comments
+    documenration
+        Include errors in h files
+        Show Examples
+   7 Custom Themes
+    try salts again
+    Use Itch.io
+domain daddy
+
+
+
+
+
+
+
+
+
+    
+
 
 
 Assets:
@@ -75,19 +67,23 @@ Assets:
     one single latter
     one double letteer
 
-make shortcuts
-make a config file so that you can set the side where the menu us color etc
+Future:
+    Nomenclature:
+        Make nomenclaature a seperate tab that only supports a few elements
+        Functional Group Creator
 
-
-
-
-
-
-
-
-
-figure out salt somehow
-
-//try invalid string
-
-		void savetofile();
+    General Code:
+        Smart Pointera
+        Move semantics
+        Enums may be used
+        Implement Exceptions
+        Understand Stability
+        null for bond in group
+        fix higher level vlencies
+        ionic bonds in acids and salts are a problem
+        make a personal lib to use whenevr i need smth subscipt url
+        change maps and sets ordered
+        somehow protect json code and other code somehow idk
+        undo redo
+        cstr
+        //consider rror in compound and element

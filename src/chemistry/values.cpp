@@ -33,29 +33,7 @@ std::array<std::string,3> BONDSYMBOL={"-","=","\u2261"};
 std::map<std::string,std::string> subScripts={{"0","₀"},{"1","₁"},{"2","₂"},{"3","₃"},{"4","₄"},{"5","₅"},{"6","₆"},{"7","₇"},{"8","₈"},{"9","₉"}};
 
 std::map<std::string,std::string> superScripts = {{"0", "⁰"}, {"1", "¹"}, {"2", "²"}, {"3", "³"}, {"4", "⁴"},{"5", "⁵"}, {"6", "⁶"}, {"7", "⁷"}, {"8", "⁸"}, {"9", "⁹"},{"+", "⁺"}, {"-", "⁻"}};
-
-std::map<std::string,std::string> molecules={
-    {"water","1&1.000000&0/8&16.000000&0/1&1.000000&0/;1&0)/0&0)2&0)/1&0)/"},
-    {"carbon dioxide","6&12.000000&0/8&16.000000&0/8&16.000000&0/;1&0)2&0)1&0)2&0)/0&0)0&0)/0&0)0&0)/"},
-    {"carbon monoxide","6&12.000000&0/8&16.000000&0/;1&0)1&0)1&-2)/0&0)0&0)0&2)/"},
-    {"hydrogen peroxide","1&1.000000&0/8&16.000000&0/8&16.000000&0/1&1.000000&0/;1&0)/0&0)2&0)/1&0)3&0)/2&0)/"},
-    {"ozone","8&16.000000&-1/8&16.000000&1/8&16.000000&0/;1&0)/0&0)2&0)2&0)/1&0)1&0)/"},
-    {"ammonia","7&14.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/;1&0)2&0)3&0)/0&0)/0&0)/0&0)/"},
-    {"nitrogen dioxide", "7&14.000000&1/8&16.000000&-1/8&16.000000&0/;1&0)2&0)2&0)/0&0)/0&0)0&0)/"},
-    {"benzene","6&12.000000&0/6&12.000000&0/6&12.000000&0/6&12.000000&0/6&12.000000&0/6&12.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/;1&0)5&0)5&0)6&0)/0&0)2&0)2&0)7&0)/1&0)3&0)1&0)8&0)/2&0)4&0)4&0)9&0)/3&0)5&0)3&0)10&0)/4&0)0&0)0&0)11&0)/0&0)/1&0)/2&0)/3&0)/4&0)/5&0)/"},
-    {"table salt","11&23.000000&0/17&35.500000&0/;1&1)/0&-1)/"},
-    {"vinegar","6&12.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/6&12.000000&0/8&16.000000&0/8&16.000000&0/1&1.000000&0/;1&0)2&0)3&0)4&0)/0&0)/0&0)/0&0)/0&0)5&0)5&0)6&0)/4&0)4&0)/4&0)7&0)/6&0)/"},
-    {"acetic acid","6&12.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/6&12.000000&0/8&16.000000&0/8&16.000000&0/1&1.000000&0/;1&0)2&0)3&0)4&0)/0&0)/0&0)/0&0)/0&0)5&0)5&0)6&0)/4&0)4&0)/4&0)7&0)/6&0)/"},
-    {"baking soda","6&12.000000&0/8&16.000000&0/8&16.000000&0/1&1.000000&0/8&16.000000&0/11&23.000000&0/;1&0)1&0)2&0)4&0)/0&0)0&0)/0&0)3&0)/2&0)/0&0)5&-1)/4&1)/"},
-    {"limestone","6&12.000000&0/8&16.000000&0/8&16.000000&0/8&16.000000&0/20&40.000000&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)4&-1)/2&1)3&1)/"},
-    {"bleach","17&35.500000&0/8&16.000000&0/11&23.000000&0/;1&0)/0&0)2&-1)/1&1)/"},
-    {"washing soda","6&12.000000&0/8&16.000000&0/8&16.000000&0/8&16.000000&0/11&23.000000&0/11&23.000000&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)5&-1)/2&1)/3&1)/"},
-    {"alcohol","6&12.000000&0/1&1.000000&0/1&1.000000&0/1&1.000000&0/6&12.000000&0/1&1.000000&0/1&1.000000&0/8&16.000000&0/1&1.000000&0/;1&0)2&0)3&0)4&0)/0&0)/0&0)/0&0)/0&0)5&0)6&0)7&0)/4&0)/4&0)/4&0)8&0)/7&0)/"}
-
-};
-
-std::vector<std::string> compoundNumbers={"water", "carbon dioxide", "carbon monoxide", "hydrogen peroxide", "ozone", "ammonia", "nitrogen dioxide", "benzene", "table salt", "vinegar", "acetic acid", "baking soda", "limestone", "bleach", "washing soda", "alcohol"};
-
+ 
 std::map<int,int> atomicity={
     {1,2},{7,2},{8,2},{9,2},{17,2},{35,2},{53,2},
     {15,4},
@@ -180,29 +158,5 @@ std::map<std::string,int> transitionMetalAtomicNumbers={
     {"Seaborgium", 106},  
     {"Bohrium", 107},  
     {"Hassium", 108}  
-
-};
-std::vector<std::string> searchBar={
-
-        "h", "he", "li", "be", "b", "c", "n", "o", "f", "ne", "na", "mg", "al", "si", "p", "s", "cl", "ar", "k", "ca", "sc", "ti", "v", "cr", "mn", "fe", "co", "ni", "cu", "zn", "ga", "ge", "as", "se", "br", "kr", "rb", "sr", "y", "zr", "nb", "mo", "tc", "ru", "rh", "pd", "ag",
-        "cd", "in", "sn", "sb", "te", "i", "xe", "cs", "ba", "la", "ce", "pr", "nd", "pm", "sm", "eu", "gd", "tb", "dy", "ho", "er", "tm", "yb", "lu", "hf", "ta",
-        "w", "re", "os", "ir", "pt", "au", "hg", "tl", "pb", "bi", "po", "at", "rn", "fr", "ra", "ac", "th", "pa", "u", "np", "pu", "am", "cm", "bk", "cf", "es",
-        "fm", "md", "no", "lr", "rf", "db", "sg", "bh", "hs", "mt", "ds", "rg", "cn", "nh", "fl", "mc", "lv", "ts", "og",
-    
-        "hydrogen", "helium", "lithium", "beryllium", "boron", "carbon", "nitrogen", "oxygen", "fluorine", "neon", "sodium", "magnesium", "aluminum", "silicon", "phosphorus", "sulfur", "chlorine", "argon", "potassium", "calcium", "scandium",
-        "titanium", "vanadium", "chromium", "manganese", "iron", "cobalt", "nickel", "copper", "zinc", "gallium", "germanium", "arsenic",
-        "selenium", "bromine", "krypton", "rubidium", "strontium", "yttrium", "zirconium", "niobium", "molybdenum", "technetium", "ruthenium",
-        "rhodium", "palladium", "silver", "cadmium", "indium", "tin", "antimony", "tellurium", "iodine", "xenon", "cesium", "barium", "lanthanum",
-        "cerium", "praseodymium", "neodymium", "promethium", "samarium", "europium", "gadolinium", "terbium", "dysprosium", "holmium", "erbium",
-        "thulium", "ytterbium", "lutetium", "hafnium", "tantalum", "tungsten", "rhenium", "osmium", "iridium", "platinum", "gold", "mercury", "thallium",
-        "lead", "bismuth", "polonium", "astatine", "radon", "francium", "radium", "actinium", "thorium", "protactinium", "uranium", "neptunium", "plutonium",
-        "americium", "curium", "berkelium", "californium", "einsteinium", "fermium", "mendelevium", "nobelium", "lawrencium", "rutherfordium", "dubnium", "seaborgium",
-        "bohrium", "hassium", "meitnerium", "darmstadtium", "roentgenium", "copernicium", "nihonium", "flerovium", "moscovium", "livermorium", "tennessine", "oganesson",
-    
-        "water", "carbon dioxide", "carbon monoxide", "hydrogen peroxide", "ozone", "ammonia", "nitrogen dioxide", "benzene", "table salt", "acetic acid", "vinegar", "baking soda", "bleach", "limestone", "washing soda", "alcohol"    
-//    ,"Fluoride", "Chloride", "Bromide", "Iodide", "Sulphate", "Sulphite", "Carbonate", "Bicarbonate", "Nitrate", "Nitrite", "Phosphate", "Phosphite", "Hydoxide",
-
-//    "Ammonium", "Hydronium"
-
 
 };

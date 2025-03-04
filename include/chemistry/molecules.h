@@ -10,7 +10,7 @@ Compound* makeMolecule(std::string name);
 
 Compound* generateMoleculeOfElement(int atomicNumber);
 
-Compound* makeSalt(std::string name);
+//Compound* makeSalt(std::string name);
 
 
 

@@ -13,6 +13,9 @@
 #include <set>
 #include <cstdlib>
 #include <numeric>
+#include <sstream>
+#include <stdexcept>
+#include <exception>
 
 
 #endif

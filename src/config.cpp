@@ -1,175 +1,529 @@
 #include "config.h"
 
-const char* windowName="Nomenclature";
-ImVec4 windowColor=ImVec4(0.12f,0.06f,0.21f,1.00f);
-int windowHeight=720;
-int windowWidth=1280;
-int largeWindowHeight = 950;
+using json = nlohmann::json;
 
-const char* fontFile="/mnt/c/Windows/Fonts/arial.ttf";
+//order of map doesnt matter but compoundNumber is order you want diplayed in documentation
+
+const char* windowName="Nomenclature";
 
 const ImWchar ranges[] = {
-    0x0020, 0x007E,  // Basic ASCII
-    0x2070, 0x209F,  // Superscripts and subscripts
+    0x0020, 0x007E,  //ASCII
+    0x2070, 0x209F,  //Superscripts and subscripts
     0
 };
 
-const char* molecularFormulaFontFile="/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf";
-
-
-double windowSmallFontSize=18.0f;
-double windowLargeFontSize=25.0f;
-
-double elementCompoundButtonFontSize=25.0f;
-
-
-
- 
-ImVec4 topMenuButtonColor=ImVec4(0.14f, 0.14f, 0.14f, 1.0f);
-ImVec4 topMenuHoveredButtonColor=ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
-ImVec4 topMenuActiveButtonColor=ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-ImVec4 topMenuTextColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-
-ImVec4 fileNameColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-
-ImVec4 settingsColorPickersTextColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-ImVec4 settingsColorPickersBackgroundColor=ImVec4(0.06f, 0.06f, 0.06f, 0.94f);
-ImVec4 settingsColorPickersTitleBarColor=ImVec4(0.098f, 0.098f, 0.439f, 1.0f);
-ImVec4 settingsColorPickersActiveTitleBarColor=ImVec4(0.200f, 0.220f, 0.270f, 1.0f);
-ImVec4 settingsColorPickersCollapsedTitleBarColor=ImVec4(0.098f, 0.098f, 0.439f, 1.0f);
-
-ImVec4 openFilePopUpTextColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-ImVec4 openFilePopUpBackgroundColor=ImVec4(0.06f, 0.06f, 0.06f, 0.94f);
-ImVec4 openFilePopUpTitleBarColor=ImVec4(0.098f, 0.098f, 0.439f, 1.0f);
-ImVec4 openFilePopUpActiveTitleBarColor=ImVec4(0.200f, 0.220f, 0.270f, 1.0f);
-ImVec4 openFilePopUpCollapsedTitleBarColor=ImVec4(0.098f, 0.098f, 0.439f, 1.0f);
-
-ImVec4 insertDirectColor=ImVec4(0.16f, 0.29f, 0.48f, 0.54f);
-ImVec4 insertDirectHoveredColor=ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
-ImVec4 insertDirectTypingColor=ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
-ImVec4 insertDirectTextColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-
+std::string currentFile="Unknown";
+const char* elementTitle="Elements";
+const char* compoundTitle="Common Compounds";
 const char* disallowedCharCompoundString="!@#$%^";
 
 const char* helpLink="github.com/";
 
-int topMenu_____Padding=10;
-
-ImVec4 sideMenuColor=ImVec4(0.1373f, 0.0392f, 0.3020f, 1.0f);
-int minimumSideMenuWidth=200;
-double initialSideMenuWidthPerCent=0.3;
-
-double childWindowSmallFontSize=25.0f;
-double childWindowLargeFontSize=35.0f;
-
-ImVec4 elementWindowColor=ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-ImVec4 elementWindowBorderColor=ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-ImVec4 elementWindowBorderShadowColor=ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-ImVec4 elementWindowTextColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-
-ImVec2 elementButtonSize=ImVec2(150,150);
-ImU32 elementButtonColor=IM_COL32(255, 255,255, 255);
-ImU32 elementButtonBorderColor=IM_COL32(0, 0, 0, 255);
-ImU32 elementButtonHoveredColor=IM_COL32(100, 100,100, 100);
-ImU32 elementButtonClickedColor=IM_COL32(255, 255,255, 255);
-
-double elementButtonCurve=15.0f;
-double elementButtonBorderThickness=10.0f;
-
-ImVec4 customElementPopUpTextColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-ImVec4 customElementPopUpBackgroundColor=ImVec4(0.06f, 0.06f, 0.06f, 0.94f);
-ImVec4 customElementPopUpTitleBarColor=ImVec4(0.098f, 0.098f, 0.439f, 1.0f);
-ImVec4 customElementPopUpActiveTitleBarColor=ImVec4(0.200f, 0.220f, 0.270f, 1.0f);
-ImVec4 customElementPopUpCollapsedTitleBarColor=ImVec4(0.098f, 0.098f, 0.439f, 1.0f);
-
-double numberFontSize=25.0f;
-double symbolFontSize=50.0f;
-double nameFontSize=20.0f;
-double massFontSize=25.0f;
-
-ImU32 atomicNumberColor=IM_COL32(0, 0, 0, 255);
-ImU32 atomicMassColor=IM_COL32(0, 0, 0, 255);
-ImU32 atomicSymbolColor=IM_COL32(0, 0, 0, 255);
-ImU32 atomicNameColor=IM_COL32(0, 0, 0, 255);
-
-ImVec2 compoundButtonSize=ImVec2(150,100);
-
-ImU32 compoundButtonBorderColor=IM_COL32(0, 0, 0, 255);
-
-
-
-
-
-
-
-
-std::vector<ImU32> compoundButtonColors={IM_COL32(123, 45, 67, 255), IM_COL32(89, 234, 120, 255), IM_COL32(200, 50, 90, 255),
-IM_COL32(30, 200, 255, 255), IM_COL32(240, 180, 60, 255), IM_COL32(180, 90, 200, 255),
-IM_COL32(75, 150, 250, 255), IM_COL32(200, 140, 100, 255), IM_COL32(50, 220, 90, 255),
-IM_COL32(180, 50, 180, 255), IM_COL32(100, 250, 100, 255), IM_COL32(255, 60, 90, 255),
-IM_COL32(70, 170, 210, 255), IM_COL32(130, 200, 75, 255), IM_COL32(210, 120, 180, 255),
-IM_COL32(255, 100, 50, 255), IM_COL32(120, 220, 60, 255), IM_COL32(90, 180, 255, 255),
-IM_COL32(40, 250, 130, 255), IM_COL32(190, 90, 230, 255)};
-
-std::vector<ImU32> compoundButtonHoveredColors= {   IM_COL32(255, 30, 70, 255), IM_COL32(80, 200, 255, 255), IM_COL32(180, 50, 100, 255),
-IM_COL32(40, 220, 80, 255), IM_COL32(200, 150, 90, 255), IM_COL32(255, 100, 150, 255),
-IM_COL32(75, 200, 90, 255), IM_COL32(100, 255, 200, 255), IM_COL32(130, 90, 250, 255),
-IM_COL32(255, 60, 180, 255), IM_COL32(180, 130, 50, 255), IM_COL32(220, 80, 220, 255),
-IM_COL32(50, 160, 255, 255), IM_COL32(200, 255, 40, 255), IM_COL32(90, 180, 200, 255),
-IM_COL32(70, 250, 150, 255), IM_COL32(180, 75, 120, 255), IM_COL32(255, 90, 60, 255),
-IM_COL32(40, 140, 220, 255), IM_COL32(100, 210, 180, 255)};
-std::vector<ImU32> compoundButtonClickedColors={
-IM_COL32(60, 255, 90, 255), IM_COL32(180, 80, 200, 255), IM_COL32(255, 100, 50, 255),
-IM_COL32(120, 250, 180, 255), IM_COL32(40, 90, 255, 255), IM_COL32(190, 140, 75, 255),
-IM_COL32(255, 80, 180, 255), IM_COL32(70, 200, 250, 255), IM_COL32(210, 50, 120, 255),
-IM_COL32(100, 255, 70, 255), IM_COL32(230, 90, 190, 255), IM_COL32(80, 130, 255, 255),
-IM_COL32(180, 255, 60, 255), IM_COL32(150, 75, 240, 255), IM_COL32(90, 200, 180, 255),
-IM_COL32(40, 170, 220, 255), IM_COL32(120, 255, 130, 255), IM_COL32(255, 40, 90, 255),
-IM_COL32(60, 210, 180, 255), IM_COL32(250, 120, 50, 255)};
-
-double compoundButtonBorderThickness=10.0f;
-double compoundButtonCurve=15.0f;
-
-double compoundNameSize=20.0f;
-double molecularFormulaSize=30.0f;
-
-ImU32 compoundNameColor=IM_COL32(0, 0, 0, 255);
-ImU32 molecularFormulaColor=IM_COL32(0, 0, 0, 255);
-
-ImVec4 compoundWindowColor=ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-ImVec4 compoundWindowBorderColor=ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-ImVec4 compoundWindowBorderShadowColor=ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-ImVec4 compoundWindowTextColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-
-const char* elementTitle="Elements";
-const char* compoundTitle="Common Compounds";
-
-
-ImU32 scrollBarColor=IM_COL32(255,255,255,255);
-
-double scrollBarcurve=15.0f;
-
-std::array<int,8> initialElements={1,2,6,7,8,9,11,17};
-
-double initialElementHeightPerCent=0.6;
-double scrollerHeightPerCent=0.025;
-double minimumWindowPerCent=0.15;
-int offset=2;
-int elementCompound_____Padding=10;
-int IDKWhyOffset=15;
-
-double searchSmallFontSize=25.0f;
-double searchLargeFontSize=35.0f;
-
-ImVec4 searchBarColor=ImVec4(0.16f, 0.29f, 0.48f, 0.54f);
-ImVec4 searchBarHoveredColor=ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
-ImVec4 searchBarTypingColor=ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
-ImVec4 searchBarTextColor=ImVec4(0.90f, 0.90f, 0.90f, 1.00f);
-
-double initialSearchBarHeightPerCent=0.05;
-const char* SearchGlass="../Assets/searchGlass.png";
-ImVec4 searchGlassTransparency=ImVec4(1.0f, 1.0f, 1.0f, 0.3f);
+const char* SearchGlass="../Assets/SearchGlass.png";
 const char* searchBarLabel="Search..";
-ImVec4 searchBarLabelColor=ImVec4(0.9f, 0.9f, 0.9f, 0.2f);
+
 const char* disallowedCharSearchBar="!@#$%^&*\n\t0123456789";
-int search___padding=4;
+
+bool isError=false;
+std::string errorMessage="";
+ 
+std::string elementVertShaderFilePath="../shaders/texture.vert";
+std::string elementFragShaderFilePath="../shaders/texture.frag";
+std::string electronVertShaderFilePath="../shaders/electron.vert";
+std::string electronFragShaderFilePath="../shaders/electron.frag";
+std::string numberVertShaderFilePath="../shaders/texture.vert";
+std::string numberFragShaderFilePath="../shaders/texture.frag";
+std::string signVertShaderFilePath="../shaders/sign.vert";
+std::string signFragShaderFilePath="../shaders/sign.frag";
+
+std::string covalentVertShaderFilePath="../shaders/covalent.vert";
+std::string covalentFragShaderFilePath="../shaders/covalent.frag";
+std::string ionicVertShaderFilePath="../shaders/ionic.vert";
+std::string ionicFragShaderFilePath="../shaders/ionic.frag";
+std::string dativeVertShaderFilePath="../shaders/dative.vert"; 
+std::string dativeFragShaderFilePath="../shaders/dative.frag";
+
+std::map<std::string,Shader> shaders;
+
+std::string elementFilePath1="../Assets/Elements/";
+std::string elementFilePath2=".png";
+
+std::vector<std::string> searchBar={
+    "h", "he", "li", "be", "b", "c", "n", "o", "f", "ne", "na", "mg", "al", "si", "p", "s", "cl", "ar", "k", "ca", "sc", "ti", "v", "cr", "mn", "fe", "co", "ni", "cu", "zn", "ga", "ge", "as", "se", "br", "kr", "rb", "sr", "y", "zr", "nb", "mo", "tc", "ru", "rh", "pd", "ag",
+    "cd", "in", "sn", "sb", "te", "i", "xe", "cs", "ba", "la", "ce", "pr", "nd", "pm", "sm", "eu", "gd", "tb", "dy", "ho", "er", "tm", "yb", "lu", "hf", "ta",
+    "w", "re", "os", "ir", "pt", "au", "hg", "tl", "pb", "bi", "po", "at", "rn", "fr", "ra", "ac", "th", "pa", "u", "np", "pu", "am", "cm", "bk", "cf", "es",
+    "fm", "md", "no", "lr", "rf", "db", "sg", "bh", "hs", "mt", "ds", "rg", "cn", "nh", "fl", "mc", "lv", "ts", "og",
+
+    "hydrogen", "helium", "lithium", "beryllium", "boron", "carbon", "nitrogen", "oxygen", "fluorine", "neon", "sodium", "magnesium", "aluminum", "silicon", "phosphorus", "sulfur", "chlorine", "argon", "potassium", "calcium", "scandium",
+    "titanium", "vanadium", "chromium", "manganese", "iron", "cobalt", "nickel", "copper", "zinc", "gallium", "germanium", "arsenic",
+    "selenium", "bromine", "krypton", "rubidium", "strontium", "yttrium", "zirconium", "niobium", "molybdenum", "technetium", "ruthenium",
+    "rhodium", "palladium", "silver", "cadmium", "indium", "tin", "antimony", "tellurium", "iodine", "xenon", "cesium", "barium", "lanthanum",
+    "cerium", "praseodymium", "neodymium", "promethium", "samarium", "europium", "gadolinium", "terbium", "dysprosium", "holmium", "erbium",
+    "thulium", "ytterbium", "lutetium", "hafnium", "tantalum", "tungsten", "rhenium", "osmium", "iridium", "platinum", "gold", "mercury", "thallium",
+    "lead", "bismuth", "polonium", "astatine", "radon", "francium", "radium", "actinium", "thorium", "protactinium", "uranium", "neptunium", "plutonium",
+    "americium", "curium", "berkelium", "californium", "einsteinium", "fermium", "mendelevium", "nobelium", "lawrencium", "rutherfordium", "dubnium", "seaborgium",
+    "bohrium", "hassium", "meitnerium", "darmstadtium", "roentgenium", "copernicium", "nihonium", "flerovium", "moscovium", "livermorium", "tennessine", "oganesson",
+};
+
+//Window
+
+
+ImVec4 windowColor;
+int windowHeight;
+int windowWidth;
+int largeWindowHeight;
+
+//what can i say im lazy
+std::string fontFileString;
+const char* fontFile;
+
+std::string molecularFormulaFontFileString;
+const char* molecularFormulaFontFile;
+
+double windowSmallFontSize;
+double windowLargeFontSize;
+
+//Top Menu 
+
+ImVec4 topMenuButtonColor;
+ImVec4 topMenuHoveredButtonColor;
+ImVec4 topMenuActiveButtonColor;
+ImVec4 topMenuTextColor;
+
+ImVec4 fileNameColor;
+
+ImVec4 settingsColorPickersTextColor;
+ImVec4 settingsColorPickersBackgroundColor;
+ImVec4 settingsColorPickersTitleBarColor;
+ImVec4 settingsColorPickersActiveTitleBarColor;
+ImVec4 settingsColorPickersCollapsedTitleBarColor;
+
+ImVec4 openFilePopUpTextColor;
+ImVec4 openFilePopUpBackgroundColor;
+ImVec4 openFilePopUpTitleBarColor;
+ImVec4 openFilePopUpActiveTitleBarColor;
+ImVec4 openFilePopUpCollapsedTitleBarColor;
+
+ImVec4 insertDirectColor;
+ImVec4 insertDirectHoveredColor;
+ImVec4 insertDirectTypingColor;
+ImVec4 insertDirectTextColor;
+
+int topMenu_____Padding;
+
+//Side Menu
+ImVec4 sideMenuColor;
+int minimumSideMenuWidth;
+double initialSideMenuWidthPerCent;
+
+//ElementCompound Child Windows
+    double childWindowSmallFontSize;
+    double childWindowLargeFontSize;
+
+    ImVec4 elementWindowColor;
+    ImVec4 elementWindowBorderColor;
+    ImVec4 elementWindowBorderShadowColor;
+    ImVec4 elementWindowTextColor;
+
+    //Element Window
+        ImVec2 elementButtonSize;
+        ImU32 elementButtonColor;
+        ImU32 elementButtonBorderColor;
+        ImU32 elementButtonHoveredColor;
+        ImU32 elementButtonClickedColor;
+
+        double elementButtonCurve;
+        double elementButtonBorderThickness;
+
+        ImVec4 customElementPopUpTextColor;
+        ImVec4 customElementPopUpBackgroundColor;
+        ImVec4 customElementPopUpTitleBarColor;
+        ImVec4 customElementPopUpActiveTitleBarColor;
+        ImVec4 customElementPopUpCollapsedTitleBarColor;
+
+        double numberFontSize;
+        double symbolFontSize;
+        double nameFontSize;
+        double massFontSize;
+
+        ImU32 atomicNumberColor;
+        ImU32 atomicMassColor;
+        ImU32 atomicSymbolColor;
+        ImU32 atomicNameColor;
+
+    //Compound Window
+        ImVec2 compoundButtonSize;
+ 
+        std::vector<ImU32> compoundButtonColors;
+        std::vector<ImU32> compoundButtonHoveredColors;
+        std::vector<ImU32> compoundButtonClickedColors;
+
+        ImU32 compoundButtonBorderColor;
+
+        double compoundButtonBorderThickness;
+        double compoundButtonCurve;
+
+        double compoundNameSize;
+        double molecularFormulaSize;
+
+        ImU32 compoundNameColor;
+        ImU32 molecularFormulaColor;
+
+        ImVec4 compoundWindowColor;
+        ImVec4 compoundWindowBorderColor;
+        ImVec4 compoundWindowBorderShadowColor;
+        ImVec4 compoundWindowTextColor;
+
+
+    ImU32 scrollBarColor;
+    double scrollBarCurve;
+    
+    std::vector<int> initialElements;
+
+    double initialElementHeightPerCent;
+    double scrollerHeightPerCent;
+    double minimumChildWindowPerCent;
+    int adjustOffset;
+    int elementCompound_____Padding;
+    int IDKWhyOffset;
+
+//Search Bar
+    double searchSmallFontSize;
+    double searchLargeFontSize;
+
+    ImVec4 searchBarColor;
+    ImVec4 searchBarHoveredColor;
+    ImVec4 searchBarTypingColor;
+    ImVec4 searchBarTextColor;
+
+    double initialSearchBarHeightPerCent;
+    ImVec4 searchGlassTransparency;
+    ImVec4 searchBarLabelColor;
+    int search___padding;
+
+//Error
+int errorMessageOffsetX;
+int errorMessageOffsetY;
+
+
+//Render
+
+//Element PNG and Texture sizes
+GLfloat elementTextureHeight;
+GLfloat elementSingleTextureWidth;
+GLfloat elementDoubleTextureWidth;
+
+GLfloat electronDistanceDirect;
+GLfloat electronDistanceAdjust;
+
+glm::vec2 defaultSpawnLocation;
+
+GLfloat signLength;
+GLfloat bondThickness;
+GLfloat signThickness;
+
+
+ 
+
+
+void to_json(json& js, const ImVec4& vec){
+    js=json{{"x",vec.x},{"y",vec.y},{"z",vec.z},{"w",vec.w}};
+}
+
+void from_json(json&js, ImVec4& vec){
+    js.at("x").get_to(vec.x);
+    js.at("y").get_to(vec.y);
+    js.at("z").get_to(vec.z);
+    js.at("w").get_to(vec.w);
+}
+
+void to_json(json& js, const glm::vec2& vec){
+    js=json{{"x",vec.x},{"y",vec.y}};
+}
+
+void from_json(json&js, glm::vec2& vec){
+    js.at("x").get_to(vec.x);
+    js.at("y").get_to(vec.y);
+}
+
+void to_json(json& js, const ImU32& vec){
+    js=json{{"R",(vec >> IM_COL32_R_SHIFT) & 0xFF},{"G",(vec >> IM_COL32_G_SHIFT) & 0xFF},{"B",(vec >> IM_COL32_B_SHIFT) & 0xFF},{"A",(vec >> IM_COL32_A_SHIFT) & 0xFF}};
+}
+
+void from_json(json& js, ImU32& vec){
+    uint8_t R = js.at("R").get<uint8_t>();
+    uint8_t G = js.at("G").get<uint8_t>();
+    uint8_t B = js.at("B").get<uint8_t>();
+    uint8_t A = js.at("A").get<uint8_t>();
+    vec = IM_COL32(R, G, B, A);
+}
+ 
+void to_json(json& js, const ImVec2& vec){
+    js=json{{"x",vec.x},{"y",vec.y}};
+}
+
+void from_json(json&js, ImVec2& vec){
+    js.at("x").get_to(vec.x);
+    js.at("y").get_to(vec.y);
+}
+
+
+int Config(){
+    //for now default
+    //try finding default if fail go to default
+    //ngl im a genius
+    json configData;
+
+    std::ifstream defaultConfigFile("../config/defaultConfig.json");
+    std::ifstream customConfigFile("../config/config.json");
+    if (!defaultConfigFile && !customConfigFile) {
+        std::cerr << "Could not find any config file\n";
+        return 0;
+    } 
+    else if(!customConfigFile){
+        defaultConfigFile>> configData;
+    }
+    else if(!defaultConfigFile){
+        customConfigFile>> configData;
+    }
+    else{
+        //custom takes priority
+        json customConfigData;
+
+        defaultConfigFile>> configData;
+        customConfigFile>> customConfigData;
+
+        configData.update(customConfigData);
+
+    }
+
+    //thnk you chatgpt i wont forget it
+    // Window properties
+    windowColor = configData.at("windowColor").get<ImVec4>();
+    windowHeight = configData.at("windowHeight").get<int>();
+    windowWidth = configData.at("windowWidth").get<int>();
+    largeWindowHeight = configData.at("largeWindowHeight").get<int>();
+
+    fontFileString=configData.at("fontFile").get<std::string>();
+    fontFile=fontFileString.c_str();
+
+    molecularFormulaFontFileString=configData.at("molecularFormulaFontFile").get<std::string>();
+    molecularFormulaFontFile=molecularFormulaFontFileString.c_str();
+
+    // Font sizes
+    windowSmallFontSize = configData.at("windowSmallFontSize").get<double>();
+    windowLargeFontSize = configData.at("windowLargeFontSize").get<double>();
+
+    // Top Menu
+    topMenuButtonColor = configData.at("topMenuButtonColor").get<ImVec4>();
+    topMenuHoveredButtonColor = configData.at("topMenuHoveredButtonColor").get<ImVec4>();
+    topMenuActiveButtonColor = configData.at("topMenuActiveButtonColor").get<ImVec4>();
+    topMenuTextColor = configData.at("topMenuTextColor").get<ImVec4>();
+
+    fileNameColor = configData.at("fileNameColor").get<ImVec4>();
+
+    settingsColorPickersTextColor = configData.at("settingsColorPickersTextColor").get<ImVec4>();
+    settingsColorPickersBackgroundColor = configData.at("settingsColorPickersBackgroundColor").get<ImVec4>();
+    settingsColorPickersTitleBarColor = configData.at("settingsColorPickersTitleBarColor").get<ImVec4>();
+    settingsColorPickersActiveTitleBarColor = configData.at("settingsColorPickersActiveTitleBarColor").get<ImVec4>();
+    settingsColorPickersCollapsedTitleBarColor = configData.at("settingsColorPickersCollapsedTitleBarColor").get<ImVec4>();
+
+    openFilePopUpTextColor = configData.at("openFilePopUpTextColor").get<ImVec4>();
+    openFilePopUpBackgroundColor = configData.at("openFilePopUpBackgroundColor").get<ImVec4>();
+    openFilePopUpTitleBarColor = configData.at("openFilePopUpTitleBarColor").get<ImVec4>();
+    openFilePopUpActiveTitleBarColor = configData.at("openFilePopUpActiveTitleBarColor").get<ImVec4>();
+    openFilePopUpCollapsedTitleBarColor = configData.at("openFilePopUpCollapsedTitleBarColor").get<ImVec4>();
+
+    insertDirectColor = configData.at("insertDirectColor").get<ImVec4>();
+    insertDirectHoveredColor = configData.at("insertDirectHoveredColor").get<ImVec4>();
+    insertDirectTypingColor = configData.at("insertDirectTypingColor").get<ImVec4>();
+    insertDirectTextColor = configData.at("insertDirectTextColor").get<ImVec4>();
+
+    topMenu_____Padding = configData.at("topMenu_____Padding").get<int>();
+
+    // Side Menu
+    sideMenuColor = configData.at("sideMenuColor").get<ImVec4>();
+    minimumSideMenuWidth = configData.at("minimumSideMenuWidth").get<int>();
+    initialSideMenuWidthPerCent = configData.at("initialSideMenuWidthPerCent").get<double>();
+
+    // ElementCompound Child Windows
+    childWindowSmallFontSize = configData.at("childWindowSmallFontSize").get<double>();
+    childWindowLargeFontSize = configData.at("childWindowLargeFontSize").get<double>();
+
+    elementWindowColor = configData.at("elementWindowColor").get<ImVec4>();
+    elementWindowBorderColor = configData.at("elementWindowBorderColor").get<ImVec4>();
+    elementWindowBorderShadowColor = configData.at("elementWindowBorderShadowColor").get<ImVec4>();
+    elementWindowTextColor = configData.at("elementWindowTextColor").get<ImVec4>();
+
+    elementButtonSize = configData.at("elementButtonSize").get<ImVec2>();
+    elementButtonColor = configData.at("elementButtonColor").get<ImU32>();
+    elementButtonBorderColor = configData.at("elementButtonBorderColor").get<ImU32>();
+    elementButtonHoveredColor = configData.at("elementButtonHoveredColor").get<ImU32>();
+    elementButtonClickedColor = configData.at("elementButtonClickedColor").get<ImU32>();
+
+    elementButtonCurve = configData.at("elementButtonCurve").get<double>();
+    elementButtonBorderThickness = configData.at("elementButtonBorderThickness").get<double>();
+
+    customElementPopUpTextColor = configData.at("customElementPopUpTextColor").get<ImVec4>();
+    customElementPopUpBackgroundColor = configData.at("customElementPopUpBackgroundColor").get<ImVec4>();
+    customElementPopUpTitleBarColor = configData.at("customElementPopUpTitleBarColor").get<ImVec4>();
+    customElementPopUpActiveTitleBarColor = configData.at("customElementPopUpActiveTitleBarColor").get<ImVec4>();
+    customElementPopUpCollapsedTitleBarColor = configData.at("customElementPopUpCollapsedTitleBarColor").get<ImVec4>();
+
+    numberFontSize = configData.at("numberFontSize").get<double>();
+    symbolFontSize = configData.at("symbolFontSize").get<double>();
+    nameFontSize = configData.at("nameFontSize").get<double>();
+    massFontSize = configData.at("massFontSize").get<double>();
+
+    atomicNumberColor = configData.at("atomicNumberColor").get<ImU32>();
+    atomicMassColor = configData.at("atomicMassColor").get<ImU32>();
+    atomicSymbolColor = configData.at("atomicSymbolColor").get<ImU32>();
+    atomicNameColor = configData.at("atomicNameColor").get<ImU32>();
+
+    compoundButtonSize = configData.at("compoundButtonSize").get<ImVec2>();
+    compoundButtonColors = configData.at("compoundButtonColors").get<std::vector<ImU32>>();
+    compoundButtonHoveredColors = configData.at("compoundButtonHoveredColors").get<std::vector<ImU32>>();
+    compoundButtonClickedColors = configData.at("compoundButtonClickedColors").get<std::vector<ImU32>>();
+
+    compoundButtonBorderColor = configData.at("compoundButtonBorderColor").get<ImU32>();
+    compoundButtonBorderThickness = configData.at("compoundButtonBorderThickness").get<double>();
+    compoundButtonCurve = configData.at("compoundButtonCurve").get<double>();
+
+    compoundNameSize = configData.at("compoundNameSize").get<double>();
+    molecularFormulaSize = configData.at("molecularFormulaSize").get<double>();
+
+    compoundNameColor = configData.at("compoundNameColor").get<ImU32>();
+    molecularFormulaColor = configData.at("molecularFormulaColor").get<ImU32>();
+
+    compoundWindowColor = configData.at("compoundWindowColor").get<ImVec4>();
+    compoundWindowBorderColor = configData.at("compoundWindowBorderColor").get<ImVec4>();
+    compoundWindowBorderShadowColor = configData.at("compoundWindowBorderShadowColor").get<ImVec4>();
+    compoundWindowTextColor = configData.at("compoundWindowTextColor").get<ImVec4>();
+
+    scrollBarColor = configData.at("scrollBarColor").get<ImU32>();
+    scrollBarCurve = configData.at("scrollBarCurve").get<double>();
+
+    initialElements = configData.at("initialElements").get<std::vector<int>>();
+
+    initialElementHeightPerCent = configData.at("initialElementHeightPerCent").get<double>();
+    scrollerHeightPerCent = configData.at("scrollerHeightPerCent").get<double>();
+    minimumChildWindowPerCent = configData.at("minimumChildWindowPerCent").get<double>();
+    adjustOffset = configData.at("adjustOffset").get<int>();
+    elementCompound_____Padding = configData.at("elementCompound_____Padding").get<int>();
+    IDKWhyOffset = configData.at("IDKWhyOffset").get<int>();
+
+    // Search Bar
+    searchSmallFontSize = configData.at("searchSmallFontSize").get<double>();
+    searchLargeFontSize = configData.at("searchLargeFontSize").get<double>();
+
+    searchBarColor = configData.at("searchBarColor").get<ImVec4>();
+    searchBarHoveredColor = configData.at("searchBarHoveredColor").get<ImVec4>();
+    searchBarTypingColor = configData.at("searchBarTypingColor").get<ImVec4>();
+    searchBarTextColor = configData.at("searchBarTextColor").get<ImVec4>();
+
+    initialSearchBarHeightPerCent = configData.at("initialSearchBarHeightPerCent").get<double>();
+    searchGlassTransparency = configData.at("searchGlassTransparency").get<ImVec4>();
+    searchBarLabelColor=configData.at("searchBarLabelColor").get<ImVec4>();
+    search___padding = configData.at("search___padding").get<int>();
+
+    //Error
+    errorMessageOffsetX=configData.at("errorMessageOffsetX").get<int>();
+    errorMessageOffsetY=configData.at("errorMessageOffsetY").get<int>();
+
+    // Element PNG and Texture sizes
+    elementTextureHeight = configData.at("elementTextureHeight").get<GLfloat>();
+    elementSingleTextureWidth = configData.at("elementSingleTextureWidth").get<GLfloat>();
+    elementDoubleTextureWidth = configData.at("elementDoubleTextureWidth").get<GLfloat>();
+
+    electronDistanceDirect=configData.at("electronDistanceDirect").get<double>();
+    electronDistanceAdjust=configData.at("electronDistanceAdjust").get<double>();
+
+
+    // Spawn location
+    defaultSpawnLocation = configData.at("defaultSpawnLocation").get<glm::vec2>();
+
+    signLength=configData.at("signLength").get<GLfloat>();
+    bondThickness=configData.at("bondThickness").get<GLfloat>();
+    signThickness=configData.at("signThickness").get<GLfloat>();
+
+    compoundNumbers= configData.at("compoundNumbers").get<std::vector<std::string>>();
+    molecules=configData.at("molecules").get<std::map<std::string,std::string>>();
+
+    if(configData.contains("additionalCompoundNumbers") && configData.contains("additionalCompoundStrings")){
+        std::vector<std::pair<std::string,int>> additionals=configData.at("additonalCompoundNumbers").get<std::vector<std::pair<std::string,int>>>();
+        std::map<std::string,std::string> additonalStrings=configData.at("additionalCompoundStrings").get<std::map<std::string,std::string>>();
+
+        if(additonalStrings.size()!=additionals.size()){
+            isError=true;
+            errorMessage="Additional Compounds could not be Inserted";
+            std::cerr<<"Additional Compounds could not be Inserted"<<std::endl;
+        }
+        else{
+            for(auto it: additionals){
+                compoundNumbers.insert(compoundNumbers.begin()+it.second,it.first);
+            }
+            for(auto [key,value]: additonalStrings){
+                molecules[key]=value;
+            }
+        }
+
+
+    }
+
+    for(auto it:compoundNumbers){
+        std::string name=it;
+        std::transform(name.begin(),name.end(),name.begin(),::tolower);
+
+        searchBar.push_back(name);
+    }
+}
+
+//template
+template <typename T> void changeCustomJSON(std::string variable,T var){
+    std::ifstream customConfigFile("../config/config.json");
+
+    if(!customConfigFile){
+        std::cout<<variable<<" could not be saved to file"<<std::endl;
+        return;
+    }
+
+    json customConfigData;
+    customConfigFile>> customConfigData;
+
+    customConfigData[variable]=var;
+
+    std::ofstream editingCustomConfigFile("../config/config.json");
+
+    if(!editingCustomConfigFile){
+        std::cout<<variable<<" could not be saved to file"<<std::endl;
+        return;
+    }
+    editingCustomConfigFile<<customConfigData;
+}
+//template
+template <typename T> void restoreToDefault(std::string variable, T& var){
+    std::ifstream defaultConfigFile("../config/defaultConfig.json");
+    std::ifstream customConfigFile("../config/config.json");
+
+    if(!customConfigFile){
+        std::cout<<variable<<" could not be restored"<<std::endl;
+        return;
+    }
+
+    json customConfigData;
+    customConfigFile>> customConfigData;
+
+    customConfigData.erase(variable);
+
+    std::ofstream editingCustomConfigFile("../config/config.json");
+    if(!editingCustomConfigFile){
+        std::cout<<variable<<" could not be saved"<<std::endl;
+        return;
+    }
+    editingCustomConfigFile<<customConfigData;
+
+    json defaultConfigData;
+    defaultConfigData<<defaultConfigFile;
+
+    var=defaultConfigData.at(variable).get<T>();
+}

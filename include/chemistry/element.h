@@ -3,6 +3,7 @@
 
 #include "StdLibDependencies.h"
 #include "values.h"
+#include "config.h"
 
 class Element{ 
 
@@ -182,7 +183,15 @@ class Element{
 		You have to pass in the atomic number of the element
 		If you want you can pass in the atomic mass and/or charge of atom
 		If you don't pass them in, then atomic mass is set as average atomic mass(present in values.cpp) of element and charge is set as 0
-		
+		If invalid Atomic Mass or Charge is passed, they are set to default
+
+		Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid
+		// Throws std::invalid_argument("Invalid Mass and Charge. They have been reset") when both Atomic Mass and Charge are Invalid
+		// Throws std::invalid_argument("Invalid Mass. It has been reset") when  Atomic Mass is invalid
+		// Throws std::invalid_argument("Invalid Charge. It has been reset") when charge is invalid
+
+		If it is not fine that mass or charge is reset, then call destructor.
+
 		Pass in: Atomic Number, Atomic Mass(optional), charge(optional)
 		Returns: New Element
 		*/
@@ -197,6 +206,16 @@ class Element{
 		Destructor for element
 		First removes elements from static variables
 		Then removes all covalent bonds
+
+		Throws std::runtime_error("Atoms Do Not Have Covalent Bond") if a covalent bond doesn't exist and can not be deleted
+
+		Throws std::runtime_error("Invalid Ionic Bond") if a number in the ionicBonds vector is invalid
+		Throws std::runtime_error("Atoms Do Not Have Ionic Bond") if an ionic bond doesn't exist and can not be destroyed
+
+		Throws std::runtime_error("Invalid Dative Bond") if a number in the dativeBonds vector is invalid
+		Throws std::runtime_error("Atoms Do Not Have Dative Bond") if a dative bond does not exist and can not be destroyed
+
+		If any of these exceptions occur, then it means the compound has been corrupted and should be deleted immediately
 		*/
 		~Element();
 
@@ -212,7 +231,6 @@ class Element{
 		int operator * (Element& secondElement);
 
 
-		//removes bond between 2 atoms
 
 		/*
 		Operator Overloading
@@ -244,14 +262,14 @@ class Element{
 				 0 if bond removal isn't successful
 		*/
 		int operator % (Element& secondElement);
-		//Getters:
 
-/*
+		/*
 		Operator Overloading
 		Creates Dative Bond between 2 atoms
 		If any of the atoms in the bond have acheived noble gas configuration and has an atomic number less than or equal to 18, then bond is not created
 		First atom gains 2 electron, and second atom donates 2 electrons to form dative bond
 
+		
 		Returns: 1 if bond is successful
 				 0 if bond isn't successful
 		*/
@@ -335,6 +353,12 @@ class Element{
 		Returns: Vector of all the elements the atom is bonded to
 		*/
 		std::vector<Element*> getCurrentBonds();
+
+		/*
+		Returns: Number of valence electrons available for bonding
+		*/
+		int getNumberOfValenceElectrons();
+
 		/*
 		Prints Number of Electrons in each sub shell of atom
 		*/
