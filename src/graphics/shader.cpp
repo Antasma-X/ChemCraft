@@ -71,3 +71,15 @@ void Shader::Deactivate(){
 void Shader::Delete(){
     glDeleteProgram(shaderProgram);
 }
+
+void Shader::SetMat4Uniform(glm::mat4 mat,const char* uniform){
+    Activate();
+    int loc=glGetUniformLocation(shaderProgram,uniform);
+    glUniformMatrix4fv(loc,1,GL_FALSE,glm::value_ptr(mat));
+}
+
+void Shader::Set3fUniform(float R,float G,float B, const char* uniform){
+    Activate();
+    int loc=glGetUniformLocation(shaderProgram,uniform);
+    glUniform3f(loc,R,G,B);
+}

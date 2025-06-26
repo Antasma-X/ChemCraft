@@ -9,6 +9,7 @@
 #include "elementObject.h"
 #include "numberObject.h"
 
+class Compound;
 //merge files
 namespace Render{
 

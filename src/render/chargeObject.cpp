@@ -1,18 +1,18 @@
 #include "chargeObject.h"
 
 
-ChargeObject::ChargeObject(std::vector<GLfloat> vertices,int number){
+ChargeObject::ChargeObject(glm::vec2 position,int number){
 
     try{
         //fix vertices
-        numberObj=NumberObject(vertices,number);
+        numberObj=NumberObject(position,number);
     }
     catch(std::invalid_argument& e){
         throw;
     }
 
-    std::vector<GLfloat> signVertices={
-        vertices[4],(vertices[5]+vertices[7])/2
+    glm::vec2 signPosition={
+        position[0]+numWidth/2+signLengt(h)/2,position[1]
     };
 
     bool isPositive;
@@ -24,7 +24,7 @@ ChargeObject::ChargeObject(std::vector<GLfloat> vertices,int number){
     }
 
     try{
-        signObj=SignObject(signVertices,isPositive);
+        signObj=SignObject(signPosition,isPositive);
     }
     catch(std::invalid_argument& e){
         throw;

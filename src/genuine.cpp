@@ -19,6 +19,22 @@ int main(int argc, char* argv[]){
     
     }
 
+    try{
+        if(!Config()){
+            return 1;
+        }
+    }
+    catch(const nlohmann::json::out_of_range& e){
+        std::cerr<<"One or more variables could not be found in either files"<<std::endl<<"Please Redownload original default config json file"<<std::endl;
+        throw;
+        return 1;
+    }
+    catch(const std::exception& e){
+        std::cerr<<"Idk what happened"<<std::endl;
+        throw;
+        return 1;
+    }
+    std::cout<<"heybal"<<std::endl;
     //putting try here is useless
     GLFWwindow* window= Management::SetUp();
     if(window==nullptr){
@@ -45,20 +61,9 @@ int main(int argc, char* argv[]){
     ImFont* compoundNameFont=io.Fonts->AddFontFromFileTTF(fontFile, compoundNameSize);
     ImFont* molecularFormulaFont=io.Fonts->AddFontFromFileTTF(molecularFormulaFontFile,molecularFormulaSize,nullptr, ranges);
 
-    try{
-        if(!Config()){
-            return 1;
-        }
-    }
-    catch(const nlohmann::json::out_of_range& e){
-        std::cout<<"One or more variables could not be found in either files"<<std::endl<<"Please Redownload original default config json file"<<std::endl;
-        return 1;
-    }
-    catch(const std::exception& e){
-        std::cout<<"Idk what happened"<<std::endl;
-        return 1;
-    }
-    
+
+    std::cout<<"heybal"<<std::endl;
+    error.Push("heyyyy");
     //App Loop
     while (!glfwWindowShouldClose(window)){
 
@@ -100,7 +105,7 @@ int main(int argc, char* argv[]){
         //Draws all elements to screen
         Render::Render();
 
-        UI::ErrorPopUp();
+        error.ErrorPopUp();
 
         ImGui::PopFont();
 

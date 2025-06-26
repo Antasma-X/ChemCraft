@@ -46,8 +46,8 @@ GLFWwindow* Management::SetUp(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
+    std::cout<<"heybal"<<std::endl;
+    window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
     if (window == nullptr){
         std::cerr<<"GLFW Window Could not Open"<<std::endl;
         glfwTerminate();
@@ -77,8 +77,9 @@ GLFWwindow* Management::SetUp(){
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    std::cout<<"heybal"<<std::endl;
     glEnable(0x8642);
-
+    std::cout<<"heybal"<<std::endl;
     //might get fukced
     //Shaders
     Shader elementShader= *new Shader(elementVertShaderFilePath,elementFragShaderFilePath);

@@ -6,6 +6,7 @@
 #include "config.h"
 #include "render.h"
 #include "signObject.h"
+#include "error.h"
 
 namespace Management{
     /*

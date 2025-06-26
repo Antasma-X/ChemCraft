@@ -69,6 +69,8 @@ struct SignObject{
     // true if plus, false if minus
     bool isPositive;
 
+    glm::vec2 position;
+    glm::mat3 model;
     //Because Errors
     SignObject()=default;
     /*
@@ -110,7 +112,7 @@ struct SignObject{
 
     Throws std::invalid_argument("Vertices are Invalid") if invalid vertices are passed in
     */
-    SignObject(std::vector<GLfloat> initialVertices,bool isPositive);
+    SignObject(glm::vec2 position,bool isPositive);
 
     /*
     Used by IonObject::Render to render Sign

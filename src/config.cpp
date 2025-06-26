@@ -2,7 +2,10 @@
 
 using json = nlohmann::json;
 
-//order of map doesnt matter but compoundNumber is order you want diplayed in documentation
+//orderm of map doesnt matter but compoundNumber is order you want diplayed in documentation
+
+Camera cam;
+struct Error error;
 
 const char* windowName="Nomenclature";
 
@@ -24,8 +27,9 @@ const char* searchBarLabel="Search..";
 
 const char* disallowedCharSearchBar="!@#$%^&*\n\t0123456789";
 
-bool isError=false;
-std::string errorMessage="";
+// 
+
+
  
 std::string elementVertShaderFilePath="../shaders/texture.vert";
 std::string elementFragShaderFilePath="../shaders/texture.frag";
@@ -47,6 +51,9 @@ std::map<std::string,Shader> shaders;
 
 std::string elementFilePath1="../Assets/Elements/";
 std::string elementFilePath2=".png";
+
+std::map<std::string,std::string> molecules;
+std::vector<std::string> compoundNumbers;
 
 std::vector<std::string> searchBar={
     "h", "he", "li", "be", "b", "c", "n", "o", "f", "ne", "na", "mg", "al", "si", "p", "s", "cl", "ar", "k", "ca", "sc", "ti", "v", "cr", "mn", "fe", "co", "ni", "cu", "zn", "ga", "ge", "as", "se", "br", "kr", "rb", "sr", "y", "zr", "nb", "mo", "tc", "ru", "rh", "pd", "ag",
@@ -230,18 +237,18 @@ void to_json(json& js, const ImVec4& vec){
     js=json{{"x",vec.x},{"y",vec.y},{"z",vec.z},{"w",vec.w}};
 }
 
-void from_json(json&js, ImVec4& vec){
+void from_json(const json&js, ImVec4& vec){
     js.at("x").get_to(vec.x);
     js.at("y").get_to(vec.y);
     js.at("z").get_to(vec.z);
     js.at("w").get_to(vec.w);
 }
 
-void to_json(json& js, const glm::vec2& vec){
+void glm::to_json(json& js, const glm::vec2& vec){
     js=json{{"x",vec.x},{"y",vec.y}};
 }
 
-void from_json(json&js, glm::vec2& vec){
+void glm::from_json(const json&js, glm::vec2& vec){
     js.at("x").get_to(vec.x);
     js.at("y").get_to(vec.y);
 }
@@ -250,7 +257,7 @@ void to_json(json& js, const ImU32& vec){
     js=json{{"R",(vec >> IM_COL32_R_SHIFT) & 0xFF},{"G",(vec >> IM_COL32_G_SHIFT) & 0xFF},{"B",(vec >> IM_COL32_B_SHIFT) & 0xFF},{"A",(vec >> IM_COL32_A_SHIFT) & 0xFF}};
 }
 
-void from_json(json& js, ImU32& vec){
+void from_json(const json& js, ImU32& vec){
     uint8_t R = js.at("R").get<uint8_t>();
     uint8_t G = js.at("G").get<uint8_t>();
     uint8_t B = js.at("B").get<uint8_t>();
@@ -262,11 +269,23 @@ void to_json(json& js, const ImVec2& vec){
     js=json{{"x",vec.x},{"y",vec.y}};
 }
 
-void from_json(json&js, ImVec2& vec){
+void from_json(const json&js, ImVec2& vec){
     js.at("x").get_to(vec.x);
     js.at("y").get_to(vec.y);
 }
 
+ImU32 RGBAtoImU32(const nlohmann::json& js){
+    return IM_COL32(js.at("R"), js.at("G"), js.at("B"), js.at("A"));
+}
+
+std::vector<ImU32> RGBAVectortoImU32(const nlohmann::json& js){
+    std::vector<ImU32> objs;
+
+    for (const auto& item: js) {
+        objs.push_back(RGBAtoImU32(item));
+    }
+    return objs;
+}
 
 int Config(){
     //for now default
@@ -276,7 +295,7 @@ int Config(){
 
     std::ifstream defaultConfigFile("../config/defaultConfig.json");
     std::ifstream customConfigFile("../config/config.json");
-    if (!defaultConfigFile && !customConfigFile) {
+    if (!defaultConfigFile.is_open() && !customConfigFile.is_open()) {
         std::cerr << "Could not find any config file\n";
         return 0;
     } 
@@ -299,7 +318,11 @@ int Config(){
 
     //thnk you chatgpt i wont forget it
     // Window properties
+    //configData.dump(4);
+    std::cout<<"ligma"<<std::endl;
+
     windowColor = configData.at("windowColor").get<ImVec4>();
+    std::cout<<"ligma"<<std::endl;
     windowHeight = configData.at("windowHeight").get<int>();
     windowWidth = configData.at("windowWidth").get<int>();
     largeWindowHeight = configData.at("largeWindowHeight").get<int>();
@@ -313,7 +336,7 @@ int Config(){
     // Font sizes
     windowSmallFontSize = configData.at("windowSmallFontSize").get<double>();
     windowLargeFontSize = configData.at("windowLargeFontSize").get<double>();
-
+    std::cout<<"ligma"<<std::endl;
     // Top Menu
     topMenuButtonColor = configData.at("topMenuButtonColor").get<ImVec4>();
     topMenuHoveredButtonColor = configData.at("topMenuHoveredButtonColor").get<ImVec4>();
@@ -333,7 +356,7 @@ int Config(){
     openFilePopUpTitleBarColor = configData.at("openFilePopUpTitleBarColor").get<ImVec4>();
     openFilePopUpActiveTitleBarColor = configData.at("openFilePopUpActiveTitleBarColor").get<ImVec4>();
     openFilePopUpCollapsedTitleBarColor = configData.at("openFilePopUpCollapsedTitleBarColor").get<ImVec4>();
-
+    std::cout<<"ligma"<<std::endl;
     insertDirectColor = configData.at("insertDirectColor").get<ImVec4>();
     insertDirectHoveredColor = configData.at("insertDirectHoveredColor").get<ImVec4>();
     insertDirectTypingColor = configData.at("insertDirectTypingColor").get<ImVec4>();
@@ -345,22 +368,28 @@ int Config(){
     sideMenuColor = configData.at("sideMenuColor").get<ImVec4>();
     minimumSideMenuWidth = configData.at("minimumSideMenuWidth").get<int>();
     initialSideMenuWidthPerCent = configData.at("initialSideMenuWidthPerCent").get<double>();
-
+    std::cout<<"ligmvvvvvva"<<std::endl;
     // ElementCompound Child Windows
     childWindowSmallFontSize = configData.at("childWindowSmallFontSize").get<double>();
     childWindowLargeFontSize = configData.at("childWindowLargeFontSize").get<double>();
 
     elementWindowColor = configData.at("elementWindowColor").get<ImVec4>();
+    std::cout<<"ligma"<<std::endl;
     elementWindowBorderColor = configData.at("elementWindowBorderColor").get<ImVec4>();
     elementWindowBorderShadowColor = configData.at("elementWindowBorderShadowColor").get<ImVec4>();
     elementWindowTextColor = configData.at("elementWindowTextColor").get<ImVec4>();
-
+    std::cout<<"ligma"<<std::endl;
     elementButtonSize = configData.at("elementButtonSize").get<ImVec2>();
-    elementButtonColor = configData.at("elementButtonColor").get<ImU32>();
-    elementButtonBorderColor = configData.at("elementButtonBorderColor").get<ImU32>();
-    elementButtonHoveredColor = configData.at("elementButtonHoveredColor").get<ImU32>();
-    elementButtonClickedColor = configData.at("elementButtonClickedColor").get<ImU32>();
-
+    std::cout<<"ligma"<<std::endl;
+    //imu32 is problem
+    elementButtonColor = RGBAtoImU32(configData.at("elementButtonColor"));
+    std::cout<<"ligma"<<std::endl;
+    elementButtonBorderColor = RGBAtoImU32(configData.at("elementButtonBorderColor"));
+    std::cout<<"ligma"<<std::endl;
+    elementButtonHoveredColor = RGBAtoImU32(configData.at("elementButtonHoveredColor"));
+    std::cout<<"ligma"<<std::endl;
+    elementButtonClickedColor = RGBAtoImU32(configData.at("elementButtonClickedColor"));
+    std::cout<<"ligma"<<std::endl;
     elementButtonCurve = configData.at("elementButtonCurve").get<double>();
     elementButtonBorderThickness = configData.at("elementButtonBorderThickness").get<double>();
 
@@ -375,42 +404,47 @@ int Config(){
     nameFontSize = configData.at("nameFontSize").get<double>();
     massFontSize = configData.at("massFontSize").get<double>();
 
-    atomicNumberColor = configData.at("atomicNumberColor").get<ImU32>();
-    atomicMassColor = configData.at("atomicMassColor").get<ImU32>();
-    atomicSymbolColor = configData.at("atomicSymbolColor").get<ImU32>();
-    atomicNameColor = configData.at("atomicNameColor").get<ImU32>();
+    atomicNumberColor = RGBAtoImU32(configData.at("atomicNumberColor"));
+    atomicMassColor = RGBAtoImU32(configData.at("atomicMassColor"));
+    atomicSymbolColor = RGBAtoImU32(configData.at("atomicSymbolColor"));
+    atomicNameColor = RGBAtoImU32(configData.at("atomicNameColor"));
 
     compoundButtonSize = configData.at("compoundButtonSize").get<ImVec2>();
-    compoundButtonColors = configData.at("compoundButtonColors").get<std::vector<ImU32>>();
-    compoundButtonHoveredColors = configData.at("compoundButtonHoveredColors").get<std::vector<ImU32>>();
-    compoundButtonClickedColors = configData.at("compoundButtonClickedColors").get<std::vector<ImU32>>();
+    compoundButtonColors =RGBAVectortoImU32( configData.at("compoundButtonColors"));
+    compoundButtonHoveredColors =RGBAVectortoImU32(configData.at("compoundButtonHoveredColors"));
+    compoundButtonClickedColors =RGBAVectortoImU32(configData.at("compoundButtonClickedColors"));
 
-    compoundButtonBorderColor = configData.at("compoundButtonBorderColor").get<ImU32>();
+    std::cout<<"ligma"<<std::endl;
+    std::cout<<"ligmabbbb"<<std::endl;
+    compoundButtonBorderColor = RGBAtoImU32(configData.at("compoundButtonBorderColor"));
+    std::cout<<"ligmabbbb"<<std::endl;
     compoundButtonBorderThickness = configData.at("compoundButtonBorderThickness").get<double>();
+    std::cout<<"ligmabbbb"<<std::endl;
     compoundButtonCurve = configData.at("compoundButtonCurve").get<double>();
-
+    std::cout<<"ligmabbbb"<<std::endl;
     compoundNameSize = configData.at("compoundNameSize").get<double>();
     molecularFormulaSize = configData.at("molecularFormulaSize").get<double>();
 
-    compoundNameColor = configData.at("compoundNameColor").get<ImU32>();
-    molecularFormulaColor = configData.at("molecularFormulaColor").get<ImU32>();
-
+    compoundNameColor = RGBAtoImU32(configData.at("compoundNameColor"));
+    molecularFormulaColor = RGBAtoImU32(configData.at("molecularFormulaColor"));
+    std::cout<<"ligmabbbb"<<std::endl;
     compoundWindowColor = configData.at("compoundWindowColor").get<ImVec4>();
     compoundWindowBorderColor = configData.at("compoundWindowBorderColor").get<ImVec4>();
     compoundWindowBorderShadowColor = configData.at("compoundWindowBorderShadowColor").get<ImVec4>();
     compoundWindowTextColor = configData.at("compoundWindowTextColor").get<ImVec4>();
-
-    scrollBarColor = configData.at("scrollBarColor").get<ImU32>();
+    std::cout<<"ligmabbbb"<<std::endl;
+    scrollBarColor = RGBAtoImU32(configData.at("scrollBarColor"));
     scrollBarCurve = configData.at("scrollBarCurve").get<double>();
 
     initialElements = configData.at("initialElements").get<std::vector<int>>();
-
+    std::cout<<"ligmabbbb"<<std::endl;
     initialElementHeightPerCent = configData.at("initialElementHeightPerCent").get<double>();
     scrollerHeightPerCent = configData.at("scrollerHeightPerCent").get<double>();
     minimumChildWindowPerCent = configData.at("minimumChildWindowPerCent").get<double>();
     adjustOffset = configData.at("adjustOffset").get<int>();
     elementCompound_____Padding = configData.at("elementCompound_____Padding").get<int>();
     IDKWhyOffset = configData.at("IDKWhyOffset").get<int>();
+    std::cout<<"ligmabbbb"<<std::endl;
 
     // Search Bar
     searchSmallFontSize = configData.at("searchSmallFontSize").get<double>();
@@ -449,13 +483,16 @@ int Config(){
     compoundNumbers= configData.at("compoundNumbers").get<std::vector<std::string>>();
     molecules=configData.at("molecules").get<std::map<std::string,std::string>>();
 
+    std::cout<<"heybal"<<std::endl;
+
     if(configData.contains("additionalCompoundNumbers") && configData.contains("additionalCompoundStrings")){
         std::vector<std::pair<std::string,int>> additionals=configData.at("additonalCompoundNumbers").get<std::vector<std::pair<std::string,int>>>();
         std::map<std::string,std::string> additonalStrings=configData.at("additionalCompoundStrings").get<std::map<std::string,std::string>>();
 
         if(additonalStrings.size()!=additionals.size()){
-            isError=true;
-            errorMessage="Additional Compounds could not be Inserted";
+            error.Push("Additional Compounds could not be Inserted");
+            // isError=true;
+            // errorMessage="Additional Compounds could not be Inserted";
             std::cerr<<"Additional Compounds could not be Inserted"<<std::endl;
         }
         else{
@@ -469,61 +506,16 @@ int Config(){
 
 
     }
-
+    std::cout<<"heybal"<<std::endl;
     for(auto it:compoundNumbers){
         std::string name=it;
         std::transform(name.begin(),name.end(),name.begin(),::tolower);
-
+        std::cout<<name<<std::endl;
         searchBar.push_back(name);
     }
+    std::cout<<"heybal"<<std::endl;
+
+    return 1;
 }
 
 //template
-template <typename T> void changeCustomJSON(std::string variable,T var){
-    std::ifstream customConfigFile("../config/config.json");
-
-    if(!customConfigFile){
-        std::cout<<variable<<" could not be saved to file"<<std::endl;
-        return;
-    }
-
-    json customConfigData;
-    customConfigFile>> customConfigData;
-
-    customConfigData[variable]=var;
-
-    std::ofstream editingCustomConfigFile("../config/config.json");
-
-    if(!editingCustomConfigFile){
-        std::cout<<variable<<" could not be saved to file"<<std::endl;
-        return;
-    }
-    editingCustomConfigFile<<customConfigData;
-}
-//template
-template <typename T> void restoreToDefault(std::string variable, T& var){
-    std::ifstream defaultConfigFile("../config/defaultConfig.json");
-    std::ifstream customConfigFile("../config/config.json");
-
-    if(!customConfigFile){
-        std::cout<<variable<<" could not be restored"<<std::endl;
-        return;
-    }
-
-    json customConfigData;
-    customConfigFile>> customConfigData;
-
-    customConfigData.erase(variable);
-
-    std::ofstream editingCustomConfigFile("../config/config.json");
-    if(!editingCustomConfigFile){
-        std::cout<<variable<<" could not be saved"<<std::endl;
-        return;
-    }
-    editingCustomConfigFile<<customConfigData;
-
-    json defaultConfigData;
-    defaultConfigData<<defaultConfigFile;
-
-    var=defaultConfigData.at(variable).get<T>();
-}

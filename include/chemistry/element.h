@@ -3,7 +3,6 @@
 
 #include "StdLibDependencies.h"
 #include "values.h"
-#include "config.h"
 
 class Element{ 
 
@@ -169,33 +168,39 @@ class Element{
 	/*
 	Used in Constructor
 	Function finds the valencies of an atom as long as its element is less than or equal to 18
-	If the element is greater than 18 then the array returned is {0,0} 
+	If the element is greater than 18 then it either gets it automatically due to being a halogen or searches higherValencies for a suitable positive valency.
 
-	Pass in: Atomic Number of Element
+	You can pass in your own wanted valency, but it will only be registered if atomic number is above 18, not a halogen, and if it is avalid valency present in higherValencies
+	However the negative valency will stay 1000
+
+	Pass in: Atomic Number of Element, charge,wanted postive valency if higher non element valency
 	Returns: Size 2 Array of valencies(First element is positive valency and second element is negative element)
 	*/
-	static std::array<int,2> findValency(int atomicNumber, int charge);
+	static std::array<int,2> findValency(int atomicNumber, int charge,int v);
 
 	public:
 		
 		/*
 		Constructor for Element
 		You have to pass in the atomic number of the element
-		If you want you can pass in the atomic mass and/or charge of atom
+		If you want you can pass in the atomic mass and/or charge of atom and/or valency if it is a higher level element
 		If you don't pass them in, then atomic mass is set as average atomic mass(present in values.cpp) of element and charge is set as 0
+		If you don't pass anything for v or pass an incorrect valency then it is reset to a default valency depending on the valency
+
+		Note: the valency passed must be the valency of the atom without charge
+
 		If invalid Atomic Mass or Charge is passed, they are set to default
-
-		Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid
-		// Throws std::invalid_argument("Invalid Mass and Charge. They have been reset") when both Atomic Mass and Charge are Invalid
-		// Throws std::invalid_argument("Invalid Mass. It has been reset") when  Atomic Mass is invalid
-		// Throws std::invalid_argument("Invalid Charge. It has been reset") when charge is invalid
-
 		If it is not fine that mass or charge is reset, then call destructor.
 
-		Pass in: Atomic Number, Atomic Mass(optional), charge(optional)
+		Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid
+
+		If atomic mass or charge passed is invalid, error popup occurs
+		if invalid valency is also passed in, error popup occurs
+
+		Pass in: Atomic Number, Atomic Mass(optional), charge(optional), v(optional)
 		Returns: New Element
 		*/
-		Element(unsigned int atomicNumber, double atomicMass=0,int charge=0);
+		Element(unsigned int atomicNumber, double atomicMass=0,int charge=0,int v=1000);
 
 		/*
 		This is not allowed(Check Definition)
@@ -207,15 +212,23 @@ class Element{
 		First removes elements from static variables
 		Then removes all covalent bonds
 
-		Throws std::runtime_error("Atoms Do Not Have Covalent Bond") if a covalent bond doesn't exist and can not be deleted
+		// Throws std::runtime_error("Atoms Do Not Have Covalent Bond") if a covalent bond doesn't exist and can not be deleted
 
-		Throws std::runtime_error("Invalid Ionic Bond") if a number in the ionicBonds vector is invalid
-		Throws std::runtime_error("Atoms Do Not Have Ionic Bond") if an ionic bond doesn't exist and can not be destroyed
+		// Throws std::runtime_error("Invalid Ionic Bond") if a number in the ionicBonds vector is invalid
+		// Throws std::runtime_error("Atoms Do Not Have Ionic Bond") if an ionic bond doesn't exist and can not be destroyed
 
-		Throws std::runtime_error("Invalid Dative Bond") if a number in the dativeBonds vector is invalid
-		Throws std::runtime_error("Atoms Do Not Have Dative Bond") if a dative bond does not exist and can not be destroyed
+		// Throws std::runtime_error("Invalid Dative Bond") if a number in the dativeBonds vector is invalid
+		// Throws std::runtime_error("Atoms Do Not Have Dative Bond") if a dative bond does not exist and can not be destroyed
 
-		If any of these exceptions occur, then it means the compound has been corrupted and should be deleted immediately
+		If an error occurs in bond destruction, this error popup occurs:
+		"Atoms Do Not Have x Bond. Compound should be destroyed immediately"
+		where x is type of bond
+
+		or
+		If an invalid bond type is present, this error popup occurs:
+		"Atoms Have Invalid Bond. Compound should be destroyed immediately" 
+
+		If any of these errors occur, then it means the compound has been corrupted and should be deleted immediately
 		*/
 		~Element();
 
@@ -230,7 +243,7 @@ class Element{
 		*/
 		int operator * (Element& secondElement);
 
-
+ 
 
 		/*
 		Operator Overloading
@@ -284,6 +297,12 @@ class Element{
 		*/
 		int operator || (Element& secondElement);
 
+		/*
+		Returns: true if element is stable
+				 false if element is unstable
+		*/
+		bool isStable();
+		
 		/*
 		Returns: Atomic Number of element
 		*/

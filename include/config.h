@@ -4,9 +4,14 @@
 #include "StdLibDependencies.h"
 #include "GUIDependencies.h"
 #include "shader.h"
-
+#include "camera.h"
 #include "json.hpp"
+#include "UIGeneration.h"
+#include "error.h"
 
+class Error;
+//have global classes sec
+extern Error error;
 //Window
 
     extern const char* windowName;
@@ -155,8 +160,8 @@
         extern int search___padding;
 
 //Error
-extern bool isError;
-extern std::string errorMessage;
+// extern bool isError;
+// extern std::string errorMessage;
 extern int errorMessageOffsetX;
 extern int errorMessageOffsetY;
 
@@ -200,37 +205,90 @@ extern GLfloat signLength;
 extern GLfloat bondThickness;
 extern GLfloat signThickness;
 
+extern struct Camera cam; 
+
 
 //Values
-std::map<std::string,std::string> molecules;
+extern std::map<std::string,std::string> molecules;
 extern std::vector<std::string> compoundNumbers;
 extern std::vector<std::string> searchBar;
 
  
 //JSON Conversions
-void to_json(nlohmann::json& js, const ImVec4& vec);
 
-void from_json(nlohmann::json&js, ImVec4& vec);
 
-void to_json(nlohmann::json& js, const glm::vec2& vec);
+    void to_json(nlohmann::json& js, const ImVec4& vec);
 
-void from_json(nlohmann::json&js, glm::vec2& vec);
+    void from_json(const nlohmann::json&js, ImVec4& vec);
+    
+    void to_json(nlohmann::json& js, const ImU32& vec);
+    
+    void from_json(const nlohmann::json& js, ImU32& vec);
+    
+    void to_json(nlohmann::json& js, const ImVec2& vec);
+    
+    void from_json(const nlohmann::json&js, ImVec2& vec);
+    
 
-void to_json(nlohmann::json& js, const ImU32& vec);
 
-void from_json(nlohmann::json& js, ImU32& vec);
+namespace glm{
+    void to_json(nlohmann::json& js, const glm::vec2& vec);
 
-void to_json(nlohmann::json& js, const ImVec2& vec);
+    void from_json(const nlohmann::json&js, glm::vec2& vec);
+}
 
-void from_json(nlohmann::json&js, ImVec2& vec);
 
 //Config Setting
 int Config();
 
-template <typename T> void changeCustomJSON(std::string variable, T var);
+template <typename T> void changeCustomJSON(std::string variable, T var){
+    std::ifstream customConfigFile("../config/config.json");
 
-template <typename T> void restoreToDefault(std::string variable, T& var);
+    if(!customConfigFile){
+        std::cout<<variable<<" could not be saved to file"<<std::endl;
+        return;
+    }
 
+    nlohmann::json customConfigData;
+    customConfigFile>> customConfigData;
+
+    customConfigData[variable]=var;
+
+    std::ofstream editingCustomConfigFile("../config/config.json");
+
+    if(!editingCustomConfigFile){
+        std::cout<<variable<<" could not be saved to file"<<std::endl;
+        return;
+    }
+    editingCustomConfigFile<<customConfigData;
+}
+//template
+template <typename T> void restoreToDefault(std::string variable, T& var){
+    std::ifstream defaultConfigFile("../config/defaultConfig.json");
+    std::ifstream customConfigFile("../config/config.json");
+
+    if(!customConfigFile){
+        std::cout<<variable<<" could not be restored"<<std::endl;
+        return;
+    }
+
+    nlohmann::json customConfigData;
+    customConfigFile>> customConfigData;
+
+    customConfigData.erase(variable);
+
+    std::ofstream editingCustomConfigFile("../config/config.json");
+    if(!editingCustomConfigFile){
+        std::cout<<variable<<" could not be saved"<<std::endl;
+        return;
+    }
+    editingCustomConfigFile<<customConfigData;
+
+    nlohmann::json defaultConfigData;
+    defaultConfigData<<defaultConfigFile;
+
+    var=defaultConfigData.at(variable).get<T>();
+}
 
 
 #endif

@@ -58,6 +58,9 @@ struct NumberObject{
     //Number being represented
     int number;
 
+
+    glm::vec2 position;
+    glm::mat4 model;
     //Because Errors
     NumberObject()=default;
     
@@ -84,7 +87,7 @@ struct NumberObject{
     Throws std::runtime_error("Invalid Number") if number is not between 8 and 1 or -1 and -8 inclusive
     Throws std::invalid_argument("Vertices are Invalid") if invalid vertices are passed in
     */
-    NumberObject(std::vector<GLfloat>vertices, int number);
+    NumberObject(glm::vec2 position, int number);
 
     /*
     Used by IonObject::Render to render number
@@ -93,7 +96,7 @@ struct NumberObject{
  
     /*
     Deletes VAO,VBO,EBO
-    */
+    */ 
     void Destroy();
 };
 

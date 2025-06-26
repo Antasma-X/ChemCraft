@@ -21,7 +21,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
 
 
-file(GLOB SOURCES "src/*.cpp" "src/chemistry/*.cpp" "src/graphics/*.cpp" "src/render/*.cpp" "src/UI/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "src/chemistry/*.cpp" "src/graphics/*.cpp" "src/render/*.cpp" "src/UI/*.cpp" "src/management/*.cpp")
 
 
 find_package(glfw3 3.3 REQUIRED)
@@ -51,3 +51,4 @@ target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/chemistry)
 target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/UI)
 target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/render)
 target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/graphics)
+target_include_directories(cute PRIVATE ${CMAKE_SOURCE_DIR}/include/management)

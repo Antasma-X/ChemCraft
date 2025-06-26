@@ -9,6 +9,7 @@ struct EBO{
 
     //ID of EBO
     GLuint ID;
+    
     //Number of Indices to pass in
     int noOfIndices;
 

@@ -8,8 +8,7 @@ Texture::Texture(std::string imageFilePath){
     unsigned char* image= stbi_load(imageFilePath.c_str(),&width,&height,&noColorChannels,STBI_rgb_alpha);
 
     if (!image) {
-        isError=true;
-        errorMessage="Failed to load texture: "+imageFilePath;
+        error.Push("Failed to load texture: "+imageFilePath);
         std::cerr << "Failed to load texture: " << imageFilePath << std::endl;
         return;
     }

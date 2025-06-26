@@ -42,6 +42,9 @@ struct BondObject{
     //Shader for Bond. Uses covalent, dative, ionic shader depending on type of bond. Shader makes first vertex red and second vertex white when dative and makes line dotted when ionic
     Shader shaderProgram;
 
+    std::vector<glm::vec2> ends;
+
+    glm::mat4 model;
     /*
     Type of Bond
     0 means covalent
@@ -72,7 +75,7 @@ struct BondObject{
     Throws std::invalid_argument("Vertices are Invalid") if invalid vertices are passed in
     Throws std::invalid_argument("Invalid Bond Type") if invalid bond type is passed in
     */
-    BondObject(std::vector<GLfloat>vertices,int type);
+    BondObject(std::vector<glm::vec2> ends,int type);
 
     //Used by Render to render bond
     void Render();

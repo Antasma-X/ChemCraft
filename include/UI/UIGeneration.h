@@ -3,12 +3,12 @@
 
 #include "StdLibDependencies.h"
 #include "GUIDependencies.h"
-
 #include"compound.h"
 
 #include "config.h"
 #include "values.h" 
 #include "render.h"
+#include "error.h"
 namespace UI
 {
     /*
@@ -144,13 +144,10 @@ namespace UI
     */
     static int FilterCharactersSearchBar(ImGuiInputTextCallbackData* data);
 
-    /*
-    Whenever an error occurs throughout the code, the isError is set to true and error Message is set
-    This function creates a popup in the bottom left corner of the screen that gives the error message
-    This can be closed be clicking OK  
-    */
-    void ErrorPopUp();
+
 } 
+
+
 
 
 #endif

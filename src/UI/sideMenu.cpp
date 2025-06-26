@@ -174,6 +174,7 @@ void UI::ElementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindo
             std::transform(lowerName.begin(),lowerName.end(),lowerName.begin(),::tolower);
 
             if(std::find(currentSearchArray.begin(),currentSearchArray.end(),lowerName)!=currentSearchArray.end()){
+                std::cout<<"kjajdajdja"<<std::endl;
                 GenerateCompoundButton(i,sizeChange,compoundNameFont,molecularFormulaFont,isFirstBox);
                 isFirstBox=false;
             }
@@ -252,8 +253,9 @@ void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
             Render::createCompoundObject(comp); 
         }
         catch(std::invalid_argument& e){
-            isError=true;
-            errorMessage=std::to_string(atomicNumber)+" is Invalid";
+            error.Push(std::to_string(atomicNumber)+" is Invalid");
+            // isError=true;
+            // errorMessage=std::to_string(atomicNumber)+" is Invalid";
             std::cerr<<atomicNumber<<" is Invalid"<<std::endl;
         }    
     }
@@ -325,19 +327,31 @@ void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
     ImGui::PushStyleColor(ImGuiCol_TitleBg,customElementPopUpTitleBarColor);
     ImGui::PushStyleColor(ImGuiCol_TitleBgActive,customElementPopUpActiveTitleBarColor);
     ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed,customElementPopUpCollapsedTitleBarColor);
-
+//popup text colot too today gonna go do a lot refactorijng for UI
     if(showCustomElementPopUp && atomicNumber==customElementAtomicNumber){
         ImGui::OpenPopup("Custom Element");
-        double atomicMass=masses[atomicNumber-1];
-        int charge =0;
+        static bool firstPopup=true;
+        static double atomicMass;
+        static int charge;
+        if(firstPopup){
+            atomicMass=masses[atomicNumber-1];
+            charge=0;
+            firstPopup=false;
+        }
+
         if(ImGui::BeginPopupModal("Custom Element",nullptr,ImGuiWindowFlags_AlwaysAutoResize)){
+            float popupWidth = ImGui::GetWindowSize().x;
+            float textWidth = ImGui::CalcTextSize(names[atomicNumber-1].c_str()).x;
+            ImGui::SetCursorPosX((popupWidth - textWidth) * 0.5f);
+
+            ImGui::Text("%s",names[atomicNumber-1].c_str());
             ImGui::Text("Enter desired Atomic Mass: ");
-            bool AM=ImGui::InputDouble("Atomic Mass", &atomicMass);
+            bool AM=ImGui::InputDouble("##Atomic Mass", &atomicMass);
     
             ImGui::Separator();
     
             ImGui::Text("Enter desired Charge: ");
-            bool C=ImGui::InputInt("Charge", &charge);
+            bool C=ImGui::InputInt("##Charge", &charge,-8,8);
     
             if((C || AM)&&ImGui::IsKeyPressed(ImGuiKey_Enter)){
                 ImGui::CloseCurrentPopup();
@@ -347,12 +361,14 @@ void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
                     Render::createCompoundObject(comp); 
                 }
                 catch(std::invalid_argument& e){
-                    isError=true;
-                    errorMessage=std::to_string(atomicNumber)+" is Invalid";
+                    error.Push(std::to_string(atomicNumber)+" is Invalid");
+                    // isError=true;
+                    // errorMessage=std::to_string(atomicNumber)+" is Invalid";
                     std::cerr<<std::to_string(atomicNumber)<<" is Invalid"<<std::endl;
                 }    
 
                 showCustomElementPopUp=false;
+                firstPopup=true;
             }
         }
         ImGui::EndPopup();
@@ -369,8 +385,11 @@ void UI::GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
     try{
         Compound comp(molecules[compoundNumbers[compoundNumber-1]]);
         formula=comp.getMolecularFormula();
+        std::cout<<"balls"<<std::endl;
     }
     catch(std::invalid_argument& e){
+        throw;
+        std::cout<<"balls"<<std::endl;
         return;
     }
 
@@ -422,8 +441,10 @@ void UI::GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
             Render::createCompoundObject(newComp);
         }
         catch(std::invalid_argument& e){
-            isError=true;
-            errorMessage="Invalid Compound String in Compound List";
+            error.Push("Invalid Compound String in Compound List"+compoundNumbers[compoundNumber-1]);
+            // isError=true;
+            // throw;
+            // errorMessage="Invalid Compound String in Compound List";
             std::cerr<<"Invalid Compound String in Compound List"<<std::endl;
         }
 
@@ -525,8 +546,10 @@ void UI::LoadMagnifyingGlass(double searchBarHeightPerCent){
     unsigned char* data = stbi_load(SearchGlass, &width, &height, &channels, 4);
 
     if (!data){
-        isError=true;
-        errorMessage="Failed to load Search Glass Image";
+        error.Push("Failed to load Search Glass Image");
+        // isError=true;
+        // m  
+        // errorMessage="Failed to load Search Glass Image";
         std::cerr<<"Failed to load image: "<< SearchGlass<<std::endl;
 
         return;

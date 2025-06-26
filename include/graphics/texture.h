@@ -4,7 +4,7 @@
 #include "GUIDependencies.h"
 #include "StdLibDependencies.h"
 #include "shader.h"
-#include "config.h"
+
 struct Texture{
     //ID of Texture
     GLuint texture;

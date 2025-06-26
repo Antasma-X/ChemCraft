@@ -53,9 +53,9 @@ struct ChargeObject{
     Throws std::runtime_error("Invalid Number") if number is not between 8 and 1 or -1 and -8 inclusive
     Throws std::invalid_argument("Vertices are Invalid") if invalid vertices are passed in
     */
-    ChargeObject(std::vector<GLfloat> vertices,int number);
+    ChargeObject(glm::vec2 position,int number);
 
-    /*
+    /* 
     Used by Render to Render Charges 
     */
     void Render();

@@ -40,6 +40,106 @@ std::map<int,int> atomicity={
     {16,8}
 };
 
+//i trust chatgpt with my life. this should be fact checked eventually
+std::map<int,std::vector<int>> higherValencies={
+    {19, {1}},                        // Potassium
+    {20, {2}},                        // Calcium
+    {21, {3}},                        // Scandium
+    {22, {2, 3, 4}},                  // Titanium
+    {23, {2, 3, 4, 5}},               // Vanadium
+    {24, {2, 3, 6}},                  // Chromium
+    {25, {2, 3, 4, 6, 7}},            // Manganese
+    {26, {2, 3}},                     // Iron
+    {27, {2, 3}},                     // Cobalt
+    {28, {2, 3}},                     // Nickel
+    {29, {1, 2}},                     // Copper
+    {30, {2}},                        // Zinc
+    {31, {3}},                        // Gallium
+    {32, {2, 4}},                     // Germanium
+    {33, {3, 5}},                     // Arsenic
+    {34, {2, 4, 6}},                  // Selenium
+    {36, {}},                         // Krypton (inert)
+    {37, {1}},                        // Rubidium
+    {38, {2}},                        // Strontium
+    {39, {3}},                        // Yttrium
+    {40, {4}},                        // Zirconium
+    {41, {3, 5}},                     // Niobium
+    {42, {2, 3, 4, 6}},               // Molybdenum
+    {43, {4, 6, 7}},                  // Technetium
+    {44, {2, 3, 4, 6, 8}},            // Ruthenium
+    {45, {2, 3, 4, 6}},               // Rhodium
+    {46, {2, 4}},                     // Palladium
+    {47, {1}},                        // Silver
+    {48, {2}},                        // Cadmium
+    {49, {3}},                        // Indium
+    {50, {2, 4}},                     // Tin
+    {51, {3, 5}},                     // Antimony
+    {52, {2, 4, 6}},                  // Tellurium
+    {54, {}},                         // Xenon (inert)
+    {55, {1}},                        // Cesium
+    {56, {2}},                        // Barium
+    {57, {3}},                        // Lanthanum
+    {58, {3, 4}},                     // Cerium
+    {59, {3}},                        // Praseodymium
+    {60, {3}},                        // Neodymium
+    {61, {3}},                        // Promethium
+    {62, {3}},                        // Samarium
+    {63, {2, 3}},                     // Europium
+    {64, {3}},                        // Gadolinium
+    {65, {3}},                        // Terbium
+    {66, {3}},                        // Dysprosium
+    {67, {3}},                        // Holmium
+    {68, {3}},                        // Erbium
+    {69, {3}},                        // Thulium
+    {70, {2, 3}},                     // Ytterbium
+    {71, {3}},                        // Lutetium
+    {72, {4}},                        // Hafnium
+    {73, {5}},                        // Tantalum
+    {74, {2, 3, 4, 5, 6}},            // Tungsten
+    {75, {4, 6, 7}},                  // Rhenium
+    {76, {2, 3, 4, 6, 8}},            // Osmium
+    {77, {2, 3, 4, 6}},               // Iridium
+    {78, {2, 4}},                     // Platinum
+    {79, {1, 3}},                     // Gold
+    {80, {1, 2}},                     // Mercury
+    {81, {1, 3}},                     // Thallium
+    {82, {2, 4}},                     // Lead
+    {83, {3, 5}},                     // Bismuth
+    {84, {2, 4, 6}},                  // Polonium
+    {86, {}},                         // Radon (inert)
+    {87, {1}},                        // Francium
+    {88, {2}},                        // Radium
+    {89, {3}},                        // Actinium
+    {90, {4}},                        // Thorium
+    {91, {4, 5}},                     // Protactinium
+    {92, {3, 4, 5, 6}},               // Uranium
+    {93, {3, 4, 5, 6, 7}},            // Neptunium
+    {94, {3, 4, 5, 6}},               // Plutonium
+    {95, {3, 4, 5, 6}},               // Americium
+    {96, {3}},                        // Curium
+    {97, {3, 4}},                     // Berkelium
+    {98, {3}},                        // Californium
+    {99, {3}},                        // Einsteinium
+    {100, {3}},                       // Fermium
+    {101, {2, 3}},                    // Mendelevium
+    {102, {2, 3}},                    // Nobelium
+    {103, {3}},                       // Lawrencium
+    {104, {4}},                       // Rutherfordium
+    {105, {5}},                       // Dubnium
+    {106, {6}},                       // Seaborgium
+    {107, {7}},                       // Bohrium
+    {108, {8}},                       // Hassium
+    {109, {7}},                       // Meitnerium
+    {110, {6}},                       // Darmstadtium
+    {111, {5}},                       // Roentgenium
+    {112, {2}},                       // Copernicium
+    {113, {1, 3}},                    // Nihonium
+    {114, {2, 4}},                    // Flerovium
+    {115, {1, 3, 5}},                 // Moscovium
+    {116, {2, 4, 6}},                 // Livermorium
+    {118, {}},                        // Oganesson (inert)
+};
+
 std::map<std::string,int> anions={
    {"Fluoride",1},
    {"Chloride",2},

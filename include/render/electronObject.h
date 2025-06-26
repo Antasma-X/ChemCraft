@@ -27,10 +27,13 @@ struct ElectronObject{
     */
     std::vector<GLfloat> Vertices;
 
+    glm::vec2 position;
+
+    glm::mat4 model;
     //VAO for Electron
     VAO vao;
 
-    //VBO for Electron
+    //VBO for Electron 
     VBO vbo;
     /*
     Note: There is no EBO
@@ -48,7 +51,7 @@ struct ElectronObject{
 
     Throws std::invalid_argument("Vertices are Invalid") if invalid vertices are passed in
     */
-    ElectronObject(std::vector<GLfloat>vertices);
+    ElectronObject(glm::vec2 position,GLfloat transparency);
 
     /*
     Used by Render to Render electron

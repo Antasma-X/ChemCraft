@@ -129,10 +129,10 @@ Compound::Compound(Element& element){
 	listOfCompounds.emplace_back(this);
 }
 
-Compound::Compound(int atomicNumber, double atomicMass, int charge){
+Compound::Compound(int atomicNumber, double atomicMass, int charge,int v){
 	Element* element;
 	try{
-		element=new Element(atomicNumber,atomicMass,charge);
+		element=new Element(atomicNumber,atomicMass,charge,v);
 	}
 	catch(std::invalid_argument& e){
 		throw;
@@ -141,7 +141,7 @@ Compound::Compound(int atomicNumber, double atomicMass, int charge){
 
 Compound::Compound(std::string compound){
 
-	std::string allowedChars="0123456789-/;&.+";
+	std::string allowedChars="0123456789-/;&.+)";
 	bool isValid =std::all_of(compound.begin(), compound.end(), [&](char c) {
 		return allowedChars.find(c) != std::string::npos;});
 
@@ -205,9 +205,20 @@ Compound::Compound(std::string compound){
 			}
 			charge+=*it;
 		}
+
+		//v
+		std::string v="";
+		for(;it !=atom.end();it++){
+			if(*it=='&'|| it==atom.end()){
+				it++;
+				break;
+			}
+			v+=*it;
+		}
+
 		Element* el;
 		try{
-			el=new Element(stoi(atomicNumber),stof(atomicMass),stoi(charge));
+			el=new Element(stoi(atomicNumber),stof(atomicMass),stoi(charge),stoi(v));
 		}
 		catch(std::invalid_argument& e){
 			throw;
@@ -258,38 +269,40 @@ Compound::Compound(std::string compound){
 			}
 			int bondType=stoi(bondTypeString);
 			int index=stoi(indexString);
-			//might have to crate special function using bond type to make this nicer but later
+			
+			if(i<index){
+				if(bondType==0){
+					if((*currentEl * *atoms[index])==0){
+						throw std::invalid_argument("Covalent Bond could not form");
+					}
+					
+				}
+				else if(bondType==-1){
+					if((*currentEl ^ *atoms[index])==0){
+						throw std::invalid_argument("Ionic Bond could not form");
+					}
+				}
+				else if(bondType==1){
+					if((*atoms[index] ^ *currentEl)==0){
+						throw std::invalid_argument("Ionic Bond could not form");
+					}
+				}
+				else if(bondType==-2){
+					if((*currentEl && *atoms[index])==0){
+						throw std::invalid_argument("Dative Bond could not form");
+	
+					}
+				}
+				else if(bondType==2){
+					if((*atoms[index] && *currentEl)==0){
+						throw std::invalid_argument("Dative Bond could not form");
+					}
+				}
+				else{
+					throw std::invalid_argument("Invalid Bond Type");
+				}
+			}
 
-			if(bondType==0){
-				if((*currentEl * *atoms[index])==0){
-					throw std::invalid_argument("Covalent Bond could not form");
-				}
-				
-			}
-			else if(bondType==-1){
-				if((*currentEl ^ *atoms[index])==0){
-					throw std::invalid_argument("Ionic Bond could not form");
-				}
-			}
-			else if(bondType==1){
-				if((*atoms[index] ^ *currentEl)==0){
-					throw std::invalid_argument("Ionic Bond could not form");
-				}
-			}
-			else if(bondType==-2){
-				if((*currentEl && *atoms[index])==0){
-					throw std::invalid_argument("Dative Bond could not form");
-
-				}
-			}
-			else if(bondType==2){
-				if((*atoms[index] && *currentEl)==0){
-					throw std::invalid_argument("Dative Bond could not form");
-				}
-			}
-			else{
-				throw std::invalid_argument("Invalid Bond Type");
-			}
 
 			bonds[currentEl].emplace_back(std::make_pair(atoms[index],bondType));
 			indexString="";
@@ -297,7 +310,6 @@ Compound::Compound(std::string compound){
 		}
 		i++;
 	}
-
 
 }
 
@@ -363,8 +375,12 @@ int Compound::addElement(Element& firstElement, int atomicNumber, int typeOfBond
 	}
 	catch(std::invalid_argument& e){
 		return 0;
+	} 
+	if(addElement(firstElement,*newElement,typeOfBond)==0){
+		free(newElement);
+		return 0;
 	}
-	return addElement(firstElement,*newElement,typeOfBond);
+	// return addElement(firstElement,*newElement,typeOfBond);
 }
 
 int Compound::addElement(Element& firstElement, Element& secondElement, Compound& secondCompound,int typeOfBond){
@@ -647,15 +663,15 @@ int Compound::hydrogenFiller(){
 	return 1;
 }
 
-int Compound::isStable(){
+bool Compound::isStable(){
 
 	for(auto atom: atoms){
-
-		if (atom->getValency()[0]!=0 && atom->getValency()[1]!=0 && atom->getAtomicNumber()<=18){
-			return 0;
+		if(atom->isStable()){
+			continue;
 		}
+		return false;
 	}
-	return 1;
+	return true;
 }
 
 bool Compound::isFullyConnected(){
@@ -793,7 +809,14 @@ std::string Compound::getCompoundString(){
 		int atomicNumber=atom->getAtomicNumber();
 		int atomicMass=atom->getAtomicMass();
 		int charge=atom->getCharge();
+		int v=atom->getValency()[0]+charge-atom->getCurrentCovalentBonds().size();
 
+		for(auto bond: atom->getCurrentDativeBonds()){
+			if(bond.second==+2){
+				v-=2;
+			}
+		}
+//ngl this is ineffiecint but im not touching it
 		for (auto bond: bonds[atom]){
 			if(bond.second==0){
 				bondString.append(std::to_string(std::distance(atoms.begin(),std::find(atoms.begin(),atoms.end(),bond.first))));
@@ -836,7 +859,7 @@ std::string Compound::getCompoundString(){
 
 		name.append(std::to_string(atom->getAtomicNumber()));
 		name.append("&");
-		if(atom->getAtomicMass()==masses[atom->getAtomicNumber()]){
+		if(atom->getAtomicMass()+0.01>masses[atom->getAtomicNumber()-1]&&atom->getAtomicMass()-0.01<masses[atom->getAtomicNumber()-1]){
 			name.append("0");
 		}
 		else{
@@ -845,14 +868,14 @@ std::string Compound::getCompoundString(){
 		
 		name.append("&");
 		name.append(std::to_string(charge));
+		name.append("&");
+		name.append(std::to_string(v));
 		name.append("/");
 	}
 
 	std::string compoundString=name+";"+bondString;
 
 	return compoundString;
-
-
 }
 std::vector<Element*> Compound::getAtoms(){
 	return atoms;
@@ -866,7 +889,7 @@ std::vector<Element*> Compound::getUnstableAtoms(){
 
 	std::vector<Element*> unstableAtoms;
 	for(auto atom:atoms){
-		if(atom->getValency()[0]!=0 && atom->getValency()[1]!=0){
+		if(!atom->isStable()){
 			unstableAtoms.emplace_back(atom);
 		}
 	}
@@ -890,7 +913,7 @@ void Compound::printCompound(){
 }
 
 
-
+ 
 
 
 

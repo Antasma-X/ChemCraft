@@ -1,13 +1,13 @@
 #include "numberObject.h"
 
-NumberObject::NumberObject(std::vector<GLfloat> vertices, int number){
+NumberObject::NumberObject(glm::vec2 position, int number){
 
     if(!((number<=8 &&number>=1)||(number>=-8&&number<=-1))){
         throw std::runtime_error("Invalid Number");
     }
-    if(vertices.size()!=16){
-        throw std::invalid_argument("Vertices are Invalid");
-    }
+    // if(vertices.size()!=16){
+    //     throw std::invalid_argument("Vertices are Invalid");
+    // }
     this->number=number;
 
     if(number>0){
@@ -18,16 +18,16 @@ NumberObject::NumberObject(std::vector<GLfloat> vertices, int number){
     }
     else{
         throw std::runtime_error("Invalid Number");
-    }
+    } 
  
 
     float h=std::abs(number)<5?0.5f:0.0f;
     float w=std::abs(number)%5;
     Vertices={
-        vertices[0],vertices[1],w*0.2f,h+0.0f,
-        vertices[2],vertices[3],w*0.2f,h+0.5f,
-        vertices[4],vertices[5],(w+1)*0.2f,h+0.5f,
-        vertices[6],vertices[7],(w+1)*0.2f,h+0.0f,
+        -numberWidth/2,-numberHeight/2,w*0.2f,h+0.0f,
+        -numberWidth/2,numberHeight/2,w*0.2f,h+0.5f,
+        numberWidth/2,numberHeight/2,(w+1)*0.2f,h+0.5f,
+        numberWidth/2,-numberHeight/2,(w+1)*0.2f,h+0.0f,
     };
     
     std::vector<GLuint> Indices={
@@ -48,11 +48,19 @@ NumberObject::NumberObject(std::vector<GLfloat> vertices, int number){
     vbo.UnBind();
     vao.UnBind();
     ebo.UnBind();
+
+    this->position=position;
+    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,0.0f));
 }
 
 void NumberObject::Render(){
     shaderProgram.Activate();
     vao.Bind();
+
+    shaderProgram.SetMat4Uniform(model,"model");
+    shaderProgram.SetMat4Uniform(cam.view,"view");
+    shaderProgram.SetMat4Uniform(cam.proj,"proj");
+    
     texture.BindAndSetTexUnit(shaderProgram,"ourTexture");
 
     glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);

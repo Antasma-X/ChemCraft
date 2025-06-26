@@ -2,12 +2,13 @@
 
 std::vector<BondObject*> BondObject::bonds={};
 
-BondObject::BondObject(std::vector<GLfloat> vertices,int type){
+BondObject::BondObject(std::vector<glm::vec2> ends,int type){
 
-    if(vertices.size()!=4){
+    if(ends.size()!=2){
         throw std::invalid_argument("Vertices are Invalid");
     }
-
+    
+    this->ends=ends;
     Vertices=vertices;
     std::vector<GLuint> indices={0,1};
     

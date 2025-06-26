@@ -1,6 +1,5 @@
 #include "element.h"
 
-
 constexpr int NUMBEROFSHELLS=9;
 
 std::array<int,118> Element::numberOfEachElement={};
@@ -226,9 +225,9 @@ int Element::doesDativeBondExist(const Element* secondElement){
 	return index;
 }
 
-std::array<int,2> Element::findValency(int atomicNumber,int charge){
+std::array<int,2> Element::findValency(int atomicNumber,int charge,int v){
 	std::array<int,2> valency;
-
+	//v-=charge;
 	if(doesFollowOctet(atomicNumber)){
 		if (atomicNumber<=2){
 			valency={atomicNumber,atomicNumber-2};
@@ -239,18 +238,29 @@ std::array<int,2> Element::findValency(int atomicNumber,int charge){
 		else if(atomicNumber<=18){
 			valency={atomicNumber-10,atomicNumber-18};
 		}
-		//check
-		valency[0]-=charge;
-		valency[1]-=charge;
+	}
+	//fuck the other weird valencies im loyal
+	else if(atomicNumber==35||atomicNumber==53||atomicNumber==85||atomicNumber==117){
+		valency={7,-1};
 	}
 	else{
-		valency={0,0};
+		if(std::find(higherValencies[atomicNumber].begin(),higherValencies[atomicNumber].end(),v)!=higherValencies[atomicNumber].end()){
+			valency={v,1000};
+		}
+		else{
+			error.Push("Valency could not be found. Default valency will be used");
+			valency={higherValencies[atomicNumber][0],1000};
+		}
+
 	}
+	//ceck
+	valency[0]-=charge;
+	valency[1]-=charge;
 
 	return valency;
 }
 	
-Element::Element(unsigned int atomicNumber, double atomicMass,int charge){
+Element::Element(unsigned int atomicNumber, double atomicMass,int charge,int v){
 
 	bool validMass=true;
 	bool validCharge=true;
@@ -266,22 +276,20 @@ Element::Element(unsigned int atomicNumber, double atomicMass,int charge){
 
 	//Sets Atomic Mass
 	if (atomicMass<=atomicNumber){
-		if(atomicMass!=0){
+		if(!(atomicMass<0.01&&atomicMass>-0.01)){
 			validMass=false;
 		}
 		atomicMass=findMass(this->atomicNumber);
 	}
 	this->atomicMass=atomicMass;
 
-	valency=findValency(atomicNumber, charge);
+	this->valency=findValency(atomicNumber, charge,v);
 
-	if(valency[0]-charge<0 || valency[1]+charge>0){
+	if(this->valency[0]-charge<0 || this->valency[1]+charge>0){
 		validCharge=false;
 		charge=0;
 	}
-	else{
-		this->charge=charge;
-	}
+	this->charge=charge;
 	
 
 	electrons=atomicNumber-charge;
@@ -313,16 +321,19 @@ Element::Element(unsigned int atomicNumber, double atomicMass,int charge){
 
 
 	if(!validMass && !validCharge){
-		isError=true;
-		errorMessage="Invalid Mass and Charge. They have been reset";
+		error.Push("Invalid Mass and Charge. They have been reset");
+		// isError=true;
+		// errorMessage=;
 	}
 	else if(!validMass){
-		isError=true;
-		errorMessage="Invalid Mass. It has been reset";
+		error.Push("Invalid Mass. It has been reset");
+		// isError=true;
+		// errorMessage="Invalid Mass. It has been reset";
 	}
 	else if(!validCharge){
-		isError=true;
-		errorMessage="Invalid Charge. It has been reset";
+		error.Push("Invalid Charge. It has been reset");
+		// isError=true;
+		// errorMessage="Invalid Charge. It has been reset";
 	}
 }
 
@@ -334,7 +345,10 @@ Element::~Element(){
 	for(auto bond: covalentBonds){
 		
 		if(((*this)/(*bond))==0){
-			std::runtime_error("Atoms Do Not Have Covalent Bond");
+			error.Push("Atoms Do Not Have Covalent Bond. Compound should be destroyed immediately");
+			// isError=true;
+			// errorMessage="Atoms Do Not Have Covalent Bond. Compound should be destroyed immediately";
+			// std::runtime_error("Atoms Do Not Have Covalent Bond");
 		}
 		
 	}
@@ -342,41 +356,58 @@ Element::~Element(){
 	for(auto bond: ionicBonds){
 		if(bond.second==-1){
 			if(((*this)%(*bond.first))==0){
-				std::runtime_error("Atoms Do Not Have Ionic Bond");
+				error.Push("Atoms Do Not Have Ionic Bond. Compound should be destroyed immediately");
+				// isError=true;
+				// errorMessage="Atoms Do Not Have Ionic Bond. Compound should be destroyed immediately";
+				// std::runtime_error("Atoms Do Not Have Ionic Bond");
 			}
 				
 		}
 		else if(bond.second==1){
 			if(((*bond.first)%(*this))==0){
-				std::runtime_error("Atoms Do Not Have Ionic Bond");
+				error.Push("Atoms Do Not Have Ionic Bond. Compound should be destroyed immediately");
+
+				//std::runtime_error("Atoms Do Not Have Ionic Bond");
 			}
 		}
 		else{
-			throw std::runtime_error("Invalid Ionic Bond");
+			error.Push("Atoms Have Invalid Bond. Compound should be destroyed immediately");
+			// isError=true;
+			// errorMessage="Atoms Have Invalid Bond. Compound should be destroyed immediately";
+			// throw std::runtime_error("Invalid Ionic Bond");
 		}
 	}
 
 	for(auto bond: dativeBonds){
 		if(bond.second==-2){
 			if(((*this)||(*bond.first))==0){
-				std::runtime_error("Atoms Do Not Have Dative Bond");
+				error.Push("Atoms Do Not Have Dative Bond. Compound should be destroyed immediately");
+				// isError=true;
+				// errorMessage="Atoms Do Not Have Dative Bond. Compound should be destroyed immediately";
+				//std::runtime_error("Atoms Do Not Have Dative Bond");
 			}
 		}
 		else if(bond.second==2){
 			if(((*bond.first)||(*this))==0){
-				std::runtime_error("Atoms Do Not Have Dative Bond");
+				error.Push("Atoms Do Not Have Dative Bond. Compound should be destroyed immediately");
+				// isError=true;
+				// errorMessage="Atoms Do Not Have Dative Bond. Compound should be destroyed immediately";
+				//std::runtime_error("Atoms Do Not Have Dative Bond");
 			}
 		}
 		else{
-			throw std::runtime_error("Invalid Dative Bond");
+			error.Push("Atoms Have Invalid Bond. Compound should be destroyed immediately");
+			// isError=true;
+			// errorMessage="Atoms Have Invalid Bond. Compound should be destroyed immediately";
+			//throw std::runtime_error("Invalid Dative Bond");
 		}
 	}
 }
 
 int Element::operator * (Element& secondElement){
-
-	if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )|| (secondElement.isNobleGasConfig() && secondElement.doesFollowOctet(secondElement.atomicNumber))||(getNumberOfValenceElectrons()<1)||(secondElement.getNumberOfValenceElectrons()<1)){
-		// throw std::runtime_error("Atoms Can Not Form Covalent Bond");
+ 
+	// if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )|| (secondElement.isNobleGasConfig() && secondElement.doesFollowOctet(secondElement.atomicNumber))||(getNumberOfValenceElectrons()<1)||(secondElement.getNumberOfValenceElectrons()<1)){
+	if(isStable()||secondElement.isStable()||(getNumberOfValenceElectrons()<1)||(secondElement.getNumberOfValenceElectrons()<1)){
 		return 0;
 	}
 	else{
@@ -395,7 +426,6 @@ int Element::operator / (Element& secondElement){
 
 	if (FirstElement_Index==-1 || SecondElement_Index==-1){
 		return 0;
-		// throw std::runtime_error("Atoms Do Not Have Covalent Bond");
 	}
 
 	addElectrons(-1);
@@ -407,8 +437,10 @@ int Element::operator / (Element& secondElement){
 }
 
 int Element::operator ^ (Element& secondElement){
-		if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )|| (secondElement.isNobleGasConfig() && secondElement.doesFollowOctet(secondElement.atomicNumber))||(secondElement.getNumberOfValenceElectrons()<1)){
-			// throw std::runtime_error("Atoms Can Not Form Ionic Bond");
+	// if ((isNobleGasConfig() && doesFollowOctet(atomicNumber) )|| (secondElement.isNobleGasConfig() && secondElement.doesFollowOctet(secondElement.atomicNumber))||(secondElement.getNumberOfValenceElectrons()<1)){
+	// 	return 0;
+	// }
+	if(isStable()||secondElement.isStable()||(getNumberOfValenceElectrons()<1)||(secondElement.getNumberOfValenceElectrons()<1)){
 		return 0;
 	}
 	else{
@@ -436,10 +468,16 @@ int Element::operator % (Element& secondElement){
 	if(ionicBonds[FirstElement_Index].second==-1){
 		addElectrons(-1);
 		secondElement.addElectrons(1);
+
+		charge+=1;
+		secondElement.charge-=1;
 	}
 	else{
 		addElectrons(1);
 		secondElement.addElectrons(-1);		
+
+		charge-=1;
+		secondElement.charge+=1;
 	}
 
 	ionicBonds.erase(ionicBonds.begin() + FirstElement_Index);
@@ -449,8 +487,10 @@ int Element::operator % (Element& secondElement){
 
 int Element::operator && (Element& secondElement){
 	//rule altered here because chmiestry
-	if ((isNobleGasConfig() && doesFollowOctet(atomicNumber))||(secondElement.getNumberOfValenceElectrons()<2)){
-		// throw std::runtime_error("Atoms Can Not Form Dative Bond");
+	// if ((isNobleGasConfig() && doesFollowOctet(atomicNumber))||(secondElement.getNumberOfValenceElectrons()<2)){
+	// 	return 0;
+	// }
+	if(isStable()||(secondElement.getNumberOfValenceElectrons()<2)){
 		return 0;
 	}
 	else{
@@ -468,7 +508,6 @@ int Element::operator || (Element& secondElement){
 
 	if (FirstElement_Index==-1 || SecondElement_Index==-1){
 		return 0;
-		// throw std::runtime_error("Atoms Do Not Have Dative Bond");
 	}
 
 	if(dativeBonds[FirstElement_Index].second==2){
@@ -481,6 +520,10 @@ int Element::operator || (Element& secondElement){
 	dativeBonds.erase(dativeBonds.begin() + FirstElement_Index);
 	secondElement.dativeBonds.erase(secondElement.dativeBonds.begin() + SecondElement_Index);
 	return 1;
+}
+
+bool Element::isStable(){
+	return isNobleGasConfig()||valency[0]==0||valency[1]==0;
 }
 
 int Element::getAtomicNumber(){
@@ -550,20 +593,14 @@ std::vector<Element*> Element::getCurrentBonds(){
  
 
 int Element::getNumberOfValenceElectrons(){
-	//////////////////////////////////////////////////////////////////////////////////////////////////for now 6 until figured out
-	int n;
-	if(doesFollowOctet(atomicNumber)){
-		n=getValency()[0]-covalentBonds.size();
-	}
-	else{
-		n=6;
-	}
+	//check
+	int n=getValency()[0]-2*covalentBonds.size()-2*dativeBonds.size();
 
-	for(auto bond: dativeBonds){
-		if(bond.second==+2){
-			n-=2;
-		}
-	}
+	// for(auto bond: dativeBonds){
+	// 	if(bond.second==+2){
+	// 		n-=2;
+	// 	}
+	// }
 
 	return n;
 }
@@ -585,3 +622,4 @@ void Element::printNumberOfEachElement(std::ostream output){
 		output<<"Number of Elements of "<<names[i]<<":"<<numberOfEachElement[i]<<std::endl;
 	}
 }
+

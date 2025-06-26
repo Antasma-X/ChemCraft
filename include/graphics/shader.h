@@ -33,6 +33,9 @@ struct Shader{
     //Destroys Shader
     void Delete();
 
+    void SetMat4Uniform(glm::mat4 mat,const char* uniform);
+
+    void Set3fUniform(float R,float G,float B, const char* uniform);
     private:
 
         //Gets the shader info from the file pass in as a string

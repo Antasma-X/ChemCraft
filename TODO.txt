@@ -1,6 +1,11 @@
 Main App:
 
 Now:
+ error
+organize includes after completing objects
+popup variables
+also custom popup
+
 make ionobject part of it and ionic bond its own thing
 //where there is destructor you always use new and free
 

@@ -5,14 +5,13 @@
 #include "values.h"
 #include "element.h"
 
+class Element;
 class Compound{
 	std::vector<Element*> atoms;
 
 	//0 is covalent
 	//-1 means current element took electron(anion)
 	//+1 means current element gave electron(cation)
-	//might change ngl
-	//organize agin
 	//-2 means current element gains 2 electrons from the bond
 	//+2 means current element donates 2 electrons to the bond
 	std::map<Element*,std::vector<std::pair<Element*,int>>> bonds;
@@ -59,12 +58,23 @@ class Compound{
 		/*
 		Constructor for Compound (Calls Compound(Element& element) internally)
 		You pass in the atomic number that will be part of the compound(the compound will only consist of that element)
+		You can also pass Atomic Mass and/or charge and/or valency if it is a higher level element
+		If you don't pass them in, then atomic mass is set as average atomic mass(present in values.cpp) of element and charge is set as 0
+		If you don't pass anything for v or pass an incorrect valency then it is reset to a default valency depending on the valency
 
-		Throws Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid(from Element.h)
+		Note: the valency passed must be the valency of the atom without charge
 
-		Pass in: Atomic Number of element to be first added to compound
+		If invalid Atomic Mass or Charge is passed, they are set to default
+		If it is not fine that mass or charge is reset, then call destructor.
+
+		Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid
+
+		If atomic mass or charge passed is invalid, error popup occurs
+		if invalid valency is also passed in, error popup occurs
+
+		Pass in: Atomic Number of element to be first added to compound, atomic mass(optional), charge (optional), v (optional)
 		*/
-		Compound(int atomicNumber,double atomicMass=0,int charge=0);
+		Compound(int atomicNumber,double atomicMass=0,int charge=0,int v=1000);
 
 		/*
 		Constructor for Compound
@@ -123,8 +133,8 @@ class Compound{
 		The atomic number will be used to create second element which is added to compound
 		The second element bonds to the first element present in the compound
 
-		Throws Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid(from Element.h)
-
+		Throws std::invalid_argument("Invalid Atomic Number") when Atomic Number is invalid
+		
 		Function will add second element to list of elements and add to both atoms' bonds map
 		Pass in: First Element which is part of the compound, Atomic number of second element , Type of Bond(0 is covalent, 1 is ionic)
 		Returns: 0 if it isn't successful
@@ -167,7 +177,7 @@ class Compound{
 		Returns: Vector of Compounds that are formed from element removal if it is successful
 				 Empty Vector if it isn't successful
 		*/
-		std::vector<Compound> removeElement(Element& firstElement);
+		std::vector<Compound> removeElement(Element& firstElement); 
 		/*
 		Creates a bond between 2 elements already present within the compound
 		You pass in 2 elements which already part of the compound and an integer signifying the type of bond
@@ -224,11 +234,10 @@ class Compound{
 		int hydrogenFiller();
 		/*
 		Checks if all the atoms in the compound have valecnies of 0 and are stable
-
-		Returns: 1 if compound is stable
-				 0 if compound is not stable
+		Returns: true if compound is stable
+				 false if compound is not stable
 		*/
-		int isStable();
+		bool isStable();
 
 		/*
 		Checks if all elements are bonded to each other in the compound (I.E. if you can access every element from any element in graph through bonds)

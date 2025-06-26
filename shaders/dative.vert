@@ -2,10 +2,12 @@
 layout(location = 0) in vec2 aPos;
 
 out vec3 color;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
 
-//doesnt work when i put id in frag idk why
 void main() {
-    gl_Position = vec4(aPos.x ,aPos.y, 0.0, 1.0);
+    gl_Position = proj*view*model*vec4(aPos.x,aPos.y, 0.0, 1.0);
 
     if (gl_VertexID < 1){
         //Red

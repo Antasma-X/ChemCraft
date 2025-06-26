@@ -12,11 +12,12 @@
 
 #include "electronObject.h"
 
-#include "element.h"
+#include "compound.h"
 
 #include "config.h"
 #include "chargeObject.h"
-
+ 
+class Element;
 struct ElementObject{
     //Element being rendered
     Element* element; 
@@ -58,6 +59,9 @@ struct ElementObject{
     //Shader for Element
     Shader shaderProgram;
 
+    glm::vec2 position;
+    glm::mat4 model;
+
     //Electrons array. Depending on how many there are some will be invisible. Goes through same order as vertices. Bottom Left,Top Left,Top Right,Bottom Right
     std::array<ElectronObject,8> electrons; 
 
@@ -91,20 +95,20 @@ struct ElementObject{
     Throws std::runtime_error("Electron Generation went Wrong") when Electrons are not generated properly
     Throws std::runtime_error("Dative Generation went Wrong") when Datives are not generated properly
     */
-    ElementObject(std::vector<GLfloat>vertices, Element* el);
+    ElementObject(glm::vec2 position, Element* el);
 
     //Used by Render to render element
     void Render();
 
     private:
         //Generates Electron Objects. Some Electrons will be invisible for valency
-        void GenerateElectrons();
+        void GenerateElectrons(GLfloat width);
 
         //Generate Dative Objects. These Objects will be used to make dative bonds
-        void GenerateDatives();
+        void GenerateDatives(GLfloat width);
 
         //Generate Charge
-        void GenerateCharge();
+        void GenerateCharge(GLfloat width);
     
 };
 #endif 

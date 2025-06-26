@@ -20,6 +20,9 @@ extern std::map<std::string,std::string> superScripts;
 
 // extern std::map<std::string,std::string> molecules;
 // extern std::vector<std::string> compoundNumbers;
+
+//kep prefered valency first
+extern std::map<int,std::vector<int>> higherValencies;
 extern std::map<int,int> atomicity;
 
 
