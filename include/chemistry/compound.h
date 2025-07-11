@@ -2,10 +2,13 @@
 #define COMPOUND_H
 
 #include "StdLibDependencies.h"
-#include "values.h"
+#include "utils.h"
+
 #include "element.h"
+#include "values.h"
 
 class Element;
+
 class Compound{
 	std::vector<Element*> atoms;
 

@@ -10,14 +10,6 @@
 
 int main(int argc, char* argv[]){
 //need quotes for space in path
-    if(argc>1){
-        if(argc>2){
-            std::cerr<<"Only First File will be counted"<<std::endl;
-        }
-        currentFile=argv[1];
-        Management::OpenFile();
-    
-    }
 
     try{
         if(!Config()){
@@ -34,11 +26,19 @@ int main(int argc, char* argv[]){
         throw;
         return 1;
     }
-    std::cout<<"heybal"<<std::endl;
+
     //putting try here is useless
     GLFWwindow* window= Management::SetUp();
     if(window==nullptr){
         return 1;
+    }
+
+    if(argc>1){
+        if(argc>2){
+            std::cerr<<"Only First File will be counted"<<std::endl;
+        }
+        currentFile=argv[1];
+        Management::OpenFile();
     }
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -61,9 +61,6 @@ int main(int argc, char* argv[]){
     ImFont* compoundNameFont=io.Fonts->AddFontFromFileTTF(fontFile, compoundNameSize);
     ImFont* molecularFormulaFont=io.Fonts->AddFontFromFileTTF(molecularFormulaFontFile,molecularFormulaSize,nullptr, ranges);
 
-
-    std::cout<<"heybal"<<std::endl;
-    error.Push("heyyyy");
     //App Loop
     while (!glfwWindowShouldClose(window)){
 
@@ -72,9 +69,8 @@ int main(int argc, char* argv[]){
 
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0,windowWidth,windowHeight);
+        glViewport(0, 0,display_w,display_h);
         glClearColor(windowColor.x * windowColor.w, windowColor.y * windowColor.w, windowColor.z * windowColor.w, windowColor.w);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0)
         {
@@ -102,19 +98,22 @@ int main(int argc, char* argv[]){
         //SideMenu for elements
         UI::SideMenu(searchFontSmall,searchFontLarge,childWindowSmallFont,childWindowLargeFont, numberFont, symbolFont, nameFont,massFont,compoundNameFont,molecularFormulaFont);
         
+        // glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         //Draws all elements to screen
         Render::Render();
 
-        error.ErrorPopUp();
+        error->ErrorPopUp();
 
         ImGui::PopFont();
-
 
         //ImGui Render(Not my render, learnt that the hard way)
         ImGui::Render();
         
         //Imgui Ending Code
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
             GLFWwindow* backup_current_context = glfwGetCurrentContext();

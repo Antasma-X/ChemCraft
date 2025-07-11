@@ -1,10 +1,13 @@
 #include "UIGeneration.h"
 
+
+// double UI::sideMenuWidthPerCent=initialSideMenuWidthPerCent; 
+
 void UI::SideMenu(ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont){
     
     static ImVec2 prevWindowSize=ImVec2(0,0);
     static double sideMenuWidthPerCent=initialSideMenuWidthPerCent;
-
+ 
     static std::vector<std::string> currentSearchArray={};
 
     ImGuiIO& io=ImGui::GetIO(); (void)io;
@@ -30,6 +33,9 @@ void UI::SideMenu(ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* child
 
 
         sideMenuWidthPerCent=ImGui::GetWindowSize().x/io.DisplaySize.x;
+
+        //im lazy
+        sideMenuWidthPerCentCopy=sideMenuWidthPerCent;
     }
 
     ImGui::End();
@@ -174,7 +180,7 @@ void UI::ElementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindo
             std::transform(lowerName.begin(),lowerName.end(),lowerName.begin(),::tolower);
 
             if(std::find(currentSearchArray.begin(),currentSearchArray.end(),lowerName)!=currentSearchArray.end()){
-                std::cout<<"kjajdajdja"<<std::endl;
+                //std::cout<<"kjajdajdja"<<std::endl;
                 GenerateCompoundButton(i,sizeChange,compoundNameFont,molecularFormulaFont,isFirstBox);
                 isFirstBox=false;
             }
@@ -250,12 +256,11 @@ void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
         Compound* comp;
         try{
             comp=new Compound(atomicNumber);
+
             Render::createCompoundObject(comp); 
         }
         catch(std::invalid_argument& e){
-            error.Push(std::to_string(atomicNumber)+" is Invalid");
-            // isError=true;
-            // errorMessage=std::to_string(atomicNumber)+" is Invalid";
+            error->Push(std::to_string(atomicNumber)+" is Invalid");
             std::cerr<<atomicNumber<<" is Invalid"<<std::endl;
         }    
     }
@@ -361,7 +366,7 @@ void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
                     Render::createCompoundObject(comp); 
                 }
                 catch(std::invalid_argument& e){
-                    error.Push(std::to_string(atomicNumber)+" is Invalid");
+                    error->Push(std::to_string(atomicNumber)+" is Invalid");
                     // isError=true;
                     // errorMessage=std::to_string(atomicNumber)+" is Invalid";
                     std::cerr<<std::to_string(atomicNumber)<<" is Invalid"<<std::endl;
@@ -385,18 +390,18 @@ void UI::GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
     try{
         Compound comp(molecules[compoundNumbers[compoundNumber-1]]);
         formula=comp.getMolecularFormula();
-        std::cout<<"balls"<<std::endl;
+        // std::cout<<"balls"<<std::endl;
     }
     catch(std::invalid_argument& e){
         throw;
-        std::cout<<"balls"<<std::endl;
+        // std::cout<<"balls"<<std::endl;
         return;
     }
 
     //You Can:t Change Staticness
     static ImVec2 initialButtonCorner = ImGui::GetCursorScreenPos();
     static ImVec2 buttonCorner = ImGui::GetCursorScreenPos();
- 
+  
     if(sizeChange && isFirstBox){
         initialButtonCorner.x=ImGui::GetCursorScreenPos().x;
         buttonCorner.x=ImGui::GetCursorScreenPos().x;
@@ -441,7 +446,7 @@ void UI::GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
             Render::createCompoundObject(newComp);
         }
         catch(std::invalid_argument& e){
-            error.Push("Invalid Compound String in Compound List"+compoundNumbers[compoundNumber-1]);
+            error->Push("Invalid Compound String in Compound List"+compoundNumbers[compoundNumber-1]);
             // isError=true;
             // throw;
             // errorMessage="Invalid Compound String in Compound List";
@@ -546,7 +551,7 @@ void UI::LoadMagnifyingGlass(double searchBarHeightPerCent){
     unsigned char* data = stbi_load(SearchGlass, &width, &height, &channels, 4);
 
     if (!data){
-        error.Push("Failed to load Search Glass Image");
+        error->Push("Failed to load Search Glass Image");
         // isError=true;
         // m  
         // errorMessage="Failed to load Search Glass Image";

@@ -2,6 +2,8 @@
 #define ELEMENT_H
 
 #include "StdLibDependencies.h"
+#include "utils.h"
+
 #include "values.h"
 
 class Element{ 

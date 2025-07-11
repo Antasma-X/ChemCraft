@@ -3,10 +3,10 @@
 
 #include "GUIDependencies.h"
 #include "StdLibDependencies.h"
-#include "config.h"
+
 #include "render.h"
-#include "signObject.h"
-#include "error.h"
+#include "callbacks.h"
+#include "utils.h"
 
 namespace Management{
     /*
@@ -28,6 +28,11 @@ namespace Management{
             window pointer if succeeds
     */
     GLFWwindow* SetUp();
+
+    /*
+    Sets up all the callbacks so you can move around, zoom in, etc for the actual app
+    */
+    static void SetCallBacks(GLFWwindow* window);
 
     /*
     Cleans up GLFW, ImGui and cleans up objects

@@ -3,12 +3,12 @@
 Texture::Texture(std::string imageFilePath){
 
     int width,height,noColorChannels;
-    stbi_set_flip_vertically_on_load(true);
+    // stbi_set_flip_vertically_on_load(true);
     //replaced 0 with rgba
     unsigned char* image= stbi_load(imageFilePath.c_str(),&width,&height,&noColorChannels,STBI_rgb_alpha);
 
     if (!image) {
-        error.Push("Failed to load texture: "+imageFilePath);
+        error->Push("Failed to load texture: "+imageFilePath);
         std::cerr << "Failed to load texture: " << imageFilePath << std::endl;
         return;
     }

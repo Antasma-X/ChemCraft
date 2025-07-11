@@ -4,13 +4,8 @@
 #include "GUIDependencies.h"
 #include "StdLibDependencies.h"
 
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
-#include "shader.h"
-
-#include "config.h"
-
+#include "graphics.h"
+#include "utils.h"
 
 struct ElectronObject{
 
@@ -27,34 +22,44 @@ struct ElectronObject{
     */
     std::vector<GLfloat> Vertices;
 
-    glm::vec2 position;
-
-    glm::mat4 model;
     //VAO for Electron
     VAO vao;
 
     //VBO for Electron 
     VBO vbo;
+
+    EBO ebo;
     /*
     Note: There is no EBO
     */
+
     /*
     Shader for Electron. Draws point that is or is not transparent. Discards to make point
     */
     Shader shaderProgram;
 
+    //Position vector of center of element in world space
+    glm::vec2 position;
+
+    //Model Matrix of Element. Ngl never understood
+    glm::mat4 model;
+    
     //Because Errors
     ElectronObject()=default;
+
     /*
     Constructor for Electron
-    Takes one Vertice with 3 values: x,y,transparency
+    
+    Takes in a vector(x,y) which is the center of the object in world space
+
+    Takes in transparency value, 1.0f if opaque, 0.0f if transparent
 
     Throws std::invalid_argument("Vertices are Invalid") if invalid vertices are passed in
     */
     ElectronObject(glm::vec2 position,GLfloat transparency);
-
+ 
     /*
-    Used by Render to Render electron
+    Used by ElementObject::Render Render to Render electron
     */
     void Render();
 
@@ -62,5 +67,9 @@ struct ElectronObject{
     Deletes VAO,VBO,EBO
     */
     void Destroy();
+
+    
+    void Move(glm::vec2 delta);
+
 };
 #endif

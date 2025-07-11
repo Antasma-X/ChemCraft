@@ -2,10 +2,7 @@
 
 using json = nlohmann::json;
 
-//orderm of map doesnt matter but compoundNumber is order you want diplayed in documentation
-
-Camera cam;
-struct Error error;
+//orderm of map doesnt matter but compoundNumber is order you want displayed in documentation
 
 const char* windowName="Nomenclature";
 
@@ -27,19 +24,16 @@ const char* searchBarLabel="Search..";
 
 const char* disallowedCharSearchBar="!@#$%^&*\n\t0123456789";
 
-// 
 
-
- 
 std::string elementVertShaderFilePath="../shaders/texture.vert";
 std::string elementFragShaderFilePath="../shaders/texture.frag";
 std::string electronVertShaderFilePath="../shaders/electron.vert";
 std::string electronFragShaderFilePath="../shaders/electron.frag";
 std::string numberVertShaderFilePath="../shaders/texture.vert";
 std::string numberFragShaderFilePath="../shaders/texture.frag";
-std::string signVertShaderFilePath="../shaders/sign.vert";
-std::string signFragShaderFilePath="../shaders/sign.frag";
-
+std::string signVertShaderFilePath="../shaders/texture.vert";
+std::string signFragShaderFilePath="../shaders/texture.frag";
+ 
 std::string covalentVertShaderFilePath="../shaders/covalent.vert";
 std::string covalentFragShaderFilePath="../shaders/covalent.frag";
 std::string ionicVertShaderFilePath="../shaders/ionic.vert";
@@ -51,6 +45,12 @@ std::map<std::string,Shader> shaders;
 
 std::string elementFilePath1="../Assets/Elements/";
 std::string elementFilePath2=".png";
+
+std::string numberBlueFilePath="../Assets/numberAtlasBlue.png";
+std::string numberRedFilePath="../Assets/numberAtlasRed.png";
+
+std::string plusFilePath="../Assets/plusBlue.png";
+std::string minusFilePath="../Assets/minusRed.png";
 
 std::map<std::string,std::string> molecules;
 std::vector<std::string> compoundNumbers;
@@ -212,9 +212,6 @@ double initialSideMenuWidthPerCent;
 int errorMessageOffsetX;
 int errorMessageOffsetY;
 
-
-//Render
-
 //Element PNG and Texture sizes
 GLfloat elementTextureHeight;
 GLfloat elementSingleTextureWidth;
@@ -223,14 +220,29 @@ GLfloat elementDoubleTextureWidth;
 GLfloat electronDistanceDirect;
 GLfloat electronDistanceAdjust;
 
+//Sign
+GLfloat plusSignTextureWidth;
+GLfloat plusSignTextureHeight;
+GLfloat minusSignTextureWidth;
+GLfloat minusSignTextureHeight;
+
+//Camera
+float minZoom;
+float maxZoom;
+int minCamMovement;
+float zoomShift;
+float elementSpacingAmount;
+
 glm::vec2 defaultSpawnLocation;
 
 GLfloat signLength;
 GLfloat bondThickness;
 GLfloat signThickness;
 
-
+GLfloat numberTextureWidth;
+GLfloat numberTextureHeight;
  
+double sideMenuWidthPerCentCopy;
 
 
 void to_json(json& js, const ImVec4& vec){
@@ -314,12 +326,12 @@ int Config(){
 
         configData.update(customConfigData);
 
-    }
+    } 
 
     //thnk you chatgpt i wont forget it
     // Window properties
     //configData.dump(4);
-    std::cout<<"ligma"<<std::endl;
+    std::cout<<"ligma" <<std::endl;
 
     windowColor = configData.at("windowColor").get<ImVec4>();
     std::cout<<"ligma"<<std::endl;
@@ -472,6 +484,20 @@ int Config(){
     electronDistanceDirect=configData.at("electronDistanceDirect").get<double>();
     electronDistanceAdjust=configData.at("electronDistanceAdjust").get<double>();
 
+    numberTextureWidth=configData.at("numberTextureWidth").get<double>();
+    numberTextureHeight=configData.at("numberTextureHeight").get<double>();
+
+    GLfloat plusSignTextureWidth=configData.at("plusSignTextureWidth").get<double>();
+    GLfloat plusSignTextureHeight=configData.at("plusSignTextureHeight").get<double>();
+    GLfloat minusSignTextureWidth=configData.at("minusSignTextureWidth").get<double>();
+    GLfloat minusSignTextureHeight=configData.at("minusSignTextureHeight").get<double>();
+
+    //Camera
+    minZoom=configData.at("minZoom").get<float>();;
+    maxZoom=configData.at("maxZoom").get<float>();
+    minCamMovement=configData.at("minCamMovement").get<int>();
+    zoomShift=configData.at("zoomShift").get<float>();
+    elementSpacingAmount=configData.at("elementSpacingAmount").get<float>();
 
     // Spawn location
     defaultSpawnLocation = configData.at("defaultSpawnLocation").get<glm::vec2>();
@@ -490,7 +516,7 @@ int Config(){
         std::map<std::string,std::string> additonalStrings=configData.at("additionalCompoundStrings").get<std::map<std::string,std::string>>();
 
         if(additonalStrings.size()!=additionals.size()){
-            error.Push("Additional Compounds could not be Inserted");
+            error->Push("Additional Compounds could not be Inserted");
             // isError=true;
             // errorMessage="Additional Compounds could not be Inserted";
             std::cerr<<"Additional Compounds could not be Inserted"<<std::endl;
@@ -515,6 +541,7 @@ int Config(){
     }
     std::cout<<"heybal"<<std::endl;
 
+    sideMenuWidthPerCentCopy=initialSideMenuWidthPerCent;
     return 1;
 }
 

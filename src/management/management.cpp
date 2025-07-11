@@ -10,8 +10,7 @@ void Management::OpenFile(){
     std::ifstream file(currentFile);
 
     if(!file){
-        isError=true;
-        errorMessage="File could not be opened";
+        error->Push("File could not be opened");
         std::cerr<<"File could not be opened"<<std::endl;
         currentFile="Unknown";
     }
@@ -24,8 +23,7 @@ void Management::OpenFile(){
                 Render::createCompoundObject(comp); 
             }
             catch(std::invalid_argument& e){
-                isError=true;
-                errorMessage=line+ " is Invalid";
+                error->Push(line+ " is Invalid");
                 std::cerr<<line<<" is Invalid"<<std::endl;
             }    
         }
@@ -36,7 +34,9 @@ void Management::OpenFile(){
 GLFWwindow* Management::SetUp(){
 
     GLFWwindow* window=nullptr;
-    //GLFW Setup
+    camera = new Camera();
+    error= new Error();
+    //GLFW Setup 
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit()){
         std::cerr<<"GLFW Failed to Initialize"<<std::endl;
@@ -72,26 +72,28 @@ GLFWwindow* Management::SetUp(){
 
     //OpenGl Set Up
     const char* glsl_version = "#version 330";
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(window, false);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
+    glDisable(GL_DEPTH_TEST);
     std::cout<<"heybal"<<std::endl;
     glEnable(0x8642);
-    std::cout<<"heybal"<<std::endl;
+
     //might get fukced
     //Shaders
-    Shader elementShader= *new Shader(elementVertShaderFilePath,elementFragShaderFilePath);
-    Shader electronShader= *new Shader(electronVertShaderFilePath,electronFragShaderFilePath);
-    Shader numberShader= *new Shader(numberVertShaderFilePath,numberFragShaderFilePath);
-    Shader signShader= *new Shader(signVertShaderFilePath,signFragShaderFilePath);
+    Shader elementShader= Shader(elementVertShaderFilePath,elementFragShaderFilePath);
+    Shader electronShader= Shader(electronVertShaderFilePath,electronFragShaderFilePath);
+    Shader numberShader= Shader(numberVertShaderFilePath,numberFragShaderFilePath);
+    Shader signShader= Shader(signVertShaderFilePath,signFragShaderFilePath);
 
-    Shader covalentShader= *new Shader(covalentVertShaderFilePath,covalentFragShaderFilePath);
-    Shader dativeShader= *new Shader(dativeVertShaderFilePath,dativeFragShaderFilePath);
-    Shader ionicShader=*new Shader(ionicVertShaderFilePath,ionicFragShaderFilePath);
+    Shader covalentShader= Shader(covalentVertShaderFilePath,covalentFragShaderFilePath);
+    Shader dativeShader= Shader(dativeVertShaderFilePath,dativeFragShaderFilePath);
+    Shader ionicShader=Shader(ionicVertShaderFilePath,ionicFragShaderFilePath);
 
-    SignObject::colorLocation=glGetUniformLocation(signShader.shaderProgram,"color");
+    // SignObject::colorLocation=glGetUniformLocation(signShader.shaderProgram,"color");
 
     shaders["electron"]=electronShader;
     shaders["element"]=elementShader;
@@ -102,7 +104,19 @@ GLFWwindow* Management::SetUp(){
     shaders["dative"]=dativeShader;
     shaders["ionic"]=ionicShader;
 
+    SetCallBacks(window);
+    
     return window;
+}
+
+void Management::SetCallBacks(GLFWwindow* window){
+    glfwSetWindowUserPointer(window, camera);
+    glfwSetCharCallback(window, ImGui_ImplGlfw_CharCallback);
+    glfwSetKeyCallback(window, Callbacks::KeyCallBack);
+    glfwSetScrollCallback(window, Callbacks::ScrollCallback);
+    glfwSetMouseButtonCallback(window, Callbacks::MouseButtonCallback);
+    glfwSetCursorPosCallback(window, Callbacks::CursorPosCallback);
+    glfwSetFramebufferSizeCallback(window, Callbacks::FrameSizeCallback);
 }
 
 void Management::CleanUp(GLFWwindow* window){
@@ -110,10 +124,13 @@ void Management::CleanUp(GLFWwindow* window){
     // for(auto it: )
 
 
-    for(auto [key,value]:shaders){
-        value.Delete();
-        free(&value);
-    }
+    // for(auto [key,value]:shaders){
+    //     value.Delete();
+    //     free(&value);
+    // }
+
+    delete error;
+    delete camera;
     
     //ImGui Ending
     ImGui_ImplOpenGL3_Shutdown();

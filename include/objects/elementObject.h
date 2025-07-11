@@ -4,20 +4,17 @@
 #include "GUIDependencies.h"
 #include "StdLibDependencies.h"
 
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
+#include "chemistry.h"
+#include "graphics.h"
+#include "utils.h"
+
 #include "texture.h"
-#include "shader.h"
 
 #include "electronObject.h"
-
-#include "compound.h"
-
-#include "config.h"
 #include "chargeObject.h"
  
 class Element;
+
 struct ElementObject{
     //Element being rendered
     Element* element; 
@@ -57,10 +54,16 @@ struct ElementObject{
     Texture texture;
 
     //Shader for Element
-    Shader shaderProgram;
+    Shader shaderProgram; 
 
+    //Position vector of center of element in world space
     glm::vec2 position;
+
+    //Model Matrix of Element. Ngl never understood
     glm::mat4 model;
+
+    //width of the texture
+    GLfloat width;
 
     //Electrons array. Depending on how many there are some will be invisible. Goes through same order as vertices. Bottom Left,Top Left,Top Right,Bottom Right
     std::array<ElectronObject,8> electrons; 
@@ -76,18 +79,8 @@ struct ElementObject{
 
     /*
     Constructor for Element Object
-    Takes in 4 Vertices in the style:
-        {
-            x,y,0.0,0.0
-            x,y,1.0,0.0
-            x,y,1.0,1.0
-            x,y,0.0,1.0
-        }
 
-        1)Bottom Left 
-        2)Top Left
-        3)Top Right
-        4)Bottom Right
+    Takes in a vector(x,y) which is the center of the object in world space
 
     Takes in pointer to element being rendered
 
@@ -100,15 +93,21 @@ struct ElementObject{
     //Used by Render to render element
     void Render();
 
+    std::vector<glm::vec2> getElectronPositions();
+    std::vector<glm::vec2> getDativePositions();
+    glm::vec2 getChargePosition();
+
+    void Move(glm::vec2 delta);
+
     private:
         //Generates Electron Objects. Some Electrons will be invisible for valency
-        void GenerateElectrons(GLfloat width);
+        void GenerateElectrons();
 
         //Generate Dative Objects. These Objects will be used to make dative bonds
-        void GenerateDatives(GLfloat width);
+        void GenerateDatives();
 
-        //Generate Charge
-        void GenerateCharge(GLfloat width);
-    
+        //Generate Charge Object so it spawns on the top right corner of the element
+        void GenerateCharge();
+     
 };
 #endif 

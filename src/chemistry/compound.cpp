@@ -137,6 +137,12 @@ Compound::Compound(int atomicNumber, double atomicMass, int charge,int v){
 	catch(std::invalid_argument& e){
 		throw;
 	}
+
+	atoms.emplace_back(element);
+	bonds[element];
+
+	listOfCompounds.emplace_back(this);
+
 }
 
 Compound::Compound(std::string compound){
@@ -218,6 +224,7 @@ Compound::Compound(std::string compound){
 
 		Element* el;
 		try{
+			
 			el=new Element(stoi(atomicNumber),stof(atomicMass),stoi(charge),stoi(v));
 		}
 		catch(std::invalid_argument& e){
@@ -380,9 +387,9 @@ int Compound::addElement(Element& firstElement, int atomicNumber, int typeOfBond
 		free(newElement);
 		return 0;
 	}
-	// return addElement(firstElement,*newElement,typeOfBond);
+	return addElement(firstElement,*newElement,typeOfBond);
 }
-
+ 
 int Compound::addElement(Element& firstElement, Element& secondElement, Compound& secondCompound,int typeOfBond){
 
 	if((!isAtomInCompound(firstElement)) || (!secondCompound.isAtomInCompound(secondElement)) || this==&secondCompound){

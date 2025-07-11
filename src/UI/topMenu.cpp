@@ -99,7 +99,7 @@ void UI::TopMenu(){
                     catch(std::runtime_error& e){
                         // isError=true;
                         // errorMessage=e.what();
-                        error.Push("A compound was corrupt. It will be destroyed");
+                        error->Push("A compound was corrupt. It will be destroyed");
                         std::cerr<<"A compound was corrupt"<<std::endl;
                         for(auto atom: it->getAtoms()){
                             free(atom);
@@ -320,7 +320,7 @@ void UI::TopMenu(){
                 Render::createCompoundObject(comp); 
             }
             catch(std::invalid_argument& e){
-                error.Push(compoundString+" is Invalid");
+                error->Push(compoundString+" is Invalid");
                 // error>>
                 // isError=true;
                 // errorMessage=e.what();
@@ -341,7 +341,7 @@ void UI::TopMenu(){
                     // isError=true;
                     // errorMessage="Error opening file";
 
-                    error.Push("Error opening file");
+                    error->Push("Error opening file");
                     std::cerr << "Error opening file" << std::endl;
                     free(outPath);
 
@@ -358,7 +358,7 @@ void UI::TopMenu(){
                     catch(std::invalid_argument& e){
                         // isError=true;
                         // errorMessage=e.what();
-                        error.Push("Compound String: "+line+ " is Invalid");
+                        error->Push("Compound String: "+line+ " is Invalid");
                         // isError=true;
                         // errorMessage="A Compound String is Invalid";
                         std::cerr<<line<<" is Invalid"<<std::endl;
@@ -370,13 +370,13 @@ void UI::TopMenu(){
         
         }
         else if (result == NFD_CANCEL){
-            error.Push("User canceled");
+            error->Push("User canceled");
             // isError=true;
             // errorMessage="User Canceled";
             std::cerr << "User canceled\n";
         }
         else{
-            error.Push("Error Opening File Dialog");
+            error->Push("Error Opening File Dialog");
             // isError=true;
             // errorMessage="Error Opening File Dialog";
             std::cerr << "Error opening file dialog.\n";
@@ -407,7 +407,7 @@ void UI::Cut(){
                 free(atom);
             }
             free(it);
-            error.Push("A Compound is Invalid");
+            error->Push("A Compound is Invalid");
             // isError=true;
             // errorMessage="A Compound is Invalid";
             std::cerr<<"A Compound is Invalid"<<std::endl;
@@ -430,7 +430,7 @@ void UI::Copy(){
                 free(atom);
             }
             free(it);
-            error.Push("Compound is Invalid");
+            error->Push("Compound is Invalid");
             // isError=true;
             // errorMessage="A Compound is Invalid";
             std::cerr<<"Compound is Invalid"<<std::endl;
@@ -451,7 +451,7 @@ void UI::Paste(){
             Render::createCompoundObject(comp); 
         }
         catch(std::invalid_argument& e){
-            error.Push("Compound String: "+line+ " is Invalid");
+            error->Push("Compound String: "+line+ " is Invalid");
             // isError=true;
             // errorMessage="A Compound String is Invalid";
             std::cerr<<line<<" is Invalid"<<std::endl;
@@ -495,7 +495,7 @@ void UI::saveAs(){
         std::ofstream file(outPath);
 
         if (!file.is_open()){
-            error.Push("Error opening file");
+            error->Push("Error opening file");
             // isError=true;
             // errorMessage="Error opening file";
             std::cerr << "Error opening file." << std::endl;
@@ -515,7 +515,7 @@ void UI::saveAs(){
                 free(it);
                 // isError=true;
                 // errorMessage="A Compound is Invalid";
-                error.Push("A Compound is Invalid");
+                error->Push("A Compound is Invalid");
                 std::cerr<<"A Compound is Invalid"<<std::endl;
             }
             
@@ -525,13 +525,13 @@ void UI::saveAs(){
         free(outPath);  
     }
     else if (result == NFD_CANCEL){
-        error.Push("User canceled");
+        error->Push("User canceled");
         // isError=true;
         // errorMessage="User Canceled";
         std::cerr << "User canceled\n";
     }
     else{
-        error.Push("Error Opening File Dialog");
+        error->Push("Error Opening File Dialog");
         // isError=true;
         // errorMessage="Error Opening File Dialog";
         std::cerr << "Error opening file dialog.\n";
@@ -542,7 +542,7 @@ void UI::save(){
 
     std::ofstream file(currentFile);
     if (!file.is_open()){
-        error.Push("Error opening file");
+        error->Push("Error opening file");
         // isError=true;
         // errorMessage="Error opening file";
         std::cerr << "Error opening file." << std::endl;
@@ -560,7 +560,7 @@ void UI::save(){
                 free(atom);
             }
             free(it);
-            error.Push("A Compound is Invalid");
+            error->Push("A Compound is Invalid");
             std::cerr<<"A Compound is Invalid"<<std::endl;
         }
     }
@@ -576,7 +576,7 @@ void UI::open(){
     if (result == NFD_OKAY && std::string(outPath).size() < 4 && (std::string(outPath).substr(std::string(outPath).size() - 4) != ".txt")){
         std::ifstream file(outPath);
         if (!file.is_open()){
-            error.Push("Error opening file");
+            error->Push("Error opening file");
             // isError=true;
             // errorMessage="Error opening file";
             std::cerr << "Error opening file." << std::endl;
@@ -601,7 +601,7 @@ void UI::open(){
                 Render::createCompoundObject(comp); 
             }
             catch(std::invalid_argument& e){
-                error.Push("Compound String: "+line+ " is Invalid");
+                error->Push("Compound String: "+line+ " is Invalid");
                 // isError=true;
                 // errorMessage="A Compound String is Invalid";
                 std::cerr<<line<<" is Invalid"<<std::endl;
@@ -613,13 +613,13 @@ void UI::open(){
         free(outPath);
     }
     else if (result == NFD_CANCEL){
-        error.Push("User canceled");
+        error->Push("User canceled");
         // isError=true;
         // errorMessage="User Canceled";
         std::cerr << "User canceled\n";
     }
     else{
-        error.Push("Error Opening File Dialog");
+        error->Push("Error Opening File Dialog");
         // isError=true;
         // errorMessage="Error Opening File Dialog";
         std::cerr << "Error opening file dialog.\n";

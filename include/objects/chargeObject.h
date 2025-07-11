@@ -4,20 +4,14 @@
 #include "GUIDependencies.h"
 #include "StdLibDependencies.h"
 
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
-#include "texture.h"
-#include "shader.h"
-
-#include "element.h"
-
-#include "config.h"
+#include "chemistry.h"
+#include "graphics.h"
+#include "utils.h"
 
 #include "numberObject.h"
 #include "signObject.h"
-
-
+ 
+ 
 struct ChargeObject{
 
     //Number Texture Object
@@ -28,23 +22,16 @@ struct ChargeObject{
 
     //Because Errors
     ChargeObject()=default;
+
     /*
     Constructor for Charge Object
-    Takes in 4 Vertices in the style:
-    {
-        x,y
-        x,y
-        x,y
-        x,y
-    }
 
-    1)Bottom Left
-    2)Top Left
-    3)Top Right
-    4)Bottom Right
+    Takes in a vector(x,y) which is the center of the object in world space
 
-    You pass in the Vertices for the number to be generated (Check NumberObject(std::vector<GLfloat> vertices,int number))
+    You pass in the bottom left positon of the number to be generated (Check NumberObject(glm::vec2 position,int number))
     and the number to be rendered
+
+    Note: You must pass in the bottom left of the obejct. The construcptr handles internal logic for centering number and sign
 
     It generates Number and Sign
     Also takes in the number to be rendered. It can only be one digit and between 1 and 8 or -1 and -8 inclusive 
@@ -56,7 +43,7 @@ struct ChargeObject{
     ChargeObject(glm::vec2 position,int number);
 
     /* 
-    Used by Render to Render Charges 
+    Used by ElementObject to Render Charges 
     */
     void Render();
 
@@ -65,5 +52,6 @@ struct ChargeObject{
     */
     void Destroy();
 
+    void Move(glm::vec2 delta);
 };
 #endif

@@ -4,7 +4,6 @@
 #include "GUIDependencies.h"
 #include "StdLibDependencies.h"
 
-
 struct EBO{
 
     //ID of EBO

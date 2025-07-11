@@ -1,331 +1,206 @@
 #include "render.h"
 
-
 void Render::Render(){
 
-    // for(auto compound:compoundList){
-    //     std::vector<Element*> atomList=compound->getAtoms();
-    //     for(auto atom: atomList){
-    //         ElementObject::elementObjects[atom]->Render();
-    //     }
-    // }
+    //Elements and their electrons
+    for(auto compound:compoundList){
+        std::vector<Element*> atomList=compound->getAtoms();
+        for(auto atom: atomList){
+            if(ElementObject::elementObjects[atom]==nullptr){
+                error->Push("Element was not rendered. Please Destroy Compound Immediately");
+                
+                continue;
+            }
+            ElementObject::elementObjects[atom]->Render();
+        }
+    }
 
-    // std::vector<BondObject*> covalentAndDativeBonds =BondObject::bonds;
-    // for(auto it:covalentAndDativeBonds){
-    //     it->Render();
-    // }
-
-
-
+    //Bonds
+    for(auto it:BondObject::bonds){
+        it->Render();
+    }
 }
-
-
-std::vector <GLfloat> Render::getVertices(std::vector <GLfloat> vertices, std::set<std::array<GLfloat,2>>& spawned,GLfloat width){
-    // const GLfloat marginOfError=0.01;
-
-    // //right
-    // for(auto val: spawned){
-    //     if(vertices[0]+(width*3)+marginOfError>=val[0] && vertices[0]+(width*3)-marginOfError<=val[0] && vertices[1]+marginOfError>=val[1]&&vertices[1]-marginOfError<=val[1]){
-    //         vertices[0]+=(width*3);
-    //     }
-    //     else{
-    //         break;
-    //     }
-    // }
-    
-}
-// void Render::createElementObjects(Compound& comp,Element& el, std::vector<Element*> visited,std::vector <GLfloat> vertices,std::set<std::array<GLfloat,2>>& spawned){
-//     static std::vector<GLuint> indices={0,1,2,2,3,0};
-//     ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-//     visited.emplace_back(&el);
-
-
-
-//     new ElementObject(vertices,indices,&el);
-
-//     std::vector<Element*> currentCovalentBonds=el.getCurrentCovalentBonds();
-//     std::vector<std::pair<Element*,int>> currentIonic=el.getCurrentIonicBonds();
-// 	std::vector<std::pair<Element*,int>> currentDative=el.getCurrentDativeBonds();
-
-        
-//     int i=0;
-//     for(auto ele: currentCovalentBonds){
-//         if(std::find(visited.begin(),visited.end(),ele)==visited.end()){
-//             GLfloat width;
-//             visited.emplace_back(ele);
-
-//             if(ele->getSymbol().size()==1){
-//                 width=elementSingleTextureWidth;
-//             }
-//             else if(ele->getSymbol().size()==2){
-//                 width=elementDoubleTextureWidth;
-//             }
-//             else{
-//                 //error
-                
-//             }
-//                 //first right then up then down then diagols then left
-
-//             vertices=getVertices(vertices,spawned,width);
-
-
-
-
-
-//             // //right
-//             // if(i==0){
-//             //     for(int i=0;i<4;i++){
-//             //         vertices[i*4]+=(width*3);
-//             //         //vertices[i*4]+=((width/io.DisplaySize.x )*2.5);
-//             //     }
-//             // }
-//             // //up
-//             // else if(i==1){
-//             //     for(int i=0;i<4;i++){
-//             //         vertices[1+i*4]+=(elementTextureHeight*3);
-//             //     }
-//             // }
-//             // //down
-//             // else if(i==2){
-//             //     for(int i=0;i<4;i++){
-//             //         vertices[1+i*4]-=(elementTextureHeight*3);
-//             //     }
-//             // }
-//             // //diagonal up right
-//             // else if(i==3){
-//             //     for(int i=0;i<4;i++){
-//             //         vertices[i*4]+=(width*3);
-//             //         vertices[1+i*4]+=(elementTextureHeight*3);
-//             //     }
-//             // }
-//             // //down right
-//             // else if(i==4){
-//             //     for(int i=0;i<4;i++){
-//             //         vertices[i*4]+=(width*3);
-//             //         vertices[1+i*4]-=(elementTextureHeight*3);
-//             //     }
-//             // }
-//             // //left down
-//             // else if(i==5){
-//             //     for(int i=0;i<4;i++){
-//             //         vertices[i*4]-=(width*3);
-//             //         vertices[1+i*4]-=(elementTextureHeight*3);
-//             //     }
-//             // }
-//             // //left up
-//             // else if(i==6){
-//             //     for(int i=0;i<4;i++){
-//             //         vertices[i*4]-=(width*3);
-//             //         vertices[1+i*4]+=(elementTextureHeight*3);
-//             //     }
-//             // }
-//             // //smth very wrong but left
-//             // else if(i==7){
-//             //     for(int i=0;i<4;i++){
-//             //         vertices[i*4]-=(width*3);
-
-//             //     }
-//             // }
-//             spawned.insert(vertices[0],vertices[1]);
-//             createElementObjects(comp,*ele,visited,vertices,spawned);
-//             i++;
-//         }
-//     }
-
-//     for(auto ele: currentIonic){
-//         if(std::find(visited.begin(),visited.end(),ele.first)==visited.end()){
-//             int width;
-//             visited.emplace_back(ele.first);
-
-//             if(ele.first->getSymbol().size()==1){
-//                 width=elementSingleTextureWidth;
-//             }
-//             else if(ele.first->getSymbol().size()==2){
-//                 width=elementDoubleTextureWidth;
-//             }
-//             else{
-//                 //error
-                
-//             }
-//                 //first left then up then down then diagols then right
-//             //right
-//             if(i==0){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]+=(width*3);
-//                 }
-//             }
-//             //up
-//             else if(i==1){
-//                 for(int i=0;i<4;i++){
-//                     vertices[1+i*4]+=(elementTextureHeight*3);
-//                 }
-//             }
-//             //down
-//             else if(i==2){
-//                 for(int i=0;i<4;i++){
-//                     vertices[1+i*4]-=(elementTextureHeight*3);
-//                 }
-//             }
-//             //diagonal up right
-//             else if(i==3){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]+=(width*3);
-//                     vertices[1+i*4]+=(elementTextureHeight*3);
-//                 }
-//             }
-//             //down right
-//             else if(i==4){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]+=(width*3);
-//                     vertices[1+i*4]-=(elementTextureHeight*3);
-//                 }
-//             }
-//             //left down
-//             else if(i==5){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]-=(width*3);
-//                     vertices[1+i*4]-=(elementTextureHeight*3);
-//                 }
-//             }
-//             //left up
-//             else if(i==6){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]-=(width*3);
-//                     vertices[1+i*4]+=(elementTextureHeight*3);
-//                 }
-//             }
-//             //smth very wrong but left
-//             else if(i==7){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]-=(width*3);
-
-//                 }
-//             }
-//             createElementObjects(comp,*ele.first,visited,vertices,spawned);
-//             i++;
-//         }
-
-//     }
-//     for(auto ele: currentDative){
-//         if(std::find(visited.begin(),visited.end(),ele.first)==visited.end()){
-//             int width;
-//             visited.emplace_back(ele.first);
-
-//             if(ele.first->getSymbol().size()==1){
-//                 width=elementSingleTextureWidth;
-//             }
-//             else if(ele.first->getSymbol().size()==2){
-//                 width=elementDoubleTextureWidth;
-//             }
-//             else{
-//                 //error
-                
-//             }
-//                 //first left then up then down then diagols then right
-//             //right
-//             if(i==0){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]+=(width*3);
-//                 }
-//             }
-//             //up
-//             else if(i==1){
-//                 for(int i=0;i<4;i++){
-//                     vertices[1+i*4]+=(elementTextureHeight*3);
-//                 }
-//             }
-//             //down
-//             else if(i==2){
-//                 for(int i=0;i<4;i++){
-//                     vertices[1+i*4]-=(elementTextureHeight*3);
-//                 }
-//             }
-//             //diagonal up right
-//             else if(i==3){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]+=(width*3);
-//                     vertices[1+i*4]+=(elementTextureHeight*3);
-//                 }
-//             }
-//             //down right
-//             else if(i==4){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]+=(width*3);
-//                     vertices[1+i*4]-=(elementTextureHeight*3);
-//                 }
-//             }
-//             //left down
-//             else if(i==5){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]-=(width*3);
-//                     vertices[1+i*4]-=(elementTextureHeight*3);
-//                 }
-//             }
-//             //left up
-//             else if(i==6){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]-=(width*3);
-//                     vertices[1+i*4]+=(elementTextureHeight*3);
-//                 }
-//             }
-//             //smth very wrong but left
-//             else if(i==7){
-//                 for(int i=0;i<4;i++){
-//                     vertices[i*4]-=(width*3);
-
-//                 }
-//             }
-//             createElementObjects(comp,*ele.first,visited,vertices,spawned);
-//         }
-//     }
-
-
-    
-// }
 
 void Render::createCompoundObject(Compound* compound){
-    
-    // ImGuiIO& io = ImGui::GetIO(); (void)io;
-    // std::vector<GLuint> indices={0,1,2,2,3,0};
-    // std::vector <GLfloat> vertices;
-    // GLfloat width;
-    // if(compound->getAtoms()[0]->getSymbol().size()==1){
-    //     width=elementSingleTextureWidth;
-    // }
-    // else if(compound->getAtoms()[0]->getSymbol().size()==2){
-    //     width=elementDoubleTextureWidth;
-    // }
-    // else{
-    //     throw std::runtime_error("Atomic Symbol is Incorrect");
-    // }
-    // vertices={
-    //     defaultSpawnLocation.x,defaultSpawnLocation.y ,0.0f,0.0f,
-    //     defaultSpawnLocation.x+((width/io.DisplaySize.x )*2),defaultSpawnLocation.y ,1.0f,0.0f,
-    //     defaultSpawnLocation.x+((width/io.DisplaySize.x )*2),defaultSpawnLocation.y +((elementTextureHeight/io.DisplaySize.y )*2)     ,1.0f,1.0f,
-    //     defaultSpawnLocation.x,defaultSpawnLocation.y +((elementTextureHeight/io.DisplaySize.y )*2)     ,0.0f,1.0f,
-    // };
 
-    //order has to be changed textire coords
-    // vertices={
-    //     defaultSpawnLocation.x,defaultSpawnLocation.y ,0.0f,0.0f,
-    //     defaultSpawnLocation.x+(width),defaultSpawnLocation.y ,1.0f,0.0f,
-    //     defaultSpawnLocation.x+(width),defaultSpawnLocation.y +(elementTextureHeight)     ,1.0f,1.0f,
-    //     defaultSpawnLocation.x,defaultSpawnLocation.y +(elementTextureHeight)     ,0.0f,1.0f,
-    // };
-    // std::vector<Element*> visited;
-    // std::set<std::array<GLfloat,2>> spawned={{defaultSpawnLocation.x,defaultSpawnLocation.y}};
+    if (!compound || compound->getAtoms().empty()){
+        error->Push("Invalid or empty compound in createElementObjectsFromCompound()");
+        return;
+    }
 
-    // createElementObjects(*compound,*compound->getAtoms()[0],visited,vertices,spawned);
+    ImGuiIO& io = ImGui::GetIO();
 
-    //bonds
-    // std::map<Element *, std::vector<std::pair<Element *, int>>> bonds=compound->getBonds();
-    // for(auto [key,value]:bonds){
+    std::set<Element*> visited;
+    std::unordered_map<Element*, glm::vec2> positions;
 
-    // }
+    // Step 1: Layout atoms relative to (0,0)
+    glm::vec2 origin = glm::vec2(0.0f);
+    float spacing = elementTextureHeight * elementSpacingAmount;
 
-    // compoundList.push_back(compound);
-    // glm::vec2 pos={100,200};
-    // new ElementObject(pos,compound->getAtoms()[0]);
-    // std::cout<<"hy"<<std::endl;
+    std::vector<glm::vec2> directions = {
+        {1, 0},   // right
+        {0, 1},   // up
+        {-1, 0},  // left
+        {0, -1}   // down
+    };
+
+    std::queue<std::pair<Element*, glm::vec2>> q;
+    Element* root = compound->getAtoms()[0];
+    q.push({root, origin});
+    positions[root] = origin;
+
+    while (!q.empty()) {
+        auto [current, pos] = q.front();
+        q.pop();
+
+        if (visited.count(current)) continue;
+        visited.insert(current);
+
+        const auto& bondMap = compound->getBonds();
+        auto it = bondMap.find(current);
+        const auto& neighbors = it->second;
+        int dirIndex = 0;
+
+        for (const auto& [neighbor, bondType] : neighbors) {
+            if (visited.count(neighbor)) continue;
+
+            glm::vec2 offset = directions[dirIndex % directions.size()] * spacing;
+            glm::vec2 neighborPos = pos + offset;
+
+            if (positions.count(neighbor) == 0) {
+                positions[neighbor] = neighborPos;
+                q.push({neighbor, neighborPos});
+            }
+
+            dirIndex++;
+        }
+    }
+
+    // Step 2: Compute bounding box of all positions
+    glm::vec2 minPos = positions.begin()->second;
+    glm::vec2 maxPos = positions.begin()->second;
+
+    for (const auto& [el, pos] : positions) {
+    minPos.x = std::min(minPos.x, pos.x);
+    minPos.y = std::min(minPos.y, pos.y);
+    maxPos.x = std::max(maxPos.x, pos.x);
+    maxPos.y = std::max(maxPos.y, pos.y);
+    }
+
+    glm::vec2 compoundCenter = (minPos + maxPos) * 0.5f;
+    //glm::vec2 screenCenter = camera->GetCurrentPosition();
+    glm::vec2 screenCenter = camera->GetCurrentPosition() + glm::vec2(io.DisplaySize.x*(1-sideMenuWidthPerCentCopy), io.DisplaySize.y) * 0.5f / camera->zoom;
+    glm::vec2 shift = screenCenter - compoundCenter;
+
+    // Step 3: Create ElementObjects with shifted positions
+    for (const auto& [el, pos] : positions) {
+        glm::vec2 finalPos = pos + shift;
+        try {
+            auto* obj = new ElementObject(finalPos, el);
+            ElementObject::elementObjects[el] = obj;
+        } catch (const std::exception& e) {
+            error->Push("Failed to create ElementObject: " + std::string(e.what()));
+        }
+
+    }
+        auto bonds = compound->getBonds();
+
+    for (auto& [el1, bondedList] : bonds) {
+        ElementObject* obj1 = ElementObject::elementObjects[el1];
+        if (!obj1) continue;
+
+        for (auto& [el2, bondType] : bondedList) {
+            if (el1 > el2) continue; // Prevent double rendering
+
+            ElementObject* obj2 = ElementObject::elementObjects[el2];
+            if (!obj2) continue;
+
+            glm::vec2 bestA, bestB;
+            float minDist = std::numeric_limits<float>::max();
+
+            std::vector<glm::vec2> spots1, spots2;
+
+            switch (bondType) {
+                case 0: // Covalent
+                    spots1 = obj1->getElectronPositions();
+                    spots2 = obj2->getElectronPositions();
+                    break;
+                case 1: case -1: // Ionic
+                    spots1 = { obj1->getChargePosition() };
+                    spots2 = { obj2->getChargePosition() };
+                    break;
+                case 2: case -2: // Dative
+                    spots1 = obj1->getDativePositions();
+                    spots2 = obj2->getDativePositions();
+                    break;
+                default:
+                    error->Push("Unknown bond type in compound");
+                    continue;
+            }
+
+            for (const auto& p1 : spots1) {
+                for (const auto& p2 : spots2) {
+                    float dist = glm::distance(p1, p2);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        bestA = p1;
+                        bestB = p2;
+                    }
+                }
+            }
+
+            // Determine donor based on bondType
+            std::vector<glm::vec2> finalEnds;
+            std::vector<ElementObject*> elements;
+            if (bondType == 1 || bondType == -2) {
+                finalEnds = { bestB, bestA }; // el2 gives to el1
+                elements={obj2,obj1};
+            } else {
+                finalEnds = { bestA, bestB }; // el1 gives to el2
+                elements={obj1,obj2};
+
+            }
+
+            try {
+                new BondObject(finalEnds, elements, std::abs(bondType));
+            } catch (const std::exception& e) {
+                error->Push("Failed to create BondObject: " + std::string(e.what()));
+            }
+        }
+    }
+
+    Render::compoundList.push_back(compound);
+
 }
+
+ElementObject* Render::getElementClicked(glm::vec2 mousePos){
+    for (auto& el : ElementObject::elementObjects) {
+        // if (mousePos.x >= el.second->position.x && mousePos.x <= el.second->position.x + el.second->width&&
+        //     mousePos.y >= el.second->position.y && mousePos.y <= el.second->position.y + elementTextureHeight) {
+        //     return el.second;
+        // }
+        float halfWidth = el.second->width / 2.0f;
+float halfHeight = elementTextureHeight / 2.0f;
+glm::vec2 pos = el.second->position;
+
+if (mousePos.x >= pos.x - halfWidth && mousePos.x <= pos.x + halfWidth &&
+    mousePos.y >= pos.y - halfHeight && mousePos.y <= pos.y + halfHeight)
+{
+    return el.second;
+}
+    }
+    return nullptr;
+} 
+
+void Render::MoveBonds(ElementObject* el,glm::vec2 delta){
+    for (auto& bond: BondObject::bonds){
+        if (bond->elements[0]==el){
+            bond->Move(delta,0);
+        }
+
+        if (bond->elements[1]==el){
+            bond->Move(delta,1);
+        }
+    }
+}
+

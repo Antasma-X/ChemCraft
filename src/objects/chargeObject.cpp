@@ -1,19 +1,14 @@
 #include "chargeObject.h"
 
-
 ChargeObject::ChargeObject(glm::vec2 position,int number){
-
     try{
-        //fix vertices
-        numberObj=NumberObject(position,number);
+        numberObj=NumberObject({position[0]+numberTextureWidth,position[1]+numberTextureHeight},number);
     }
     catch(std::invalid_argument& e){
         throw;
     }
 
-    glm::vec2 signPosition={
-        position[0]+numWidth/2+signLengt(h)/2,position[1]
-    };
+    glm::vec2 signPosition={position[0]+numberTextureWidth,position[1]+numberTextureHeight};
 
     bool isPositive;
     if(number>0){
@@ -22,7 +17,6 @@ ChargeObject::ChargeObject(glm::vec2 position,int number){
     else{
         isPositive=false;
     }
-
     try{
         signObj=SignObject(signPosition,isPositive);
     }
@@ -30,7 +24,7 @@ ChargeObject::ChargeObject(glm::vec2 position,int number){
         throw;
     }
 }
-
+ 
 void ChargeObject::Render(){
     numberObj.Render();
     signObj.Render();
@@ -39,4 +33,10 @@ void ChargeObject::Render(){
 void ChargeObject::Destroy(){
     numberObj.Destroy();
     signObj.Destroy();
+}
+
+void ChargeObject::Move(glm::vec2 delta){
+    numberObj.Move(delta);
+    signObj.Move(delta);
+
 }

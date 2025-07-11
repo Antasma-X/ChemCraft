@@ -1,17 +1,14 @@
 #ifndef CONFIG_H
 #define CONFIG_H
-
+ 
 #include "StdLibDependencies.h"
 #include "GUIDependencies.h"
-#include "shader.h"
-#include "camera.h"
+
 #include "json.hpp"
-#include "UIGeneration.h"
+
+#include "shader.h"
 #include "error.h"
 
-class Error;
-//have global classes sec
-extern Error error;
 //Window
 
     extern const char* windowName;
@@ -165,8 +162,13 @@ extern Error error;
 extern int errorMessageOffsetX;
 extern int errorMessageOffsetY;
 
-
-//Render
+ 
+//Camera
+extern float minZoom;
+extern float maxZoom;
+extern int minCamMovement;
+extern float zoomShift;
+extern float elementSpacingAmount;
 
 //Shader
 extern std::string elementVertShaderFilePath;
@@ -198,21 +200,36 @@ extern GLfloat elementDoubleTextureWidth;
 
 extern GLfloat electronDistanceDirect;
 extern GLfloat electronDistanceAdjust;
-
+ 
 extern glm::vec2 defaultSpawnLocation;
 
 extern GLfloat signLength;
 extern GLfloat bondThickness;
 extern GLfloat signThickness;
 
-extern struct Camera cam; 
+//Number Assets
+extern std::string numberBlueFilePath;
+extern std::string numberRedFilePath;
 
+extern GLfloat numberTextureWidth;
+extern GLfloat numberTextureHeight;
+
+//Sign Assets
+extern std::string plusFilePath;
+extern std::string minusFilePath;
+
+extern GLfloat plusSignTextureWidth;
+extern GLfloat plusSignTextureHeight;
+extern GLfloat minusSignTextureWidth;
+extern GLfloat minusSignTextureHeight;
+ 
 
 //Values
 extern std::map<std::string,std::string> molecules;
 extern std::vector<std::string> compoundNumbers;
 extern std::vector<std::string> searchBar;
 
+extern double sideMenuWidthPerCentCopy;
  
 //JSON Conversions
 
@@ -285,7 +302,7 @@ template <typename T> void restoreToDefault(std::string variable, T& var){
     editingCustomConfigFile<<customConfigData;
 
     nlohmann::json defaultConfigData;
-    defaultConfigData<<defaultConfigFile;
+    defaultConfigFile>>defaultConfigData;
 
     var=defaultConfigData.at(variable).get<T>();
 }

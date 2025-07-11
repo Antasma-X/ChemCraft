@@ -3,14 +3,16 @@
 
 #include "StdLibDependencies.h"
 #include "GUIDependencies.h"
-#include"compound.h"
 
-#include "config.h"
-#include "values.h" 
+#include "chemistry.h"
+#include "graphics.h"
+#include "utils.h"
+
 #include "render.h"
-#include "error.h"
+
 namespace UI
 {
+
     /*
     Generates Top Menu Main Menu Bar
 

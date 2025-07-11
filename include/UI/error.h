@@ -6,8 +6,9 @@
 
 #include "config.h"
 
+
 /* 
-Whenever an error occurs throughout the code, the rror is pushed to the errorStrings stack
+Whenever an error occurs throughout the code, the error is pushed to the errorStrings stack
 This function creates a popup in the bottom left corner of the screen that gives the error message
 This can be closed be clicking OK  
 
@@ -22,4 +23,5 @@ class Error{
         void ErrorPopUp();
 };
 
+extern Error* error;
 #endif

@@ -4,16 +4,21 @@
 #include "GUIDependencies.h"
 #include "StdLibDependencies.h"
 
-#include "compound.h"
+#include "chemistry.h"
+#include "graphics.h"
+#include "utils.h"
+
 #include "bondObject.h"
+#include "chargeObject.h"
+#include "electronObject.h"
 #include "elementObject.h"
-#include "numberObject.h"
+#include "numberObject.h" 
+#include "signObject.h"
 
 class Compound;
-//merge files
+class Camera;
+
 namespace Render{
-
-
 
     /*
     Vector containing all compounds being rendered
@@ -26,13 +31,16 @@ namespace Render{
     */
     void Render();
 
+    /*
+    Creates Element Object for every single element in the compound passed in which is then rendered in Render()
+
+    Pass In: Pointer to compound to start being rendered
+    */
     void createCompoundObject(Compound* compound);
 
-    static std::vector <GLfloat> getVertices(std::vector <GLfloat> vertices, std::set<std::array<GLfloat,2>>& spawned,GLfloat width);
+    ElementObject* getElementClicked(glm::vec2 mousePos);
 
-    static void createElementObjects(Compound& comp,Element& el, std::vector<Element*> visited,std::vector <GLfloat> vertices,std::set<std::array<GLfloat,2>>& spawned);
-
-    void elementMovement();
+    void MoveBonds(ElementObject* el,glm::vec2 delta);
 
     void compoundMovement();
 

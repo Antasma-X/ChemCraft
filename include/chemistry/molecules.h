@@ -6,9 +6,9 @@
 #include "compound.h"
 #include "values.h"
 
-Compound* makeMolecule(std::string name);
+// Compound* makeMolecule(std::string name);
 
-Compound* generateMoleculeOfElement(int atomicNumber);
+// Compound* generateMoleculeOfElement(int atomicNumber);
 
 //Compound* makeSalt(std::string name);
 

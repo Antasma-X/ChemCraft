@@ -3,31 +3,31 @@
 
 
 
-Compound* generateMoleculeOfElement(int atomicNumber){
-    if(atomicity.find(atomicNumber) == atomicity.end()){
-        return nullptr;
-        // error
-    }
-    else{
-        std::vector<Element*> elements;
+// Compound* generateMoleculeOfElement(int atomicNumber){
+//     if(atomicity.find(atomicNumber) == atomicity.end()){
+//         return nullptr;
+//         // error
+//     }
+//     else{
+//         std::vector<Element*> elements;
         
-        for(int i=0;i<atomicity[atomicNumber];i++){
-            elements.emplace_back(new Element(atomicNumber));
-        }
-        Compound* newCompound=new Compound(*elements[0]);
+//         for(int i=0;i<atomicity[atomicNumber];i++){
+//             elements.emplace_back(new Element(atomicNumber));
+//         }
+//         Compound* newCompound=new Compound(*elements[0]);
 
-        for(std::size_t i=1;i<elements.size();i++){
-            newCompound->addElement(*elements[i-1],*elements[i],0);
-        }
-        newCompound->createBond(*elements[0],*elements[elements.size()-1],0);
-        return newCompound;
-    }
-}
-
-// Compound* makeMolecule(std::string compoundString){
-//     Compound* newCompound= new Compound(compoundString);
-//     return newCompound;
+//         for(std::size_t i=1;i<elements.size();i++){
+//             newCompound->addElement(*elements[i-1],*elements[i],0);
+//         }
+//         newCompound->createBond(*elements[0],*elements[elements.size()-1],0);
+//         return newCompound;
+//     }
 // }
+
+// // Compound* makeMolecule(std::string compoundString){
+// //     Compound* newCompound= new Compound(compoundString);
+// //     return newCompound;
+// // }
 
 
 

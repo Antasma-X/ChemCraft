@@ -2,7 +2,10 @@
 #define VAO_H
 
 #include"GUIDependencies.h"
+#include "StdLibDependencies.h"
+
 #include "VBO.h"
+
 struct VAO{
 
     //ID of VAO
