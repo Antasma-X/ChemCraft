@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <array>
 #include <map>
 #include <fstream>
 #include <algorithm>
@@ -16,6 +17,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <exception>
-
+#include <unordered_set>
 
 #endif

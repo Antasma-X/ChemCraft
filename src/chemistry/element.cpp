@@ -251,12 +251,12 @@ std::array<int,2> Element::findValency(int atomicNumber,int charge,int v){
 			//std::cout<<"hhsd"<<std::endl;
 		}
 		else{
-			error->Push("Valency could not be found. Default valency will be used");
+			error->push("Valency could not be found. Default valency will be used");
 			//std::cout<<"sexxxyyyyyyy"<<v<<"   "<<atomicNumber<<std::endl;
 			valency={higherValencies[atomicNumber][0],1000};
 		}
 	}
-	//ceck
+	//ceck 
 	valency[0]-=charge;
 	valency[1]-=charge;
 
@@ -325,17 +325,17 @@ Element::Element(unsigned int atomicNumber, double atomicMass,int charge,int v){
 
 
 	if(!validMass && !validCharge){
-		error->Push("Invalid Mass and Charge. They have been reset");
+		error->push("Invalid Mass and Charge. They have been reset");
 		// isError=true;
 		// errorMessage=;
 	}
 	else if(!validMass){
-		error->Push("Invalid Mass. It has been reset");
+		error->push("Invalid Mass. It has been reset");
 		// isError=true;
 		// errorMessage="Invalid Mass. It has been reset";
 	}
 	else if(!validCharge){
-		error->Push("Invalid Charge. It has been reset");
+		error->push("Invalid Charge. It has been reset");
 		// isError=true;
 		// errorMessage="Invalid Charge. It has been reset";
 	}
@@ -349,7 +349,7 @@ Element::~Element(){
 	for(auto bond: covalentBonds){
 		
 		if(((*this)/(*bond))==0){
-			error->Push("Atoms Do Not Have Covalent Bond. Compound should be destroyed immediately");
+			error->push("Atoms Do Not Have Covalent Bond. Compound should be destroyed immediately");
 			// isError=true;
 			// errorMessage="Atoms Do Not Have Covalent Bond. Compound should be destroyed immediately";
 			// std::runtime_error("Atoms Do Not Have Covalent Bond");
@@ -360,7 +360,7 @@ Element::~Element(){
 	for(auto bond: ionicBonds){
 		if(bond.second==-1){
 			if(((*this)%(*bond.first))==0){
-				error->Push("Atoms Do Not Have Ionic Bond. Compound should be destroyed immediately");
+				error->push("Atoms Do Not Have Ionic Bond. Compound should be destroyed immediately");
 				// isError=true;
 				// errorMessage="Atoms Do Not Have Ionic Bond. Compound should be destroyed immediately";
 				// std::runtime_error("Atoms Do Not Have Ionic Bond");
@@ -369,13 +369,13 @@ Element::~Element(){
 		}
 		else if(bond.second==1){
 			if(((*bond.first)%(*this))==0){
-				error->Push("Atoms Do Not Have Ionic Bond. Compound should be destroyed immediately");
+				error->push("Atoms Do Not Have Ionic Bond. Compound should be destroyed immediately");
 
 				//std::runtime_error("Atoms Do Not Have Ionic Bond");
 			}
 		}
 		else{
-			error->Push("Atoms Have Invalid Bond. Compound should be destroyed immediately");
+			error->push("Atoms Have Invalid Bond. Compound should be destroyed immediately");
 			// isError=true;
 			// errorMessage="Atoms Have Invalid Bond. Compound should be destroyed immediately";
 			// throw std::runtime_error("Invalid Ionic Bond");
@@ -385,7 +385,7 @@ Element::~Element(){
 	for(auto bond: dativeBonds){
 		if(bond.second==-2){
 			if(((*this)||(*bond.first))==0){
-				error->Push("Atoms Do Not Have Dative Bond. Compound should be destroyed immediately");
+				error->push("Atoms Do Not Have Dative Bond. Compound should be destroyed immediately");
 				// isError=true;
 				// errorMessage="Atoms Do Not Have Dative Bond. Compound should be destroyed immediately";
 				//std::runtime_error("Atoms Do Not Have Dative Bond");
@@ -393,14 +393,14 @@ Element::~Element(){
 		}
 		else if(bond.second==2){
 			if(((*bond.first)||(*this))==0){
-				error->Push("Atoms Do Not Have Dative Bond. Compound should be destroyed immediately");
+				error->push("Atoms Do Not Have Dative Bond. Compound should be destroyed immediately");
 				// isError=true;
 				// errorMessage="Atoms Do Not Have Dative Bond. Compound should be destroyed immediately";
 				//std::runtime_error("Atoms Do Not Have Dative Bond");
 			}
 		}
 		else{
-			error->Push("Atoms Have Invalid Bond. Compound should be destroyed immediately");
+			error->push("Atoms Have Invalid Bond. Compound should be destroyed immediately");
 			// isError=true;
 			// errorMessage="Atoms Have Invalid Bond. Compound should be destroyed immediately";
 			//throw std::runtime_error("Invalid Dative Bond");

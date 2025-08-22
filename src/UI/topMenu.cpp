@@ -1,6 +1,6 @@
 #include "UIGeneration.h"
 
-void UI::TopMenu(){
+void UI::topMenu(){
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
@@ -78,47 +78,54 @@ void UI::TopMenu(){
             // }
 
             ImGui::Separator(); 
+    std::cout<<"jdbdjjngsjbhsjbskgbsegbweuigbweegbwegkhbewugwgh"<<std::endl;
+
             
             if (ImGui::MenuItem("Cut", "CTRL+X")||(ImGui::IsKeyDown(ImGuiMod_Ctrl) && ImGui::IsKeyPressed(ImGuiKey_X))){
-                Cut();
+    std::cout<<"jdgd"<<std::endl;
+                
+                Callbacks::cut();
+    std::cout<<"jdbdjjngsjbhsjbskgbsegbweuigbweegbwegkhbewugwgh"<<std::endl;
+
             }
             if (ImGui::MenuItem("Copy", "CTRL+C")||(ImGui::IsKeyDown(ImGuiMod_Ctrl) && ImGui::IsKeyPressed(ImGuiKey_C))){
-                Copy();
+                Callbacks::copy();
             }
             if (ImGui::MenuItem("Paste", "CTRL+V")||(ImGui::IsKeyDown(ImGuiMod_Ctrl) && ImGui::IsKeyPressed(ImGuiKey_V))){ 
-                Paste();
+                Callbacks::paste();
             }
             if(ImGui::MenuItem("Hydrogen Filler")){
-                auto list=Render::compoundList;
-                for(auto it: list){
-                    try{
-                        if((it->hydrogenFiller())==0){
-                            throw std::runtime_error("Hydrogen Bond could not form");
-                        }
-                    }
-                    catch(std::runtime_error& e){
-                        // isError=true;
-                        // errorMessage=e.what();
-                        error->Push("A compound was corrupt. It will be destroyed");
-                        std::cerr<<"A compound was corrupt"<<std::endl;
-                        for(auto atom: it->getAtoms()){
-                            free(atom);
-                        }
-                        free(it);
-                    }
+                // auto list=Render::compoundList;
+                // for(auto it: list){
+                //     try{
+                //         if((it->hydrogenFiller())==0){
+                //             throw std::runtime_error("Hydrogen Bond could not form");
+                //         }
+                //     }
+                //     catch(std::runtime_error& e){
+                //         // isError=true;
+                //         // errorMessage=e.what();
+                //         error->push("A compound was corrupt. It will be destroyed");
+                //         std::cerr<<"A compound was corrupt"<<std::endl;
+                //         for(auto atom: it->getAtoms()){
+                //             delete atom;
+                //         }
+                //         delete it;
+                //     }
 
-                }
+                // }
                 //Render::ReRenderCompounds();
             }
             ImGui::EndMenu();
         }
+    std::cout<<"jdgd"<<std::endl;
 
         if(ImGui::BeginMenu("Insert")){
             if (ImGui::MenuItem("Direct")) {
                 showInsertDirect=!showInsertDirect;
             }
             if (ImGui::MenuItem("From File")) {
-                showInsertFile=!showInsertDirect;
+                showInsertFile=!showInsertFile;
             }
             ImGui::EndMenu();
         }
@@ -132,29 +139,35 @@ void UI::TopMenu(){
         ImGui::PushStyleColor(ImGuiCol_TitleBgActive,openFilePopUpActiveTitleBarColor);
         ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed,openFilePopUpCollapsedTitleBarColor);
 
-        if(ImGui::Button("Open")){
-            bool openFile=false;
+    std::cout<<"jdgd"<<std::endl;
 
+        if(ImGui::Button("Open")){
             ImGui::OpenPopup("Progress Loss Warning");
-            if(ImGui::BeginPopupModal("Progress Loss Warning",nullptr,ImGuiWindowFlags_AlwaysAutoResize)){
-                ImGui::Text("Warning: You will lose unsaved progress");
-                ImGui::Text("Do you Wish to Continue?");
+        }        
+
+        bool openFile=false;
+    std::cout<<"jdgd"<<std::endl;
+
+        if(ImGui::BeginPopupModal("Progress Loss Warning",nullptr,ImGuiWindowFlags_AlwaysAutoResize)){
+            ImGui::Text("Warning: You will lose unsaved progress");
+            ImGui::Text("Do you Wish to Continue?");
                 
-                if(ImGui::Button("Cancel")){
-                    openFile=false;
-                    ImGui::CloseCurrentPopup();
-                }
-                ImGui::SameLine();
-                if(ImGui::Button("Ok",ImVec2(ImGui::GetCursorPos().x,ImGui::GetWindowSize().y-80))){
-                    openFile=true;
-                    ImGui::CloseCurrentPopup();
-                }
+            if(ImGui::Button("Cancel")){
+                openFile=false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if(ImGui::Button("Ok",ImVec2(ImGui::GetCursorPos().x,ImGui::GetWindowSize().y-80))){
+                openFile=true;
+                ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
-            if(openFile){
-                open();
-            }
-        }        
+        }
+    std::cout<<"jdbdjjngsjbhsjbskgbsegbweuigbweegbwegkhbewugwgh"<<std::endl;
+
+        if(openFile){
+            open();
+        }
 
         ImGui::PopStyleColor(5);
 
@@ -309,18 +322,19 @@ void UI::TopMenu(){
 
         static char buffer[1000]="";
         
-        ImGui::InputTextWithHint("Compound String", "Enter Compound String", buffer, sizeof(char),ImGuiInputTextFlags_CallbackCharFilter, FilterLettersCompoundString);
+        ImGui::InputTextWithHint("Compound String", "Enter Compound String", buffer, sizeof(char),ImGuiInputTextFlags_CallbackCharFilter, filterLettersCompoundString);
         compoundString=std::string(buffer);
         std::transform(compoundString.begin(),compoundString.end(),compoundString.begin(),::tolower);
 
-        if(*(compoundString.end()-1)=='\n'){
+        if(!compoundString.empty()&&compoundString.back()=='\n'){
             Compound* comp;
             try{
                 comp=new Compound(compoundString);
                 Render::createCompoundObject(comp); 
             }
             catch(std::invalid_argument& e){
-                error->Push(compoundString+" is Invalid");
+                error->push(compoundString+" is Invalid");
+                delete comp;
                 // error>>
                 // isError=true;
                 // errorMessage=e.what();
@@ -334,14 +348,14 @@ void UI::TopMenu(){
         nfdchar_t *outPath = NULL;
         nfdresult_t result = NFD_OpenDialog(NULL, NULL, &outPath);
 
-            if (result == NFD_OKAY && std::string(outPath).size() < 4 && (std::string(outPath).substr(std::string(outPath).size() - 4) != ".txt")){
+            if (result == NFD_OKAY && std::string(outPath).size() >= 4 && (std::string(outPath).substr(std::string(outPath).size() - 4) == ".txt")){
                 std::ifstream file(outPath);
                 if (!file.is_open())
                 {
                     // isError=true;
                     // errorMessage="Error opening file";
 
-                    error->Push("Error opening file");
+                    error->push("Error opening file");
                     std::cerr << "Error opening file" << std::endl;
                     free(outPath);
 
@@ -358,7 +372,8 @@ void UI::TopMenu(){
                     catch(std::invalid_argument& e){
                         // isError=true;
                         // errorMessage=e.what();
-                        error->Push("Compound String: "+line+ " is Invalid");
+                        error->push("Compound String: "+line+ " is Invalid");
+                        delete comp;
                         // isError=true;
                         // errorMessage="A Compound String is Invalid";
                         std::cerr<<line<<" is Invalid"<<std::endl;
@@ -370,13 +385,13 @@ void UI::TopMenu(){
         
         }
         else if (result == NFD_CANCEL){
-            error->Push("User canceled");
+            error->push("User canceled");
             // isError=true;
             // errorMessage="User Canceled";
             std::cerr << "User canceled\n";
         }
         else{
-            error->Push("Error Opening File Dialog");
+            error->push("Error Opening File Dialog");
             // isError=true;
             // errorMessage="Error Opening File Dialog";
             std::cerr << "Error opening file dialog.\n";
@@ -389,79 +404,7 @@ void UI::TopMenu(){
     ImGui::PopStyleColor(7);
 }
 
-void UI::Cut(){
-    std::string clipBoard;
-
-    auto list=Render::compoundList;
-    for(auto it: list){
-        try{
-            clipBoard.append(it->getCompoundString());
-            for(auto atom: it->getAtoms()){
-                free(atom);
-            }
-            free(it);
-            clipBoard.append("\n");
-        }
-        catch(std::runtime_error& e){
-            for(auto atom: it->getAtoms()){
-                free(atom);
-            }
-            free(it);
-            error->Push("A Compound is Invalid");
-            // isError=true;
-            // errorMessage="A Compound is Invalid";
-            std::cerr<<"A Compound is Invalid"<<std::endl;
-        }
-    }
-    ImGui::SetClipboardText(clipBoard.c_str());
-}
-
-void UI::Copy(){
-    std::string clipBoard;
-
-    auto list=Render::compoundList;
-    for(auto it: list){
-        try{
-            clipBoard.append(it->getCompoundString());
-            clipBoard.append("\n");
-        }
-        catch(std::runtime_error& e){
-            for(auto atom: it->getAtoms()){
-                free(atom);
-            }
-            free(it);
-            error->Push("Compound is Invalid");
-            // isError=true;
-            // errorMessage="A Compound is Invalid";
-            std::cerr<<"Compound is Invalid"<<std::endl;
-        }
-    }
-    ImGui::SetClipboardText(clipBoard.c_str());
-}
-
-void UI::Paste(){
-    std::string clipBoard=std::string(ImGui::GetClipboardText());
-    std::string line;
-
-    std::istringstream stream(clipBoard);
-    while (std::getline(stream, line)){
-        Compound* comp;
-        try{
-            comp=new Compound(line);
-            Render::createCompoundObject(comp); 
-        }
-        catch(std::invalid_argument& e){
-            error->Push("Compound String: "+line+ " is Invalid");
-            // isError=true;
-            // errorMessage="A Compound String is Invalid";
-            std::cerr<<line<<" is Invalid"<<std::endl;
-        }    
-    }
-}
-
-
-
-int UI::FilterLettersCompoundString(ImGuiInputTextCallbackData* data){
+int UI::filterLettersCompoundString(ImGuiInputTextCallbackData* data){
     if (strchr(disallowedCharCompoundString, data->EventChar)||isalpha(data->EventChar)){
         return 1;
     } 
@@ -484,8 +427,11 @@ void UI::saveAs(){
     nfdchar_t *outPath = NULL;
     nfdresult_t result = NFD_OpenDialog(NULL, NULL, &outPath);
 
+    std::cout<<"me"<<std::endl;
     if (result == NFD_OKAY){
-        if ((std::string(outPath).size()) < 4 || std::string(outPath).substr(std::string(outPath).size() - 4) != ".txt"){
+    std::cout<<"me"<<std::endl;
+
+        if ((std::string(outPath).size()) <4 || std::string(outPath).substr(std::string(outPath).size() - 4) != ".txt"){
             currentFile=outPath+std::string(".txt");
         }
         else{
@@ -495,7 +441,7 @@ void UI::saveAs(){
         std::ofstream file(outPath);
 
         if (!file.is_open()){
-            error->Push("Error opening file");
+            error->push("Error opening file");
             // isError=true;
             // errorMessage="Error opening file";
             std::cerr << "Error opening file." << std::endl;
@@ -503,19 +449,24 @@ void UI::saveAs(){
             return;
         }
         
-        auto list=Render::compoundList;
+        auto list=Render::getCompoundList();
+    std::cout<<list.size()<<std::endl;
+
         for(auto it: list){
+    std::cout<<"me"<<std::endl;
+
             try{
+                std::cout<<(it->getCompoundString()).c_str()<<std::endl;
                 file<<(it->getCompoundString()).c_str()<<std::endl;
             }
             catch(std::runtime_error& e){
                 for(auto atom: it->getAtoms()){
-                    free(atom);
+                    delete atom;
                 }
-                free(it);
+                delete it;
                 // isError=true;
                 // errorMessage="A Compound is Invalid";
-                error->Push("A Compound is Invalid");
+                error->push("A Compound is Invalid");
                 std::cerr<<"A Compound is Invalid"<<std::endl;
             }
             
@@ -525,13 +476,13 @@ void UI::saveAs(){
         free(outPath);  
     }
     else if (result == NFD_CANCEL){
-        error->Push("User canceled");
+        error->push("User canceled");
         // isError=true;
         // errorMessage="User Canceled";
         std::cerr << "User canceled\n";
     }
     else{
-        error->Push("Error Opening File Dialog");
+        error->push("Error Opening File Dialog");
         // isError=true;
         // errorMessage="Error Opening File Dialog";
         std::cerr << "Error opening file dialog.\n";
@@ -542,7 +493,7 @@ void UI::save(){
 
     std::ofstream file(currentFile);
     if (!file.is_open()){
-        error->Push("Error opening file");
+        error->push("Error opening file");
         // isError=true;
         // errorMessage="Error opening file";
         std::cerr << "Error opening file." << std::endl;
@@ -550,17 +501,17 @@ void UI::save(){
     }
 
     std::string line;
-    auto list=Compound::getListOfCompounds();
+    auto list=Render::getCompoundList();
     for(auto it: list){
         try{
             file<<(it->getCompoundString()).c_str()<<std::endl;
         }
         catch(std::runtime_error& e){
             for(auto atom: it->getAtoms()){
-                free(atom);
+                delete atom;
             }
-            free(it);
-            error->Push("A Compound is Invalid");
+            delete it;
+            error->push("A Compound is Invalid");
             std::cerr<<"A Compound is Invalid"<<std::endl;
         }
     }
@@ -573,10 +524,10 @@ void UI::open(){
     nfdchar_t *outPath = NULL;
     nfdresult_t result = NFD_OpenDialog(NULL, NULL, &outPath);
 
-    if (result == NFD_OKAY && std::string(outPath).size() < 4 && (std::string(outPath).substr(std::string(outPath).size() - 4) != ".txt")){
+    if (result == NFD_OKAY && std::string(outPath).size() >= 4 && (std::string(outPath).substr(std::string(outPath).size() - 4) == ".txt")){
         std::ifstream file(outPath);
         if (!file.is_open()){
-            error->Push("Error opening file");
+            error->push("Error opening file");
             // isError=true;
             // errorMessage="Error opening file";
             std::cerr << "Error opening file." << std::endl;
@@ -585,12 +536,12 @@ void UI::open(){
         }
         
         std::string line;
-        auto list=Render::compoundList;
+        auto list=Render::getCompoundList();
         for(auto it: list){
             for(auto atom: it->getAtoms()){
-                free(atom);
+                delete atom;
             }
-            free(it);
+            delete it;
         }
         Render::compoundList.clear();
 
@@ -601,7 +552,8 @@ void UI::open(){
                 Render::createCompoundObject(comp); 
             }
             catch(std::invalid_argument& e){
-                error->Push("Compound String: "+line+ " is Invalid");
+                error->push("Compound String: "+line+ " is Invalid");
+                delete comp;
                 // isError=true;
                 // errorMessage="A Compound String is Invalid";
                 std::cerr<<line<<" is Invalid"<<std::endl;
@@ -613,13 +565,13 @@ void UI::open(){
         free(outPath);
     }
     else if (result == NFD_CANCEL){
-        error->Push("User canceled");
+        error->push("User canceled");
         // isError=true;
         // errorMessage="User Canceled";
         std::cerr << "User canceled\n";
     }
     else{
-        error->Push("Error Opening File Dialog");
+        error->push("Error Opening File Dialog");
         // isError=true;
         // errorMessage="Error Opening File Dialog";
         std::cerr << "Error opening file dialog.\n";

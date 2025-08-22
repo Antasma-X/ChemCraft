@@ -450,3 +450,67 @@ add_executable(cute )
     
 //     // new ElementObject({300.0f, 400.0f}, compound->getAtoms()[0]);
 //     // std::cout<<"ifhifhiwhfwihf"<<compound->getAtoms().size()<<std::endl;
+
+
+
+
+
+
+// for(int i=0;i<8;i++){
+//     std::vector<GLfloat> electronVertices;
+
+//     if(i==n){
+//         transparency=0.0f;
+//     }
+
+//     if(i==0){
+//         electronVertices={
+//            Vertices[0]-electronDistanceDirect,Vertices[1]+electronDistanceAdjust ,transparency
+//         };
+
+//     }
+//     else if(i==1){
+//         electronVertices={
+//             Vertices[8]+electronDistanceDirect,Vertices[9]-electronDistanceAdjust ,transparency
+//         };         
+//     }
+//     else if(i==2){
+//         electronVertices={
+//             Vertices[4]+electronDistanceAdjust,Vertices[5]+electronDistanceDirect ,transparency
+//         };         
+//     }
+//     else if(i==3){
+//         electronVertices={
+//             Vertices[12]-electronDistanceAdjust,Vertices[13]-electronDistanceDirect ,transparency
+//         };         
+//     }
+//     else if(i==4){
+//         electronVertices={
+//             Vertices[4]-electronDistanceDirect,Vertices[5]-electronDistanceAdjust ,transparency
+//         };
+//     }
+//     else if(i==5){
+//         electronVertices={
+//             Vertices[8]-electronDistanceAdjust,Vertices[9]+electronDistanceDirect ,transparency
+//         };         
+//     }
+//     else if(i==6){
+//         electronVertices={
+//             Vertices[12]+electronDistanceDirect,Vertices[13]+electronDistanceAdjust ,transparency
+//         };         
+//     }
+//     else if(i==7){
+//         electronVertices={
+//             Vertices[0]+electronDistanceAdjust,Vertices[1]-electronDistanceDirect ,transparency
+//         };
+//     }
+//     else{
+//         throw std::runtime_error("Electron Generation went Wrong");
+//     }
+
+//     //removed new for now
+//     ElectronObject electron= ElectronObject(electronVertices,transparency
+    
+    
+//     );
+//     electrons[i]=electron;

@@ -548,7 +548,7 @@ int Compound::createBond(Element& firstElement, Element& secondElement,	int type
 
 	return 1;
 }
-
+ 
 std::vector<Compound> Compound::removeBond(Element& firstElement, Element& secondElement, int typeOfBond){
 	std::vector<Compound> newCompounds;
 
@@ -603,7 +603,6 @@ std::vector<Compound> Compound::removeBond(Element& firstElement, Element& secon
 		newCompounds.emplace_back(createCompoundFromElement(firstElement));
 
 		newCompounds.emplace_back(createCompoundFromElement(secondElement));
-
 	}
 	
 	return newCompounds;
@@ -615,12 +614,10 @@ Compound Compound::createCompoundFromElement(Element& element){
 
 	createCompoundFromElementUtil(element,atoms,bonds);
 
-
 	Compound newCompound(*atoms[0]);
 
 	newCompound.atoms=atoms;
 	newCompound.bonds=bonds;
-
 
 	return newCompound;
 }

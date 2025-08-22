@@ -16,7 +16,7 @@ std::string currentFile="Unknown";
 const char* elementTitle="Elements";
 const char* compoundTitle="Common Compounds";
 const char* disallowedCharCompoundString="!@#$%^";
-
+ 
 const char* helpLink="github.com/";
 
 const char* SearchGlass="../Assets/SearchGlass.png";
@@ -24,11 +24,15 @@ const char* searchBarLabel="Search..";
 
 const char* disallowedCharSearchBar="!@#$%^&*\n\t0123456789";
 
-
+ 
 std::string elementVertShaderFilePath="../shaders/texture.vert";
 std::string elementFragShaderFilePath="../shaders/texture.frag";
+std::string glowElementVertShaderFilePath="../shaders/glowElement.vert";
+std::string glowElementFragShaderFilePath="../shaders/glowElement.frag";
 std::string electronVertShaderFilePath="../shaders/electron.vert";
 std::string electronFragShaderFilePath="../shaders/electron.frag";
+std::string glowElectronVertShaderFilePath="../shaders/glowElectron.vert";
+std::string glowElectronFragShaderFilePath="../shaders/glowElectron.frag";
 std::string numberVertShaderFilePath="../shaders/texture.vert";
 std::string numberFragShaderFilePath="../shaders/texture.frag";
 std::string signVertShaderFilePath="../shaders/texture.vert";
@@ -40,6 +44,8 @@ std::string ionicVertShaderFilePath="../shaders/ionic.vert";
 std::string ionicFragShaderFilePath="../shaders/ionic.frag";
 std::string dativeVertShaderFilePath="../shaders/dative.vert"; 
 std::string dativeFragShaderFilePath="../shaders/dative.frag";
+std::string glowBondVertShaderFilePath="../shaders/glowBond.vert";
+std::string glowBondFragShaderFilePath="../shaders/glowBond.frag";
 
 std::map<std::string,Shader> shaders;
 
@@ -52,15 +58,17 @@ std::string numberRedFilePath="../Assets/numberAtlasRed.png";
 std::string plusFilePath="../Assets/plusBlue.png";
 std::string minusFilePath="../Assets/minusRed.png";
 
-std::map<std::string,std::string> molecules;
-std::vector<std::string> compoundNumbers;
+const char* disallowedCharCompoundNames="!@#$%^&*\n\t0123456789";
 
-std::vector<std::string> searchBar={
+std::map<std::string,std::string> molecules;
+std::vector<std::string> compoundNames;
+
+std::vector<std::string> searchBarArray={
     "h", "he", "li", "be", "b", "c", "n", "o", "f", "ne", "na", "mg", "al", "si", "p", "s", "cl", "ar", "k", "ca", "sc", "ti", "v", "cr", "mn", "fe", "co", "ni", "cu", "zn", "ga", "ge", "as", "se", "br", "kr", "rb", "sr", "y", "zr", "nb", "mo", "tc", "ru", "rh", "pd", "ag",
     "cd", "in", "sn", "sb", "te", "i", "xe", "cs", "ba", "la", "ce", "pr", "nd", "pm", "sm", "eu", "gd", "tb", "dy", "ho", "er", "tm", "yb", "lu", "hf", "ta",
     "w", "re", "os", "ir", "pt", "au", "hg", "tl", "pb", "bi", "po", "at", "rn", "fr", "ra", "ac", "th", "pa", "u", "np", "pu", "am", "cm", "bk", "cf", "es",
     "fm", "md", "no", "lr", "rf", "db", "sg", "bh", "hs", "mt", "ds", "rg", "cn", "nh", "fl", "mc", "lv", "ts", "og",
-
+ 
     "hydrogen", "helium", "lithium", "beryllium", "boron", "carbon", "nitrogen", "oxygen", "fluorine", "neon", "sodium", "magnesium", "aluminum", "silicon", "phosphorus", "sulfur", "chlorine", "argon", "potassium", "calcium", "scandium",
     "titanium", "vanadium", "chromium", "manganese", "iron", "cobalt", "nickel", "copper", "zinc", "gallium", "germanium", "arsenic",
     "selenium", "bromine", "krypton", "rubidium", "strontium", "yttrium", "zirconium", "niobium", "molybdenum", "technetium", "ruthenium",
@@ -217,14 +225,35 @@ GLfloat elementTextureHeight;
 GLfloat elementSingleTextureWidth;
 GLfloat elementDoubleTextureWidth;
 
+GLfloat elementHoveredGlowLevel;
+GLfloat elementSelectedGlowLevel;
+
 GLfloat electronDistanceDirect;
 GLfloat electronDistanceAdjust;
+GLfloat electronRadius;
+GLfloat electronSelectionBuffer;
+
+GLfloat electronHoveredGlowLevel;
+GLfloat electronSelectedGlowLevel;
+
+GLfloat electronToDativePullFactor;
+GLfloat minElectronSeparation;
+
+GLfloat electronShiftDuration;
+GLfloat electronShiftDelay;
+GLfloat electronCornerRadius;
 
 //Sign
 GLfloat plusSignTextureWidth;
 GLfloat plusSignTextureHeight;
 GLfloat minusSignTextureWidth;
 GLfloat minusSignTextureHeight;
+ 
+ImVec4 contextMenuPopUpTextColor;
+ImVec4 contextMenuPopUpBackgroundColor;
+ImVec4 contextMenuPopUpTitleBarColor;
+ImVec4 contextMenuPopUpActiveTitleBarColor;
+ImVec4 contextMenuPopUpCollapsedTitleBarColor;
 
 //Camera
 float minZoom;
@@ -239,11 +268,14 @@ GLfloat signLength;
 GLfloat bondThickness;
 GLfloat signThickness;
 
+GLfloat bondHoveredGlowLevel;
+GLfloat bondSelectedGlowLevel;
+
 GLfloat numberTextureWidth;
 GLfloat numberTextureHeight;
  
 double sideMenuWidthPerCentCopy;
-
+ 
 
 void to_json(json& js, const ImVec4& vec){
     js=json{{"x",vec.x},{"y",vec.y},{"z",vec.z},{"w",vec.w}};
@@ -311,10 +343,10 @@ int Config(){
         std::cerr << "Could not find any config file\n";
         return 0;
     } 
-    else if(!customConfigFile){
+    else if(!customConfigFile.is_open()){
         defaultConfigFile>> configData;
     }
-    else if(!defaultConfigFile){
+    else if(!defaultConfigFile.is_open()){
         customConfigFile>> configData;
     }
     else{
@@ -329,12 +361,9 @@ int Config(){
     } 
 
     //thnk you chatgpt i wont forget it
-    // Window properties
-    //configData.dump(4);
-    std::cout<<"ligma" <<std::endl;
 
+    // Window properties
     windowColor = configData.at("windowColor").get<ImVec4>();
-    std::cout<<"ligma"<<std::endl;
     windowHeight = configData.at("windowHeight").get<int>();
     windowWidth = configData.at("windowWidth").get<int>();
     largeWindowHeight = configData.at("largeWindowHeight").get<int>();
@@ -348,7 +377,7 @@ int Config(){
     // Font sizes
     windowSmallFontSize = configData.at("windowSmallFontSize").get<double>();
     windowLargeFontSize = configData.at("windowLargeFontSize").get<double>();
-    std::cout<<"ligma"<<std::endl;
+
     // Top Menu
     topMenuButtonColor = configData.at("topMenuButtonColor").get<ImVec4>();
     topMenuHoveredButtonColor = configData.at("topMenuHoveredButtonColor").get<ImVec4>();
@@ -368,7 +397,7 @@ int Config(){
     openFilePopUpTitleBarColor = configData.at("openFilePopUpTitleBarColor").get<ImVec4>();
     openFilePopUpActiveTitleBarColor = configData.at("openFilePopUpActiveTitleBarColor").get<ImVec4>();
     openFilePopUpCollapsedTitleBarColor = configData.at("openFilePopUpCollapsedTitleBarColor").get<ImVec4>();
-    std::cout<<"ligma"<<std::endl;
+
     insertDirectColor = configData.at("insertDirectColor").get<ImVec4>();
     insertDirectHoveredColor = configData.at("insertDirectHoveredColor").get<ImVec4>();
     insertDirectTypingColor = configData.at("insertDirectTypingColor").get<ImVec4>();
@@ -380,28 +409,23 @@ int Config(){
     sideMenuColor = configData.at("sideMenuColor").get<ImVec4>();
     minimumSideMenuWidth = configData.at("minimumSideMenuWidth").get<int>();
     initialSideMenuWidthPerCent = configData.at("initialSideMenuWidthPerCent").get<double>();
-    std::cout<<"ligmvvvvvva"<<std::endl;
-    // ElementCompound Child Windows
+
+    // Element Compound Child Windows
     childWindowSmallFontSize = configData.at("childWindowSmallFontSize").get<double>();
     childWindowLargeFontSize = configData.at("childWindowLargeFontSize").get<double>();
 
     elementWindowColor = configData.at("elementWindowColor").get<ImVec4>();
-    std::cout<<"ligma"<<std::endl;
     elementWindowBorderColor = configData.at("elementWindowBorderColor").get<ImVec4>();
     elementWindowBorderShadowColor = configData.at("elementWindowBorderShadowColor").get<ImVec4>();
     elementWindowTextColor = configData.at("elementWindowTextColor").get<ImVec4>();
-    std::cout<<"ligma"<<std::endl;
+
     elementButtonSize = configData.at("elementButtonSize").get<ImVec2>();
-    std::cout<<"ligma"<<std::endl;
+
     //imu32 is problem
     elementButtonColor = RGBAtoImU32(configData.at("elementButtonColor"));
-    std::cout<<"ligma"<<std::endl;
     elementButtonBorderColor = RGBAtoImU32(configData.at("elementButtonBorderColor"));
-    std::cout<<"ligma"<<std::endl;
     elementButtonHoveredColor = RGBAtoImU32(configData.at("elementButtonHoveredColor"));
-    std::cout<<"ligma"<<std::endl;
     elementButtonClickedColor = RGBAtoImU32(configData.at("elementButtonClickedColor"));
-    std::cout<<"ligma"<<std::endl;
     elementButtonCurve = configData.at("elementButtonCurve").get<double>();
     elementButtonBorderThickness = configData.at("elementButtonBorderThickness").get<double>();
 
@@ -426,37 +450,28 @@ int Config(){
     compoundButtonHoveredColors =RGBAVectortoImU32(configData.at("compoundButtonHoveredColors"));
     compoundButtonClickedColors =RGBAVectortoImU32(configData.at("compoundButtonClickedColors"));
 
-    std::cout<<"ligma"<<std::endl;
-    std::cout<<"ligmabbbb"<<std::endl;
     compoundButtonBorderColor = RGBAtoImU32(configData.at("compoundButtonBorderColor"));
-    std::cout<<"ligmabbbb"<<std::endl;
     compoundButtonBorderThickness = configData.at("compoundButtonBorderThickness").get<double>();
-    std::cout<<"ligmabbbb"<<std::endl;
     compoundButtonCurve = configData.at("compoundButtonCurve").get<double>();
-    std::cout<<"ligmabbbb"<<std::endl;
     compoundNameSize = configData.at("compoundNameSize").get<double>();
     molecularFormulaSize = configData.at("molecularFormulaSize").get<double>();
 
     compoundNameColor = RGBAtoImU32(configData.at("compoundNameColor"));
     molecularFormulaColor = RGBAtoImU32(configData.at("molecularFormulaColor"));
-    std::cout<<"ligmabbbb"<<std::endl;
     compoundWindowColor = configData.at("compoundWindowColor").get<ImVec4>();
     compoundWindowBorderColor = configData.at("compoundWindowBorderColor").get<ImVec4>();
     compoundWindowBorderShadowColor = configData.at("compoundWindowBorderShadowColor").get<ImVec4>();
     compoundWindowTextColor = configData.at("compoundWindowTextColor").get<ImVec4>();
-    std::cout<<"ligmabbbb"<<std::endl;
     scrollBarColor = RGBAtoImU32(configData.at("scrollBarColor"));
     scrollBarCurve = configData.at("scrollBarCurve").get<double>();
 
     initialElements = configData.at("initialElements").get<std::vector<int>>();
-    std::cout<<"ligmabbbb"<<std::endl;
     initialElementHeightPerCent = configData.at("initialElementHeightPerCent").get<double>();
     scrollerHeightPerCent = configData.at("scrollerHeightPerCent").get<double>();
     minimumChildWindowPerCent = configData.at("minimumChildWindowPerCent").get<double>();
     adjustOffset = configData.at("adjustOffset").get<int>();
     elementCompound_____Padding = configData.at("elementCompound_____Padding").get<int>();
     IDKWhyOffset = configData.at("IDKWhyOffset").get<int>();
-    std::cout<<"ligmabbbb"<<std::endl;
 
     // Search Bar
     searchSmallFontSize = configData.at("searchSmallFontSize").get<double>();
@@ -481,67 +496,132 @@ int Config(){
     elementSingleTextureWidth = configData.at("elementSingleTextureWidth").get<GLfloat>();
     elementDoubleTextureWidth = configData.at("elementDoubleTextureWidth").get<GLfloat>();
 
+    elementHoveredGlowLevel = configData.at("elementHoveredGlowLevel").get<GLfloat>();
+    elementSelectedGlowLevel = configData.at("elementSelectedGlowLevel").get<GLfloat>();
+
     electronDistanceDirect=configData.at("electronDistanceDirect").get<double>();
     electronDistanceAdjust=configData.at("electronDistanceAdjust").get<double>();
+    electronRadius=configData.at("electronRadius").get<double>();
+    electronSelectionBuffer=configData.at("electronSelectionBuffer").get<double>();
 
+    electronHoveredGlowLevel=configData.at("electronHoveredGlowLevel").get<double>();
+    electronSelectedGlowLevel=configData.at("electronSelectedGlowLevel").get<double>();
+
+    electronToDativePullFactor=configData.at("electronToDativePullFactor").get<double>();
+    minElectronSeparation=configData.at("minElectronSeparation").get<double>();
+
+    electronShiftDuration=configData.at("electronShiftDuration").get<double>();
+    electronShiftDelay=configData.at("electronShiftDelay").get<double>();
+    electronCornerRadius=configData.at("electronCornerRadius").get<double>();
+ 
     numberTextureWidth=configData.at("numberTextureWidth").get<double>();
     numberTextureHeight=configData.at("numberTextureHeight").get<double>();
 
-    GLfloat plusSignTextureWidth=configData.at("plusSignTextureWidth").get<double>();
-    GLfloat plusSignTextureHeight=configData.at("plusSignTextureHeight").get<double>();
-    GLfloat minusSignTextureWidth=configData.at("minusSignTextureWidth").get<double>();
-    GLfloat minusSignTextureHeight=configData.at("minusSignTextureHeight").get<double>();
+    plusSignTextureWidth=configData.at("plusSignTextureWidth").get<double>();
+    plusSignTextureHeight=configData.at("plusSignTextureHeight").get<double>();
+    minusSignTextureWidth=configData.at("minusSignTextureWidth").get<double>();
+    minusSignTextureHeight=configData.at("minusSignTextureHeight").get<double>();
+
+    contextMenuPopUpTextColor = configData.at("contextMenuPopUpTextColor").get<ImVec4>();
+    contextMenuPopUpBackgroundColor = configData.at("contextMenuPopUpBackgroundColor").get<ImVec4>();
+    contextMenuPopUpTitleBarColor = configData.at("contextMenuPopUpTitleBarColor").get<ImVec4>();
+    contextMenuPopUpActiveTitleBarColor = configData.at("contextMenuPopUpActiveTitleBarColor").get<ImVec4>();
+    contextMenuPopUpCollapsedTitleBarColor = configData.at("contextMenuPopUpCollapsedTitleBarColor").get<ImVec4>();
 
     //Camera
-    minZoom=configData.at("minZoom").get<float>();;
+    minZoom=configData.at("minZoom").get<float>();; 
     maxZoom=configData.at("maxZoom").get<float>();
     minCamMovement=configData.at("minCamMovement").get<int>();
     zoomShift=configData.at("zoomShift").get<float>();
     elementSpacingAmount=configData.at("elementSpacingAmount").get<float>();
 
-    // Spawn location
+    // Spawn location 
     defaultSpawnLocation = configData.at("defaultSpawnLocation").get<glm::vec2>();
 
     signLength=configData.at("signLength").get<GLfloat>();
     bondThickness=configData.at("bondThickness").get<GLfloat>();
     signThickness=configData.at("signThickness").get<GLfloat>();
 
-    compoundNumbers= configData.at("compoundNumbers").get<std::vector<std::string>>();
+    bondHoveredGlowLevel=configData.at("bondHoveredGlowLevel").get<GLfloat>();
+    bondSelectedGlowLevel=configData.at("bondSelectedGlowLevel").get<GLfloat>();
+
+    compoundNames= configData.at("compoundNames").get<std::vector<std::string>>();
     molecules=configData.at("molecules").get<std::map<std::string,std::string>>();
 
-    std::cout<<"heybal"<<std::endl;
-
-    if(configData.contains("additionalCompoundNumbers") && configData.contains("additionalCompoundStrings")){
-        std::vector<std::pair<std::string,int>> additionals=configData.at("additonalCompoundNumbers").get<std::vector<std::pair<std::string,int>>>();
-        std::map<std::string,std::string> additonalStrings=configData.at("additionalCompoundStrings").get<std::map<std::string,std::string>>();
+    if(configData.contains("additionalCompoundNames") && configData.contains("additionalMolecules")){
+        std::vector<std::pair<std::string,int>> additionals=configData.at("additionalCompoundNames").get<std::vector<std::pair<std::string,int>>>();
+        std::map<std::string,std::string> additonalStrings=configData.at("additionalMolecules").get<std::map<std::string,std::string>>();
 
         if(additonalStrings.size()!=additionals.size()){
-            error->Push("Additional Compounds could not be Inserted");
-            // isError=true;
-            // errorMessage="Additional Compounds could not be Inserted";
+            error->push("Additional Compounds could not be Inserted");
             std::cerr<<"Additional Compounds could not be Inserted"<<std::endl;
         }
         else{
             for(auto it: additionals){
-                compoundNumbers.insert(compoundNumbers.begin()+it.second,it.first);
+                compoundNames.insert(compoundNames.begin()+it.second,it.first);
             }
             for(auto [key,value]: additonalStrings){
                 molecules[key]=value;
             }
         }
-
-
     }
-    std::cout<<"heybal"<<std::endl;
-    for(auto it:compoundNumbers){
+
+    for(auto it:compoundNames){
         std::string name=it;
         std::transform(name.begin(),name.end(),name.begin(),::tolower);
-        std::cout<<name<<std::endl;
-        searchBar.push_back(name);
+        searchBarArray.push_back(name);
     }
-    std::cout<<"heybal"<<std::endl;
 
     sideMenuWidthPerCentCopy=initialSideMenuWidthPerCent;
+    return 1;
+}
+
+int addCompoundToConfigFile(std::string name, std::string compoundString){
+
+    json configData;
+
+    std::ifstream customConfigFile("../config/config.json");
+    if (!customConfigFile.is_open()) {
+        error->push("Could not find custom config file");
+        std::cerr << "Could not find any config file\n";
+        return 0;
+    }
+
+    customConfigFile>>configData;
+    customConfigFile.close();
+
+    if(!configData.contains("additionalCompoundNames")||!configData["additionalCompoundNames"].is_array()){
+        configData["additionalCompoundNames"]=json::array();
+    }
+
+    if (std::find(configData["additionalCompoundNames"].begin(),configData["additionalCompoundNames"].end(), name)!=configData["additionalCompoundNames"].end()||std::find(compoundNames.begin(),compoundNames.end(), name)!=compoundNames.end()) {
+        error->push("Compound Name already exists. Please choose another");
+        return 0;
+    } 
+
+    if (!configData.contains("molecules")||!configData["molecules"].is_object()) {
+        configData["molecules"]=json::object();
+    }
+
+    configData["additionalCompoundNames"].push_back(name);
+    configData["molecules"][name]= compoundString;
+
+    compoundNames.push_back(name);
+    molecules[name]=compoundString;
+
+    std::transform(name.begin(),name.end(),name.begin(),::tolower);
+    searchBarArray.push_back(name);
+
+    std::ofstream outFile("../config/config.json");
+    if (!outFile.is_open()) {
+        error->push("Could not find custom config file");
+        std::cerr << "Could not find any config file\n";
+        return 0;
+    }
+
+    outFile<<configData.dump(4);
+    outFile.close();
+
     return 1;
 }
 

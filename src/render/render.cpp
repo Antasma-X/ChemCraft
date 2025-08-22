@@ -1,30 +1,13 @@
 #include "render.h"
 
-void Render::Render(){
-
-    //Elements and their electrons
-    for(auto compound:compoundList){
-        std::vector<Element*> atomList=compound->getAtoms();
-        for(auto atom: atomList){
-            if(ElementObject::elementObjects[atom]==nullptr){
-                error->Push("Element was not rendered. Please Destroy Compound Immediately");
-                
-                continue;
-            }
-            ElementObject::elementObjects[atom]->Render();
-        }
-    }
-
-    //Bonds
-    for(auto it:BondObject::bonds){
-        it->Render();
-    }
+std::vector<Compound*> Render::getCompoundList(){
+    return compoundList;
 }
 
 void Render::createCompoundObject(Compound* compound){
 
     if (!compound || compound->getAtoms().empty()){
-        error->Push("Invalid or empty compound in createElementObjectsFromCompound()");
+        error->push("Invalid or empty compound in createElementObjectsFromCompound()");
         return;
     }
 
@@ -97,22 +80,23 @@ void Render::createCompoundObject(Compound* compound){
         glm::vec2 finalPos = pos + shift;
         try {
             auto* obj = new ElementObject(finalPos, el);
-            ElementObject::elementObjects[el] = obj;
+            ElementObject::getAllElementObjects()[el] = obj;
+            elementObjectToCompound[obj]=compound;
         } catch (const std::exception& e) {
-            error->Push("Failed to create ElementObject: " + std::string(e.what()));
+            error->push("Failed to create ElementObject: " + std::string(e.what()));
         }
 
     }
         auto bonds = compound->getBonds();
 
     for (auto& [el1, bondedList] : bonds) {
-        ElementObject* obj1 = ElementObject::elementObjects[el1];
+        ElementObject* obj1 = ElementObject::getAllElementObjects()[el1];
         if (!obj1) continue;
 
         for (auto& [el2, bondType] : bondedList) {
             if (el1 > el2) continue; // Prevent double rendering
 
-            ElementObject* obj2 = ElementObject::elementObjects[el2];
+            ElementObject* obj2 = ElementObject::getAllElementObjects()[el2];
             if (!obj2) continue;
 
             glm::vec2 bestA, bestB;
@@ -134,7 +118,7 @@ void Render::createCompoundObject(Compound* compound){
                     spots2 = obj2->getDativePositions();
                     break;
                 default:
-                    error->Push("Unknown bond type in compound");
+                    error->push("Unknown bond type in compound");
                     continue;
             }
 
@@ -162,45 +146,666 @@ void Render::createCompoundObject(Compound* compound){
             }
 
             try {
-                new BondObject(finalEnds, elements, std::abs(bondType));
+                auto bondObj=new BondObject(finalEnds, elements, std::abs(bondType));
+                bondObjectToCompound[bondObj];
+                compoundToBondObjects[compound].insert(bondObj);
             } catch (const std::exception& e) {
-                error->Push("Failed to create BondObject: " + std::string(e.what()));
+                error->push("Failed to create BondObject: " + std::string(e.what()));
             }
         }
     }
 
     Render::compoundList.push_back(compound);
+    std::cout<<"ffhushf"<<std::endl;
 
 }
 
-ElementObject* Render::getElementClicked(glm::vec2 mousePos){
-    for (auto& el : ElementObject::elementObjects) {
-        // if (mousePos.x >= el.second->position.x && mousePos.x <= el.second->position.x + el.second->width&&
-        //     mousePos.y >= el.second->position.y && mousePos.y <= el.second->position.y + elementTextureHeight) {
-        //     return el.second;
-        // }
-        float halfWidth = el.second->width / 2.0f;
-float halfHeight = elementTextureHeight / 2.0f;
-glm::vec2 pos = el.second->position;
+void Render::render(){
+    std::cout<<"render1"<<std::endl;
 
-if (mousePos.x >= pos.x - halfWidth && mousePos.x <= pos.x + halfWidth &&
-    mousePos.y >= pos.y - halfHeight && mousePos.y <= pos.y + halfHeight)
-{
-    return el.second;
+
+    //Elements and their electrons
+    for(auto compound:compoundList){
+        std::vector<Element*> atomList=compound->getAtoms();
+        for(auto atom: atomList){
+    std::cout<<"render2"<<std::endl;
+
+            if(ElementObject::getAllElementObjects()[atom]==nullptr){
+
+                error->push("Element was not rendered. Please Destroy Compound Immediately");
+                continue;
+            }
+            ElementObject::getAllElementObjects()[atom]->render();
+        }
+    }
+
+    //Bonds
+    for(auto it:BondObject::getAllBondObjects()){
+    std::cout<<"render3"<<std::endl;
+
+        it->render();
+    }
 }
+
+void Render::moveCompound(Compound* comp,glm::vec2 delta){
+
+    std::vector<Element*> atomList=comp->getAtoms();
+    for(auto atom: atomList){
+        if(ElementObject::getAllElementObjects()[atom]==nullptr){
+            error->push("Element was not found. Please Destroy Compound Immediately");
+            
+            continue;
+        }
+        ElementObject::getAllElementObjects()[atom]->move(delta);
+        moveBonds(ElementObject::getAllElementObjects()[atom],delta);
+    }
+}
+
+void Render::moveBonds(ElementObject* el,glm::vec2 delta){
+    for (auto& bond: BondObject::getAllBondObjects()){
+        if (bond->getElements()[0]==el){
+            bond->move(delta,0);
+        }
+
+        if (bond->getElements()[1]==el){
+            bond->move(delta,1);
+        }
+    }
+} 
+
+void Render::moveDative(ElectronObject* dative,glm::vec2 delta){
+    auto electrons=ElementObject::getElectronsOfDative(dative);
+    if(!electrons[0]||!electrons[1]||electrons[0]->isTransparent()||electrons[1]->isTransparent()){
+        return;
+    }
+    dative->move(delta);
+
+    glm::vec2 dativePos = dative->getPosition();
+    glm::vec2 elementCenter = ElementObject::getElementObjectOfElectronOrDative(dative)->getPosition(); // You need access to this
+
+    // Vector from element to dative
+    glm::vec2 dir = dativePos - elementCenter;
+    float len = glm::length(dir);
+    if (len == 0) return;
+  
+    float electronSeparation = std::max(elementTextureHeight-2*electronDistanceAdjust - len * electronToDativePullFactor, minElectronSeparation);
+    glm::vec2 offset = dir * (electronSeparation / 2.0f);
+
+    electrons[0]->move(delta+offset);
+    electrons[1]->move(delta-offset);
+}
+
+int Render::checkElectronShiftingOrBonding(ElectronObject* electron){
+
+    glm::vec2 pos=electron->getPosition();
+
+    ElectronObject* otherElectron=nullptr;
+    ElementObject* otherChargeElementObject=nullptr;
+ 
+    for (auto& el : ElementObject::getAllElementObjects()){
+        std::vector<ElectronObject*> newObjs=el.second->getElectronObjectsOn(pos);
+        bool loopOver=false;
+        if(!newObjs.empty()){
+            for(auto it: newObjs){
+                if(it!=electron){
+                    otherElectron=it;
+                    loopOver=true;
+                    break;
+                }
+            }
+        }
+        if(loopOver){
+            break;
+        }
+    }
+
+    for (auto& el : ElementObject::getAllElementObjects()){
+        if(el.second->chargeObjectContains(pos)){
+            if(el.second!=ElementObject::getElementObjectOfElectronOrDative(electron)){
+                otherChargeElementObject=el.second;
+                break;
+            }
+        }
+    }
+
+    if(otherElectron!=nullptr){
+        if(ElementObject::getElementObjectOfElectronOrDative(electron)==ElementObject::getElementObjectOfElectronOrDative(otherElectron)){
+            if(electron==otherElectron){
+                return 0;
+            }
+            ElementObject::getElementObjectOfElectronOrDative(electron)->shiftElectronToNewElectron(electron,otherElectron);
+            return 1;
+        }
+        else if(otherElectron->isTransparent()){
+            if(createBond(ElementObject::getElementObjectOfElectronOrDative(electron),ElementObject::getElementObjectOfElectronOrDative(otherElectron),0,electron,otherElectron)==0){
+                return -1;
+            }
+            return 2;
+        } 
+    }
+    else if(otherChargeElementObject!=nullptr){
+        if(createBond(ElementObject::getElementObjectOfElectronOrDative(electron),otherChargeElementObject,electron)==0){
+            return -1;
+        }
+        return 3;
+    }
+
+    return 0;
+}
+
+int Render::checkDativeBonding(ElectronObject* dative){
+    ElectronObject* otherDative=nullptr;
+
+    for (auto& el : ElementObject::getAllElementObjects()){
+        std::vector<ElectronObject*> newObjs=el.second->getDativeObjectsOn(dative->getPosition());
+        if(!newObjs.empty()){
+            otherDative=newObjs[0];
+            break;
+        }
+    }
+
+    if(otherDative==nullptr){
+        return 0;
+    }
+
+    if(ElementObject::getElementObjectOfElectronOrDative(dative)==ElementObject::getElementObjectOfElectronOrDative(otherDative)){
+        return 0;
+    }
+    else{
+        if(createBond(ElementObject::getElementObjectOfElectronOrDative(dative),ElementObject::getElementObjectOfElectronOrDative(otherDative),2,dative,otherDative)==0){
+            return -1;
+        }
+        return 1;
+    }
+}
+
+int Render::createBond(ElementObject* elObj1,ElementObject* elObj2, int type, ElectronObject* electron, ElectronObject* otherElectron){
+    Compound* comp1=elementObjectToCompound[elObj1];
+    Compound* comp2=elementObjectToCompound[elObj2];
+
+    if(comp1==comp2){
+        if(!comp1->createBond(*elObj1->getElement(),*elObj2->getElement(),type)){
+            return 0;
+        }
+
+        elObj1->update();
+        elObj2->update();
+
+        BondObject* bondObject = new BondObject({elObj1->getOriginalElectronOrDativePosition(electron),otherElectron->getPosition()},{elObj1,elObj2},-type);
+        bondObjectToCompound[bondObject]=comp1;
+        compoundToBondObjects[comp1].insert(bondObject);
+    }
+    else{
+        if(!comp1->addElement(*elObj1->getElement(),*elObj2->getElement(),*comp2,-type)){
+            return 0;
+        }
+
+        elObj1->update();
+        elObj2->update();
+
+        BondObject* bondObject = new BondObject({elObj1->getOriginalElectronOrDativePosition(electron),otherElectron->getPosition()},{elObj1,elObj2},type);
+
+        bondObjectToCompound[bondObject]=comp1;
+        compoundToBondObjects[comp1].insert(bondObject);
+
+        auto it = std::find(compoundList.begin(), compoundList.end(), comp2);
+        if (it != compoundList.end()) {
+            compoundList.erase(it);
+        }
+
+        for(auto [key,value]: bondObjectToCompound){
+            if(value==comp2){
+                bondObjectToCompound[key]=comp1;
+            }
+        }
+
+        compoundToBondObjects[comp1].insert(compoundToBondObjects[comp2].begin(),compoundToBondObjects[comp2].end());
+        compoundToBondObjects.erase(comp2);
+
+        for(auto [key,value]:elementObjectToCompound){
+            if(value==comp2){
+                elementObjectToCompound[key]=comp1;
+            }
+        }
+
+        delete comp2;
+    }
+    return 1;
+}
+
+int Render::createBond(ElementObject* elObj1,ElementObject* elObj2, ElectronObject* electron){
+    Compound* comp1=elementObjectToCompound[elObj1];
+    Compound* comp2=elementObjectToCompound[elObj2];
+
+    if(comp1==comp2){
+        if(!comp1->createBond(*elObj1->getElement(),*elObj2->getElement(),-1)){
+            return 0;
+        }
+
+        elObj1->update();
+        elObj2->update();
+
+        BondObject* bondObject = new BondObject({elObj1->getChargePosition(),elObj2->getChargePosition()},{elObj1,elObj2},1);
+        bondObjectToCompound[bondObject]=comp1;
+        compoundToBondObjects[comp1].insert(bondObject);
+    }  
+    else{
+        if(!comp1->addElement(*elObj1->getElement(),*elObj2->getElement(),*comp2,-1)){
+            return 0;
+        }
+
+        elObj1->update();
+        elObj2->update();
+
+        BondObject* bondObject = new BondObject({elObj1->getChargePosition(),elObj2->getChargePosition()},{elObj1,elObj2},1);
+        bondObjectToCompound[bondObject]=comp1;
+        compoundToBondObjects[comp1].insert(bondObject);
+
+        auto it = std::find(compoundList.begin(), compoundList.end(), comp2);
+        if (it != compoundList.end()) {
+            compoundList.erase(it);
+        }
+
+        for(auto [key,value]: bondObjectToCompound){
+            if(value==comp2){
+                bondObjectToCompound[key]=comp1;
+            }
+        }
+
+        compoundToBondObjects[comp1].insert(compoundToBondObjects[comp2].begin(),compoundToBondObjects[comp2].end());
+        compoundToBondObjects.erase(comp2);
+
+        for(auto [key,value]:elementObjectToCompound){
+            if(value==comp2){
+                elementObjectToCompound[key]=comp1;
+            }
+        }
+        
+        delete comp2;
+    }
+
+    return 1;
+}
+
+int Render::removeBond(BondObject* bondObj){
+    Compound* comp=bondObjectToCompound[bondObj];
+
+    auto stackCompounds=comp->removeBond(*bondObj->getElements()[0]->getElement(),*bondObj->getElements()[1]->getElement(),bondObj->getType());
+    
+    if(stackCompounds.size()==0){
+        return 0;
+    }
+    std::vector<Compound*> compounds;
+    for(auto& sComp:stackCompounds){
+        compounds.push_back(new Compound(sComp));
+    }
+
+    bondObj->getElements()[0]->update();
+    bondObj->getElements()[1]->update();
+
+    if(compounds.size()!=1){
+        auto it = std::find(compoundList.begin(), compoundList.end(), comp);
+        if (it != compoundList.end()) {
+            compoundList.erase(it);
+        }
+
+        compoundList.push_back(compounds[0]);
+        compoundList.push_back(compounds[1]);
+
+        auto atomList=compounds[0]->getAtoms();
+        for(auto [key,value]: bondObjectToCompound){
+            if (value==comp){
+                auto it = std::find(atomList.begin(), atomList.end(), key->getElements()[0]->getElement());
+                if (it != atomList.end()) {
+                    bondObjectToCompound[key]=compounds[0];
+                }
+                else{
+                    bondObjectToCompound[key]=compounds[1];
+                }
+            }
+        }
+
+        for(auto bondObject:compoundToBondObjects[comp]){
+            auto it = std::find(atomList.begin(), atomList.end(), bondObject->getElements()[0]->getElement());
+            if (it != atomList.end()) {
+                compoundToBondObjects[compounds[0]].insert(bondObject);
+            }
+            else{
+                compoundToBondObjects[compounds[1]].insert(bondObject);
+            }
+        }
+        compoundToBondObjects.erase(comp);
+
+        for(auto [key,value]: elementObjectToCompound){
+            if (value==comp){
+                auto it = std::find(atomList.begin(), atomList.end(), key->getElement());
+                if (it != atomList.end()) {
+                    elementObjectToCompound[key]=compounds[0];
+                }
+                else{
+                    elementObjectToCompound[key]=compounds[1];
+                }
+            }
+        }
+        delete comp;
+    }
+
+    bondObjectToCompound.erase(bondObj);
+    delete bondObj;
+
+    return 1;
+}
+
+int Render::removeElement(ElementObject* elementObj){
+    Compound* comp=elementObjectToCompound[elementObj];
+ 
+    auto stackCompounds=comp->removeElement(*elementObj->getElement());
+
+    if(stackCompounds.size()==0){
+        return 0;
+    }
+
+    std::vector<Compound*> compounds;
+    for(auto& sComp:stackCompounds){
+        compounds.push_back(new Compound(sComp));
+    }
+
+    //get all the bondobjs the element was connected to
+    std::vector<BondObject*> bondObjectsToBeRemoved;
+    std::vector<ElementObject*> elementObjectsToBeUpdated;
+
+    for(auto bondObj: BondObject::getAllBondObjects()){
+        if(elementObj==bondObj->getElements()[0]){
+            elementObjectsToBeUpdated.push_back(bondObj->getElements()[1]);
+            bondObjectsToBeRemoved.push_back(bondObj);
+        }
+        else if(elementObj==bondObj->getElements()[1]){
+            elementObjectsToBeUpdated.push_back(bondObj->getElements()[0]);
+            bondObjectsToBeRemoved.push_back(bondObj);
+        }
+    }
+
+    if(compounds.size()!=1){
+        auto it = std::find(compoundList.begin(), compoundList.end(), comp);
+        if (it != compoundList.end()) {
+            compoundList.erase(it);
+        }
+
+        for(auto it:compounds){
+            compoundList.push_back(it);
+        }
+
+        for(auto [key,value]: bondObjectToCompound){
+            if(value==comp){
+                if(std::find(bondObjectsToBeRemoved.begin(),bondObjectsToBeRemoved.end(),key)!=bondObjectsToBeRemoved.end()){
+                    bondObjectToCompound.erase(key);
+                    continue;
+                }
+                for(auto compound:compounds){
+                    auto atomList=compound->getAtoms();
+                    auto it = std::find(atomList.begin(), atomList.end(), key->getElements()[0]->getElement());
+                    if (it != atomList.end()) {
+                        bondObjectToCompound[key]=compound;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for(auto bondObject:compoundToBondObjects[comp]){
+            if(std::find(bondObjectsToBeRemoved.begin(),bondObjectsToBeRemoved.end(),bondObject)!=bondObjectsToBeRemoved.end()){
+                bondObjectToCompound.erase(bondObject);
+                continue;
+            }
+//basically we have to find wht each bond object belongs to add there
+
+            for(auto compound:compounds){
+                auto atomList=compound->getAtoms();
+                auto it = std::find(atomList.begin(), atomList.end(), bondObject->getElements()[0]->getElement());
+                if (it != atomList.end()) {
+                    compoundToBondObjects[compound].insert(bondObject);
+                    break;
+                }
+            }
+        }
+        compoundToBondObjects.erase(comp);
+
+        elementObjectToCompound.erase(elementObj); 
+
+        for(auto [key,value]: elementObjectToCompound){
+            if (value==comp){
+
+
+                for(auto compound:compounds){
+                    auto atomList=compound->getAtoms();
+                    auto it = std::find(atomList.begin(), atomList.end(), key->getElement());
+                    if (it != atomList.end()) {
+                        elementObjectToCompound[key]=compound;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        delete comp;
+    }
+
+    for(auto bondObj: bondObjectsToBeRemoved){
+        delete bondObj;
+    }
+
+    for(auto elObj:elementObjectsToBeUpdated){
+        elObj->update();
+    }
+
+    elementObjectToCompound.erase(elementObj);
+    delete elementObj;
+
+    return 1;
+}
+
+void Render::deleteCompound(Compound* comp){
+    std::cout<<"boy"<<std::endl;
+
+    std::vector<Element*> atomList=comp->getAtoms();
+    std::cout<<"boy"<<std::endl;
+
+    for(auto& atom: atomList){
+
+        if(ElementObject::getAllElementObjects()[atom]==nullptr){
+            error->push("Element was not rendered. Please Destroy Compound Immediately");
+            continue;
+        }
+        delete ElementObject::getAllElementObjects()[atom];
+    }   
+
+    for(auto& bond: compoundToBondObjects[comp]){
+        delete bond;
+    }
+    std::cout<<"boy"<<std::endl;
+
+    for(auto it = compoundList.begin(); it != compoundList.end(); ++it){
+    std::cout<<"sndjbndjbn"<<std::endl;
+
+        if(*it == comp){
+            compoundList.erase(it);
+            break;
+        }
+    }
+    std::cout<<"boy"<<std::endl;
+
+// delete compoundelement objects too
+    delete comp;
+}
+
+void Render::resetElectronPos(ElectronObject* electron){
+    ElementObject* elObj =ElementObject::getElementObjectOfElectronOrDative(electron);
+
+    glm::vec2 ogPos=elObj->getOriginalElectronOrDativePosition(electron);
+    electron->move(ogPos-electron->getPosition());
+}
+
+void Render::resetDativePos(ElectronObject* dative){
+    ElementObject* elObj =ElementObject::getElementObjectOfElectronOrDative(dative);
+
+    std::array<ElectronObject*,2> electrons=ElementObject::getElectronsOfDative(dative);
+
+    glm::vec2 ogPos;
+
+    ogPos=elObj->getOriginalElectronOrDativePosition(dative);
+    dative->move(ogPos-dative->getPosition());
+
+    ogPos=elObj->getOriginalElectronOrDativePosition(electrons[0]);
+    electrons[0]->move(ogPos-electrons[0]->getPosition());
+
+    ogPos=elObj->getOriginalElectronOrDativePosition(electrons[1]);
+    electrons[1]->move(ogPos-electrons[1]->getPosition());
+}
+
+bool Render::isPartOfOneCompound(std::set<ElementObject*> elementObjects){
+
+    for(auto compound:compoundList){
+        auto atoms=compound->getAtoms();
+        if (elementObjects.size() != atoms.size()){
+            continue;
+        }
+
+        std::unordered_set<Element*> setA;
+
+        for(auto el: elementObjects){
+            setA.insert(el->getElement());
+        }
+
+        std::unordered_set<Element*> setB;
+
+        for(auto el: atoms){
+            setB.insert(el);
+        }
+
+        if(setA==setB){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+Compound* Render::getCompoundIfExists(std::set<ElementObject*> elementObjects){
+    Compound* comp=nullptr;
+
+    for(auto compound:compoundList){
+        auto atoms=compound->getAtoms();
+        if (elementObjects.size() != atoms.size()){
+            continue;
+        }
+
+        std::unordered_set<Element*> setA;
+
+        for(auto el: elementObjects){
+            setA.insert(el->getElement());
+        }
+
+        std::unordered_set<Element*> setB;
+
+        for(auto el: atoms){
+            setB.insert(el);
+        }
+
+        if(setA==setB){
+            comp=compound;
+            break;
+        }
+    }
+
+    return comp;
+}
+
+std::set<ElementObject*> Render::getElementObjectsOn(glm::vec2 pos){
+    std::set<ElementObject*> objs;
+
+    for (auto& el : ElementObject::getAllElementObjects()){
+        if(el.second->contains(pos)){
+            objs.insert(el.second);
+        }
+    }
+    return objs;
+}
+
+std::set<ElectronObject*> Render::getElectronObjectsOn(glm::vec2 pos){
+    std::set<ElectronObject*> objs;
+    //only when selecting is happeneing element loses ownership of electron
+    for (auto& el : ElementObject::getAllElementObjects()){
+        std::vector<ElectronObject*> newObjs=el.second->getElectronObjectsOn(pos);
+        objs.insert(newObjs.begin(),newObjs.end());
+    }
+    return objs;
+}
+
+std::set<ElectronObject*> Render::getDativeObjectsOn(glm::vec2 pos){
+    std::set<ElectronObject*> objs;
+    //only when selecting is happeneing element loses ownership of electron
+    for (auto& el : ElementObject::getAllElementObjects()){
+        std::vector<ElectronObject*> newObjs=el.second->getDativeObjectsOn(pos);
+        objs.insert(newObjs.begin(),newObjs.end());
+    }
+    return objs;
+}
+
+std::set<BondObject*> Render::getBondsObjectsOn(glm::vec2 pos){
+    std::set<BondObject*> objs;
+
+    for (auto& bond : BondObject::getAllBondObjects()){
+        if(bond->contains(pos)){
+            objs.insert(bond);
+        }
+    }
+    return objs;
+}
+
+Compound* Render::getCompoundSelected(glm::vec2 pos){
+ 
+    for(auto comp :compoundList ){
+        auto atomList=comp->getAtoms();
+        for(auto atom:atomList){
+            auto obj=ElementObject::getAllElementObjects()[atom];
+            if(obj==nullptr){
+                continue;
+            }
+            if(obj->contains(pos)){
+                return comp;
+            }
+        } 
     }
     return nullptr;
 } 
 
-void Render::MoveBonds(ElementObject* el,glm::vec2 delta){
-    for (auto& bond: BondObject::bonds){
-        if (bond->elements[0]==el){
-            bond->Move(delta,0);
-        }
-
-        if (bond->elements[1]==el){
-            bond->Move(delta,1);
-        }
-    }
+Compound* Render::getCompoundWithElementObject(ElementObject* elObj){
+    return elementObjectToCompound[elObj];
 }
 
+std::set<ElementObject*> Render::getCompoundElementObjectsWithBondObject(BondObject* bondObj){
+    std::set<ElementObject*> elObjs;
+    
+    Compound* comp=bondObjectToCompound[bondObj];
+
+    std::vector<Element*> atomList=comp->getAtoms();
+    for(auto atom: atomList){
+
+        if(ElementObject::getAllElementObjects()[atom]==nullptr){
+            error->push("Element was not found. Please Destroy Compound Immediately");
+            continue;
+        }
+        elObjs.insert(ElementObject::getAllElementObjects()[atom]);
+    }
+
+    return elObjs;
+}
+
+std::set<BondObject*> Render::getCompoundBondObjectsWithElementObject(ElementObject* elObj){
+    std::set<BondObject*> bondObjs;
+    Compound* comp=elementObjectToCompound[elObj];
+
+    return compoundToBondObjects[comp];
+}

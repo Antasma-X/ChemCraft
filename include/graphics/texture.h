@@ -14,8 +14,19 @@ struct Texture{
     //Because Errors
     Texture()=default;
 
+    // //Not Allowed
+    // Texture(const Texture&)=delete;
+    // Texture& operator=(const Texture&)=delete;
+
     //Creates Texture using imageilepath passed in and Unbinds texture
     Texture(std::string imageFilePath);
+
+    // // Move constructor and assignment
+    // Texture(Texture&& other) noexcept;
+    // Texture& operator=(Texture&& other) noexcept;
+
+    // //Destroys Texture
+    // ~Texture();
 
     //Binds Texture
     void Bind();
@@ -28,7 +39,6 @@ struct Texture{
 
     //Destroys Texture
     void Delete();
-
 };
 
 

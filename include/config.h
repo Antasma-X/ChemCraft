@@ -173,19 +173,25 @@ extern float elementSpacingAmount;
 //Shader
 extern std::string elementVertShaderFilePath;
 extern std::string elementFragShaderFilePath;
+extern std::string glowElementVertShaderFilePath;
+extern std::string glowElementFragShaderFilePath;
 extern std::string electronVertShaderFilePath;
 extern std::string electronFragShaderFilePath;
+extern std::string glowElectronVertShaderFilePath;
+extern std::string glowElectronFragShaderFilePath;
 extern std::string numberVertShaderFilePath;
 extern std::string numberFragShaderFilePath;
 extern std::string signVertShaderFilePath;
 extern std::string signFragShaderFilePath;
-
+ 
 extern std::string covalentVertShaderFilePath;
 extern std::string covalentFragShaderFilePath;
 extern std::string ionicVertShaderFilePath;
 extern std::string ionicFragShaderFilePath;
 extern std::string dativeVertShaderFilePath;
 extern std::string dativeFragShaderFilePath;
+extern std::string glowBondVertShaderFilePath;
+extern std::string glowBondFragShaderFilePath;
 
 extern std::map<std::string,Shader> shaders;
 
@@ -198,16 +204,34 @@ extern GLfloat elementTextureHeight;
 extern GLfloat elementSingleTextureWidth;
 extern GLfloat elementDoubleTextureWidth;
 
+extern GLfloat elementHoveredGlowLevel;
+extern GLfloat elementSelectedGlowLevel;
+
 extern GLfloat electronDistanceDirect;
 extern GLfloat electronDistanceAdjust;
- 
-extern glm::vec2 defaultSpawnLocation;
+extern GLfloat electronRadius;
+extern GLfloat electronSelectionBuffer;
 
+extern GLfloat electronHoveredGlowLevel;
+extern GLfloat electronSelectedGlowLevel;
+ 
+extern GLfloat electronToDativePullFactor;
+extern GLfloat minElectronSeparation;
+
+extern GLfloat electronShiftDuration;
+extern GLfloat electronShiftDelay;
+extern GLfloat electronCornerRadius;
+
+extern glm::vec2 defaultSpawnLocation;
+ 
 extern GLfloat signLength;
 extern GLfloat bondThickness;
 extern GLfloat signThickness;
 
-//Number Assets
+extern GLfloat bondHoveredGlowLevel;
+extern GLfloat bondSelectedGlowLevel;
+
+//Number Assets 
 extern std::string numberBlueFilePath;
 extern std::string numberRedFilePath;
 
@@ -223,40 +247,52 @@ extern GLfloat plusSignTextureHeight;
 extern GLfloat minusSignTextureWidth;
 extern GLfloat minusSignTextureHeight;
  
+//Context Menu
+extern ImVec4 contextMenuPopUpTextColor;
+extern ImVec4 contextMenuPopUpBackgroundColor;
+extern ImVec4 contextMenuPopUpTitleBarColor;
+extern ImVec4 contextMenuPopUpActiveTitleBarColor;
+extern ImVec4 contextMenuPopUpCollapsedTitleBarColor;
+
+extern const char* disallowedCharCompoundNames;
 
 //Values
 extern std::map<std::string,std::string> molecules;
-extern std::vector<std::string> compoundNumbers;
-extern std::vector<std::string> searchBar;
+extern std::vector<std::string> compoundNames;
+extern std::vector<std::string> searchBarArray;
 
 extern double sideMenuWidthPerCentCopy;
  
+inline constexpr GLfloat Z_NORMAL=0.0f;
+inline constexpr GLfloat Z_HOVERED=0.1f;
+inline constexpr GLfloat Z_SELECTED=0.2f;
+
+
+ 
 //JSON Conversions
+void to_json(nlohmann::json& js, const ImVec4& vec);
 
+void from_json(const nlohmann::json&js, ImVec4& vec);
 
-    void to_json(nlohmann::json& js, const ImVec4& vec);
+void to_json(nlohmann::json& js, const ImU32& vec);
 
-    void from_json(const nlohmann::json&js, ImVec4& vec);
-    
-    void to_json(nlohmann::json& js, const ImU32& vec);
-    
-    void from_json(const nlohmann::json& js, ImU32& vec);
-    
-    void to_json(nlohmann::json& js, const ImVec2& vec);
-    
-    void from_json(const nlohmann::json&js, ImVec2& vec);
-    
+void from_json(const nlohmann::json& js, ImU32& vec);
 
+void to_json(nlohmann::json& js, const ImVec2& vec);
 
+void from_json(const nlohmann::json&js, ImVec2& vec);
+    
 namespace glm{
     void to_json(nlohmann::json& js, const glm::vec2& vec);
 
     void from_json(const nlohmann::json&js, glm::vec2& vec);
 }
-
+ 
 
 //Config Setting
 int Config();
+
+int addCompoundToConfigFile(std::string name, std::string compoundString);
 
 template <typename T> void changeCustomJSON(std::string variable, T var){
     std::ifstream customConfigFile("../config/config.json");
@@ -279,7 +315,7 @@ template <typename T> void changeCustomJSON(std::string variable, T var){
     }
     editingCustomConfigFile<<customConfigData;
 }
-//template
+
 template <typename T> void restoreToDefault(std::string variable, T& var){
     std::ifstream defaultConfigFile("../config/defaultConfig.json");
     std::ifstream customConfigFile("../config/config.json");
@@ -306,6 +342,5 @@ template <typename T> void restoreToDefault(std::string variable, T& var){
 
     var=defaultConfigData.at(variable).get<T>();
 }
-
 
 #endif

@@ -1,115 +1,79 @@
-element Moving
-borders
-
-
-
-rewrite both classes
-borders when selected
-compound Moving
-std::clmap electron pos idea
-electron shiifting
-bond Creation
-cond removal
-
-4. ✨ You can now easily add:
-Glow/highlight when hovered or selected
-
-Scaling when zooming (via model matrix)
-
-Textured or shaded visuals
-
-Animations (e.g. orbit paths, flashing)
-
-
-z indexing
-
-Main App:
-
-        "Limestone": "6&12.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/20&40.000000&0&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)4&-1)/2&1)3&1)/",
-        "Limestone",
-
 Now:
-glowing button
 
-place where spawns is bad
-do eerrors well
-            comp=new Compound(atomicNumber);
-            Render::createCompoundObject(comp); 
-            must go together
+deal with selected eelections too
+shifting and dragging electrons
+you cant move transparent elecetrons have to enforce
 
-gotta fix the fact that valency is fucked
-this fact is probably due to the fact the compound string is fuckedfigure it out tom
-organuze eveything
+iff bond is failure you gotta check and error push
+in callbacks check removebnds success and shit
 
-Now:
-    first redner 
-    elements
-    electrons
-    bonds
-    charges
+error checking implement more
+we need errors we dative vs electron
+updateELement too
+
+figure out rendering
+set electron transparent after bondingafter bonding dative should not be selectable
 
 
-    remeber the dots are there for bonding
-    electron shiifting
-    valency and element spawning are all fucked
-    config stuff and organize
-    Write code to minimize bond size
+left click not working
+ have to figure out removing elements and stuff
+ fix shaders
+ fix hover
+ comments
 
-
-use more referneces
-when selected border
-                     hovering       
-Element Moving
-have move function for everything
-Compound Moving
-
-error messages
-memory managamenet
-acale config and offest
-adjust sizes
-
-save compound to additonals
-you left click, then it asks for a name then it saves the compound using popup
-also updates compound buttons by appending
-//select variable for deleteion 
-
-  4  Compound Deletion( delete button)
-    Bond Creation
-    Bond Deletion
-
- 5   Hydrogen Filler
-    Stable Indicator
+ fix bonding
+ fix rendering
 
 
 
+Organization:
+run the app
+    Comments
+    errors
+    c_str 
+    fix up rendering
+    check if everything rendering
+    then confirm everything and organize
+    error messages
+    memory managamenet
 
+    gotta fix the fact that valency is fucked
+    this fact is probably due to the fact the compound string is fuckedfigure it out tom
 
-
-
-Post:
-open with
- 6   Organize
- cross platform ending
+    open with
     Recheck topmenu
-    make multiplatform
-
-    comments
+    
     documenration
         Include errors in h files
         Show Examples
+
+
+    use the actual app
+
+Post:
+ 6   Organize
+ acale config and offest
+adjust sizes
+ cross platform ending
+    make multiplatform
+
    7 Custom Themes
     Use Itch.io
-domain daddy
+    domain daddy
 
 
 
 
 
+Notes:
+        "Limestone": "6&12.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/20&40.000000&0&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)4&-1)/2&1)3&1)/",
+        "Limestone",
 
+        comp=new Compound(atomicNumber);
+        Render::createCompoundObject(comp); 
+        must go together
 
-
-
-    
+        electron used to make bond
 
 
 
@@ -125,8 +89,10 @@ Future:
         Functional Group Creator
 
     General Code:
+        Get rid of all the maps and vectors
         Smart Pointera
         Move semantics
+        Copy construcotrs and copy paste
         Enums may be used
         Implement Exceptions
         Understand Stability
@@ -138,4 +104,11 @@ Future:
         somehow protect json code and other code somehow idk
         undo redo
         cstr
+        refernences
         //consider rror in compound and element
+        pointers
+        Hydrogen Filler
+        Stable Indicator
+
+        copy constructors
+        good pointers

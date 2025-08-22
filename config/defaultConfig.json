@@ -511,11 +511,60 @@
     "elementSingleTextureWidth":100,
     "elementDoubleTextureWidth":200,
 
+    "elementHoveredGlowLevel":0.5, 
+    "elementSelectedGlowLevel":0.8,
+
     "electronDistanceDirect":5,
     "electronDistanceAdjust":5,
+    "electronRadius": 2.0,
+    "electronSelectionBuffer":10.0,
+    
+    "electronHoveredGlowLevel":0.5,
+    "electronSelectedGlowLevel":0.8,
+
+    "electronToDativePullFactor":0.5,
+    "minElectronSeparation":5,
+
+    "electronShiftDuration": 0.3,
+    "electronShiftDelay": 0.1,
+    "electronCornerRadius": 20.0,
 
     "numberTextureWidth":20,
     "numberTextureHeight":20,
+
+    "contextMenuPopUpTextColor":{
+        "x":0.90,
+        "y": 0.90,
+        "z": 0.90,
+        "w": 1.0
+    },
+
+    "contextMenuPopUpBackgroundColor":{
+        "x":0.06,
+        "y": 0.06,
+        "z": 0.06,
+        "w": 0.94
+    },
+
+    "contextMenuPopUpTitleBarColor":{
+        "x":0.098,
+        "y": 0.098,
+        "z": 0.439,
+        "w": 1.0
+    },
+
+    "contextMenuPopUpActiveTitleBarColor":{
+        "x":0.200,
+        "y": 0.220,
+        "z": 0.270,
+        "w": 1.0
+    },
+    "contextMenuPopUpCollapsedTitleBarColor":{
+        "x":0.098,
+        "y": 0.098,
+        "z": 0.439,
+        "w": 1.0
+    },
 
     "plusSignTextureWidth":20,
     "plusSignTextureHeight":20,
@@ -536,7 +585,11 @@
     "bondThickness":5.0,
     "signThickness":5.0,
     "signLength":5.0,
-    "compoundNumbers": [
+ 
+    "bondHoveredGlowLevel":0.5,
+    "bondSelectedGlowLevel":0.8,
+
+    "compoundNames": [
         "Water",
         "Carbon Dioxide",
         "Carbon Monoxide",
@@ -554,7 +607,7 @@
         "Alcohol"
     ], 
 
-    "molecules": {
+    "molecules": { 
         "Water": "1&1.000000&0&0/8&16.000000&0&0/1&1.000000&0&0/;1&0)/0&0)2&0)/1&0)/",
         "Carbon Dioxide": "6&12.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/;1&0)2&0)1&0)2&0)/0&0)0&0)/0&0)0&0)/",
         "Carbon Monoxide": "6&12.000000&0&0/8&16.000000&0&0/;1&0)1&0)1&-2)/0&0)0&0)0&2)/",
@@ -571,5 +624,4 @@
         "Washing Soda": "6&12.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/11&23.000000&0&0/11&23.000000&0&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)5&-1)/2&1)/3&1)/",
         "Alcohol": "6&12.000000&0&0/1&1.000000&0&0/1&1.000000&0&0/1&1.000000&0&0/6&12.000000&0&0/1&1.000000&0&0/1&1.000000&0&0/8&16.000000&0&0/1&1.000000&0&0/;1&0)2&0)3&0)4&0)/0&0)/0&0)/0&0)/0&0)5&0)6&0)7&0)/4&0)/4&0)/4&0)8&0)/7&0)/"
       }
-    
 } 

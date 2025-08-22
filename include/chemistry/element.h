@@ -33,7 +33,7 @@ class Element{
 	//Static arrays of elements and addresses
 	static std::array <int,118> numberOfEachElement;
 	static std::array <std::vector<Element*>,118> elementList;
-
+ 
 	/*
 	Finds Symbol of Element from list of symbols in values.cpp using atomic number passed in
 	Pass In: Atomic Number
@@ -333,7 +333,7 @@ class Element{
 		Returns: Charge of atom
 		*/
         int getCharge();
-
+ 
 		/*
 		Returns: Array of Valencies of atom(first positive valency then negative valency)
 				 If atom has atomic number greater than 18 then array will be {0,0}
@@ -398,7 +398,6 @@ class Element{
 		Prints Number of each element
 		*/
 		static void printNumberOfEachElement(std::ostream output);
-
 
 };
 

@@ -1,67 +1,103 @@
 #include "signObject.h"
 
-// GLuint SignObject::colorLocation;
-SignObject::SignObject(glm::vec2 position,bool isPositive){
-
-    this->isPositive=isPositive;
+SignObject::SignObject(glm::vec2 pos,bool isPositive){
 
     if(isPositive){
-
         position.x+=plusSignTextureWidth/2;
-
         texture=Texture(plusFilePath);
-        Vertices={
-            -plusSignTextureWidth/2,-plusSignTextureHeight/2,0.0,0.0,
-            -plusSignTextureWidth/2,plusSignTextureHeight/2,0.0,1.0,
-            plusSignTextureWidth/2,plusSignTextureHeight/2,1.0,1.0,
-            plusSignTextureWidth/2,-plusSignTextureHeight/2,1.0,0.0
-        };
+
+        width=plusSignTextureWidth;
+        height=plusSignTextureHeight;
     }
     else{
-
         position.x+=minusSignTextureWidth/2;
-
         texture=Texture(minusFilePath);
-        Vertices={
-            -minusSignTextureWidth/2,-minusSignTextureHeight/2,0.0,0.0,
-            -minusSignTextureWidth/2,minusSignTextureHeight/2,0.0,1.0,
-            minusSignTextureWidth/2,minusSignTextureHeight/2,1.0,1.0,
-            minusSignTextureWidth/2,-minusSignTextureHeight/2,1.0,0.0
-        };
+ 
+        width=minusSignTextureWidth;
+        height=minusSignTextureHeight;
     }
 
-    std::vector<GLuint> Indices={
+    vertices={
+        -1.0f,-1.0f,0.0,0.0,
+        -1.0f,1.0f,0.0,1.0,
+        1.0f,1.0f,1.0,1.0,
+        1.0f,-1.0f,1.0,0.0
+    };
+
+    std::vector<GLuint> indices={
         0,1,2,
         2,3,0
     };
+
+    this->isPositive=isPositive;
+    position=pos;
+    zIndex=Z_NORMAL;
 
     shaderProgram=shaders["sign"];
 
     vao=VAO();
     vao.Bind();
-    vbo=VBO(Vertices);
-    ebo=EBO(Indices);
+    vbo=VBO(vertices);
+    ebo=EBO(indices);
 
     vao.LinkVBO(vbo,0,2,GL_FLOAT,2*sizeof(GLfloat),0);
 
     vbo.UnBind();
     vao.UnBind();
     ebo.UnBind();
-
     
-    this->position=position;
-    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,0.0f));
-    model=glm::scale(model,glm::vec3(1.0f,1.0f,1.0f));
+    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
+    model=glm::scale(model, glm::vec3(width/2.0f,height/2.0f,1.0f));
 }
 
-void SignObject::Render(){
+SignObject::SignObject(SignObject&& other) noexcept{
+    vertices=std::move(other.vertices);
+    vao=std::move(other.vao);
+    vbo=std::move(other.vbo);
+    ebo=std::move(other.ebo);
+    texture=std::move(other.texture);
+    shaderProgram=other.shaderProgram;
+
+    isPositive=other.isPositive;
+    position=other.position;
+    width=other.width;
+    height=other.height;
+    model=other.model;
+}
+
+SignObject& SignObject::operator=(SignObject&& other) noexcept{
+    if(this!=&other){
+        vertices=std::move(other.vertices);
+        vao=std::move(other.vao);
+        vbo=std::move(other.vbo);
+        ebo=std::move(other.ebo);
+        texture=std::move(other.texture);
+        shaderProgram=other.shaderProgram;
+
+        isPositive=other.isPositive;
+        position=other.position; 
+        width=other.width;
+        height=other.height;
+        model=other.model;
+    }
+    return *this;
+}
+
+SignObject::~SignObject(){ 
+    // vao.Delete();
+    // vbo.Delete();
+    // ebo.Delete();
+    // texture.Delete();
+}
+
+void SignObject::render(){
     shaderProgram.Activate();
-    vao.Bind();
 
     shaderProgram.SetMat4Uniform(model,"model");
     shaderProgram.SetMat4Uniform(camera->GetView(),"view");
     shaderProgram.SetMat4Uniform(camera->GetProj(),"proj");
     
+    vao.Bind();
     texture.BindAndSetTexUnit(shaderProgram,"ourTexture");
 
     glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);
@@ -71,13 +107,50 @@ void SignObject::Render(){
     texture.UnBind();
 }
 
-void SignObject::Destroy(){ 
-    vao.Delete();
-    vbo.Delete();
-    ebo.Delete();
+void SignObject::move(glm::vec2 delta){
+    position+=delta;
+    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
+    model=glm::scale(model, glm::vec3(width/2.0f,height/2.0f,1.0f));
+} 
+
+bool SignObject::contains(glm::vec2 pos){
+    if (pos.x >= position.x - width/2.0f && pos.x <= position.x + width/2.0f &&
+        pos.y >= position.y - height/2.0f && pos.y <= position.y + height/2.0f
+    ){
+        return true;
+    }
+    return false;
 }
 
-void SignObject::Move(glm::vec2 delta){
-    position+=delta;
-    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,0.0f));
+void SignObject::setCharge(bool isPositive){
+    if(this->isPositive!=isPositive){
+        if(isPositive){
+            position.x+=plusSignTextureWidth/2;
+            texture=Texture(plusFilePath);
+
+            width=plusSignTextureWidth;
+            height=plusSignTextureHeight;
+        }
+        else{
+            position.x+=minusSignTextureWidth/2;
+            texture=Texture(minusFilePath);
+    
+            width=minusSignTextureWidth;
+            height=minusSignTextureHeight;
+        }
+
+        model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
+        model=glm::scale(model, glm::vec3(width/2.0f,height/2.0f,1.0f));
+    }
+}
+
+
+void SignObject::shift(GLfloat i){
+    zIndex=i;
+    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
+    model=glm::scale(model, glm::vec3(width/2.0f,height/2.0f,1.0f));
+}
+
+bool SignObject::isPlus(){
+    return isPositive;
 }

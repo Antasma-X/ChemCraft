@@ -8,11 +8,12 @@
 #include "graphics.h"
 #include "utils.h"
 
+#include "callbacks.h"
 #include "render.h"
 
 namespace UI
 {
-
+ 
     /*
     Generates Top Menu Main Menu Bar
 
@@ -50,27 +51,12 @@ namespace UI
         Opens github link
 
     */
-    void TopMenu();
-
-    /*
-    Copies current compounds' strings on screen and then removes them
-    */
-    static void Cut();
-
-    /*
-    Copies current compounds' strings on screen 
-    */
-    static void Copy();
-    
-    /*
-    Pastes compounds from clipBoard
-    */
-    static void Paste();
+    void topMenu();
 
     /*
     Filter for Input from text
     */
-    static int FilterLettersCompoundString(ImGuiInputTextCallbackData* data);
+    static int filterLettersCompoundString(ImGuiInputTextCallbackData* data);
     
     /*
     Opens a file from NFD and removes all current compounds on screen. The file opened becomes the current file
@@ -99,7 +85,7 @@ namespace UI
 
     You pass in the various fonts required which are generated before loop
     */
-    void SideMenu( ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont);
+    void sideMenu( ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont);
 
     /*
     Generates the overall look and relationship between element and compound child menus
@@ -113,19 +99,19 @@ namespace UI
 
     You also pass in search bar filtered words
     */
-    static void ElementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont,const std::vector<std::string>& currentSearchArray);
+    static void elementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont,const std::vector<std::string>& currentSearchArray);
 
-    /*
+    /* 
     Generates an element button in the element child window
     You can left click to create default element 
     You can right click to open up popup to adjusts mass and charge
     */
-    static void GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,bool isFirstBox);
+    static void generateElementButton(int atomicNumber, double sizeChange,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,bool isFirstBox);
     
     /*
     Generates a compound button in compound child window with their name and moleculor formula
     */
-    static void GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* compoundNameFont,ImFont* molecularFormulaFont,bool isFirstBox);
+    static void generateCompoundButton(int compoundNumber, double sizeChange,ImFont* compoundNameFont,ImFont* molecularFormulaFont,bool isFirstBox);
 
     /*
     Creates search bar at bottom of side menu
@@ -134,19 +120,17 @@ namespace UI
 
     It alters currentSearchArray to filter elements and compounds
     */
-    static void SearchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<std::string>& currentSearchArray);
+    static void searchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<std::string>& currentSearchArray);
 
     /*
     Loads Magnifying glass pic
     */
-    static void LoadMagnifyingGlass(double searchBarHeightPerCent);
+    static void loadMagnifyingGlass(double searchBarHeightPerCent);
 
     /*
     Filters characters allowed in search bar
     */
-    static int FilterCharactersSearchBar(ImGuiInputTextCallbackData* data);
-
-
+    static int filterCharactersSearchBar(ImGuiInputTextCallbackData* data);
 } 
 
 

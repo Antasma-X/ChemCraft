@@ -1,25 +1,33 @@
 #include "electronObject.h"
 
-ElectronObject::ElectronObject(glm::vec2 position,GLfloat transparency){
+ElectronObject::ElectronObject(glm::vec2 pos,GLfloat transparency){
 
-    Vertices={
+    vertices={
         -1.0f,-1.0f,transparency,
-        1.0f,-1.0f,transparency,
         -1.0f,1.0f,transparency,
-        1.0f,1.0f,transparency
+        1.0f,1.0f,transparency,
+        1.0f,-1.0f,transparency
     };
-    shaderProgram=shaders["electron"];
 
-        std::vector<GLuint> Indices={
+    std::vector<GLuint> indices={
         0,1,2,
         2,3,0
     };
+
+    this->position=pos;
+    this->transparency=transparency;
+    isSelected=false;
+    isHovered=false;
+    zIndex=Z_NORMAL;
+
+    shaderProgram=shaders["electron"];
+    glowShaderProgram=shaders["glowElectron"];
+
     vao=VAO();
     vao.Bind();
-    vbo=VBO(Vertices);
-    ebo=EBO(Indices);
+    vbo=VBO(vertices);
+    ebo=EBO(indices);
 
- 
     vao.LinkVBO(vbo,0,2,GL_FLOAT,3*sizeof(GLfloat),0);
     vao.LinkVBO(vbo,1,1,GL_FLOAT,3*sizeof(GLfloat),(void*)(2*sizeof(GLfloat)));
 
@@ -27,38 +35,161 @@ ElectronObject::ElectronObject(glm::vec2 position,GLfloat transparency){
     vao.UnBind();
     ebo.UnBind();
 
-    this->position=position;
-    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,0.0f));
-    model = glm::scale(model, glm::vec3(2 * 0.5f));
+    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
+    model=glm::scale(model, glm::vec3(electronRadius));
 } 
 
-void ElectronObject::Render(){
+ElectronObject::ElectronObject(ElectronObject&& other) noexcept{
+    vertices=std::move(other.vertices);
+    vao=std::move(other.vao);
+    vbo=std::move(other.vbo);
+    ebo=std::move(other.ebo);
+    shaderProgram=other.shaderProgram;
+    position=other.position;
+    transparency=other.transparency;
+    zIndex=other.zIndex;
+    isSelected=other.isSelected;
+    isHovered=other.isHovered;
+    model=other.model;
+} 
+
+ElectronObject& ElectronObject::operator=(ElectronObject&& other) noexcept{
+    if(this!=&other){
+        vertices=std::move(other.vertices);
+        vao=std::move(other.vao);
+        vbo=std::move(other.vbo);
+        ebo=std::move(other.ebo);
+        shaderProgram=other.shaderProgram;
+        position=other.position;
+        transparency=other.transparency;
+        zIndex=other.zIndex;
+        isSelected=other.isSelected;
+        isHovered=other.isHovered;
+        model=other.model;
+    }
+    return *this;
+}
+
+ElectronObject::~ElectronObject(){
+    // vao.Delete();
+    // vbo.Delete(); 
+    // ebo.Delete();
+} 
+
+void ElectronObject::render(){
+
+    if(isSelected||isHovered){
+        glm::mat4 glowModel = glm::translate(glm::mat4(1.0f), glm::vec3(position, zIndex));
+        glowModel = glm::scale(glowModel, glm::vec3(electronRadius * 1.1f, electronRadius * 1.1f, 1.0f));
+
+        glowShaderProgram.Activate();
+
+        glowShaderProgram.SetMat4Uniform(glowModel, "model");
+        glowShaderProgram.SetMat4Uniform(camera->GetView(), "view");
+        glowShaderProgram.SetMat4Uniform(camera->GetProj(), "proj");
+        if(isSelected){
+            glowShaderProgram.Set1fUniform(electronSelectedGlowLevel, "glow");
+        }
+        else if(isHovered){
+            glowShaderProgram.Set1fUniform(electronHoveredGlowLevel, "glow");
+        }
+
+        vao.Bind(); 
+
+        glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);
+
+        vao.UnBind();
+        glowShaderProgram.Deactivate();
+    }
+
     shaderProgram.Activate();
-    vao.Bind();
 
     shaderProgram.SetMat4Uniform(model,"model");
     shaderProgram.SetMat4Uniform(camera->GetView(),"view");
     shaderProgram.SetMat4Uniform(camera->GetProj(),"proj");
 
-    // glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    vao.Bind();
 
-    // glDrawArrays(GL_POINTS, 0,1);
+    glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);
 
     vao.UnBind();
     shaderProgram.Deactivate();
-
 }
 
-void ElectronObject::Destroy(){
-    vao.Delete();
-    vbo.Delete();
-} 
-
-void ElectronObject::Move(glm::vec2 delta){
+void ElectronObject::move(glm::vec2 delta){
     position+=delta;
     model=glm::translate(glm::mat4(1.0f),glm::vec3(position,0.0f));
-    model = glm::scale(model, glm::vec3(2 * 0.5f));
+    model=glm::scale(model,glm::vec3(electronRadius));
+}
 
+bool ElectronObject::contains(glm::vec2 pos){
+    return glm::distance(pos, position) <= electronRadius + electronSelectionBuffer;
+} 
 
+void ElectronObject::setTransparency(GLfloat transparency){
+    this->transparency=transparency;
+
+    vertices={
+        -1.0f,-1.0f,transparency,
+        -1.0f,1.0f,transparency,
+        1.0f,1.0f,transparency,
+        1.0f,-1.0f,transparency
+    };
+
+    vbo.Bind();
+    vbo.UpdateVertices(vertices);
+    vbo.UnBind();
+}
+
+void ElectronObject::select(bool b){
+    isSelected=b;
+ 
+    if(isSelected){
+        zIndex=Z_SELECTED;
+    }
+    else{
+        if(!isHovered){
+            zIndex=Z_NORMAL;
+        }
+    }
+
+    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
+    model=glm::scale(model, glm::vec3(electronRadius));
+}
+
+void ElectronObject::hover(bool b){
+    isHovered=b;
+
+    if(!isSelected){
+        if(isHovered){
+            zIndex=Z_HOVERED;
+        }
+        else{
+            zIndex=Z_NORMAL;
+        }
+    }
+
+    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
+    model=glm::scale(model, glm::vec3(electronRadius));
+}
+
+void ElectronObject::shift(GLfloat i){
+    zIndex=i;
+    model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
+    model=glm::scale(model, glm::vec3(electronRadius));
+}
+ 
+glm::vec2 ElectronObject::getPosition(){
+    return position;
+} 
+
+GLfloat ElectronObject::getTransparency(){
+    return transparency;
+}
+
+bool ElectronObject::isTransparent(){
+    if(transparency<0.02f&&transparency>-0.02f){
+        return true;
+    }
+    return false;
 }

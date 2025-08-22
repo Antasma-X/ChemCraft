@@ -15,8 +15,19 @@ struct EBO{
     //Because errors
     EBO()=default;
 
+    // //Not Allowed
+    // EBO(const EBO&)=delete;
+    // EBO& operator=(const EBO&)=delete;
+
     //Creates EBO object and does not unbind
     EBO(std::vector<GLuint> indices);
+
+    // // Move constructor and assignment
+    // EBO(EBO&& other) noexcept;
+    // EBO& operator=(EBO&& other) noexcept;
+
+    // //Destroys EBO
+    // ~EBO();
 
     //Binds EBO
     void Bind();

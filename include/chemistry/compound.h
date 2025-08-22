@@ -300,7 +300,7 @@ class Compound{
 		*/
 		std::vector<Element*> getUnstableAtoms();
 	
-		/*
+		/* 
 		Returns: List of Compounds
 		*/
 		static std::vector<Compound*> getListOfCompounds();

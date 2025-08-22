@@ -9,10 +9,17 @@
 #include "utils.h"
 
 namespace Management{
+
     /*
-    Called when GLFW has error
+    Sets up all the callbacks so you can move around, zoom in, etc for the actual app
     */
-    static void glfw_error_callback(int error, const char* description);
+    static void SetCallBacks(GLFWwindow* window);
+
+    //Clipboard function for pasting
+    static const char* My_GetClipboardText(void* user_data);
+
+    //Clipboard function for copying
+    static void My_SetClipboardText(void* user_data, const char* text);
 
     /*
     Opens file passed in main and makes it current
@@ -30,12 +37,7 @@ namespace Management{
     GLFWwindow* SetUp();
 
     /*
-    Sets up all the callbacks so you can move around, zoom in, etc for the actual app
-    */
-    static void SetCallBacks(GLFWwindow* window);
-
-    /*
-    Cleans up GLFW, ImGui and cleans up objects
+    Cleans up GLFW, OpenGL, ImGui and cleans up objects
     */
     void CleanUp(GLFWwindow* window);
 }

@@ -10,7 +10,7 @@
 
 #include "texture.h"
 
-struct NumberObject{
+class NumberObject{
     
     /*
     Vertices
@@ -32,7 +32,7 @@ struct NumberObject{
         x,y,0.0,1.0
     }
     */
-    std::vector<GLfloat> Vertices;
+    std::vector<GLfloat> vertices;
 
     //VAO for Number
     VAO vao;
@@ -58,36 +58,72 @@ struct NumberObject{
     //Model Matrix of Element. Ngl never understood
     glm::mat4 model;
 
-    //Because Errors
-    NumberObject()=default;
+    //Z index used to placed number object above other objects when selected
+    GLfloat zIndex;
+ 
+    public:
+        //Because Errors
+        NumberObject()=default;
+
+        //Not Allowed
+        NumberObject(const NumberObject&) = delete;
+        NumberObject& operator=(const NumberObject&) = delete;
+        
+        /*
+        Constructor for Number Object
     
-    /*
-    Constructor for Number Object
+        Takes in a vector(x,y) which is the center of the object in world space
+
+        The constructor will then add texture coords depending on the number because of atlas
+
+        Also takes in the number to be rendered. It can only be one digit and between -8 and 8 inclusive 
+        The negative controls the color of the object. Red if negative, Blue if positive
+        Note: 0 counts as positive
+    
+        Throws std::runtime_error("Invalid Number") if number is not between -8 and 8 inclusive
+        Throws std::invalid_argument("Vertices are Invalid") if invalid vertices are passed in
+        */
+        NumberObject(glm::vec2 pos, int number);
+
+        // Move constructor and assignment  
+        NumberObject(NumberObject&& other) noexcept;
+        NumberObject& operator=(NumberObject&& other) noexcept;
+
+        /* 
+        Desttroys vao stuff
+        */
+        ~NumberObject();
+
+        /*
+        Used by ChargeObject::render to render number
+        */
+        void render();
+    
+        //Moves number by delta passed in
+        void move(glm::vec2 delta);
+
+        //Checks if number object covers the world position passed in 
+        bool contains(glm::vec2 pos);
  
-    Takes in a vector(x,y) which is the center of the object in world space
+        /*
+        Sets number
+        
+        It can only be one digit and between -8 and 8 inclusive 
+        The negative controls the color of the object. Red if negative, Blue if positive
+        Note: 0 counts as positive
+    
+        Throws std::runtime_error("Invalid Number") if number is not between -8 and 8 inclusive       
+        */
+        void setNumber(int n);
 
-    The constructor will then add texture coords depending on the number because of atlas
+        /*
+        Pass in: Z Index you want number object to have
+        Changes Z index of number object to value passed in. Used to put the number object in front or below other objects
+        */
+        void shift(GLfloat i);
 
-    Also takes in the number to be rendered. It can only be one digit and between 1 and 8 or -1 and -8 inclusive 
-    The negative controls the color of the object. Red if negative, Blue if positive
- 
-    Throws std::runtime_error("Invalid Number") if number is not between 8 and 1 or -1 and -8 inclusive
-    Throws std::invalid_argument("Vertices are Invalid") if invalid vertices are passed in
-    */
-    NumberObject(glm::vec2 position, int number);
-
-    /*
-    Used by ChargeObject::Render to render number
-    */
-    void Render();
- 
-    /*
-    Deletes VAO,VBO,EBO
-    */ 
-    void Destroy();
-
-    void Move(glm::vec2 delta);
-
+        //Returns number being represented
+        int getNumber();
 };
 
 #endif

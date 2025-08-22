@@ -13,14 +13,18 @@ This function creates a popup in the bottom left corner of the screen that gives
 This can be closed be clicking OK  
 
 The most recent error is prioritized
-prganize includestime too
 */
 class Error{
+
+    //Stack of errors that happened. When users presses X, stack is popped
     std::stack<std::string> errorStrings;
 
     public:
-        void Push(std::string errorString);
-        void ErrorPopUp();
+        //Pushes string passed in to errorStrings
+        void push(std::string errorString);
+
+        //Renders error window
+        void errorPopUp();
 };
 
 extern Error* error;

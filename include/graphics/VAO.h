@@ -11,9 +11,20 @@ struct VAO{
     //ID of VAO
     GLuint ID;
 
+    // //Not Allowed
+    // VAO(const VAO&)=delete;
+    // VAO& operator=(const VAO&)=delete;
+
     //Creates VAO but does not link it
     VAO();
 
+    // // Move constructor and assignment
+    // VAO(VAO&& other) noexcept;
+    // VAO& operator=(VAO&& other) noexcept;
+
+    // //Destroys VAO
+    // ~VAO();
+    
     /*
     Links the VBO to the VAO. Does not bind the VAO automatically but does bind and unbind the VBO automatically
     Needs to be called multpiple times for each property

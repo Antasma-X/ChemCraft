@@ -8,7 +8,7 @@ Texture::Texture(std::string imageFilePath){
     unsigned char* image= stbi_load(imageFilePath.c_str(),&width,&height,&noColorChannels,STBI_rgb_alpha);
 
     if (!image) {
-        error->Push("Failed to load texture: "+imageFilePath);
+        error->push("Failed to load texture: "+imageFilePath);
         std::cerr << "Failed to load texture: " << imageFilePath << std::endl;
         return;
     }
@@ -26,6 +26,24 @@ Texture::Texture(std::string imageFilePath){
     glBindTexture(GL_TEXTURE_2D, 0);
     stbi_image_free(image);
 }
+
+// Texture::Texture(Texture&& other) noexcept{
+//     texture=other.texture;
+//     other.texture=0;
+// }
+
+// Texture& Texture::operator=(Texture&& other) noexcept{
+//     if (this != &other){
+//         // Delete();
+//         texture=other.texture;
+//         other.texture=0;
+//     }
+//     return *this;
+// }
+
+// Texture::~Texture(){
+//     Delete();
+// }
 
 void Texture::Bind(){
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -47,5 +65,8 @@ void Texture::BindAndSetTexUnit(Shader& shader, const char* uniform){
 }
 
 void Texture::Delete(){
-    glDeleteTextures(1,&texture);
+    if(texture!=0){
+        glDeleteTextures(1,&texture);
+        texture=0;
+    }
 }

@@ -3,7 +3,7 @@
 
 // double UI::sideMenuWidthPerCent=initialSideMenuWidthPerCent; 
 
-void UI::SideMenu(ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont){
+void UI::sideMenu(ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont){
     
     static ImVec2 prevWindowSize=ImVec2(0,0);
     static double sideMenuWidthPerCent=initialSideMenuWidthPerCent;
@@ -26,10 +26,10 @@ void UI::SideMenu(ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* child
     if (ImGui::Begin("Side Menu", nullptr, window_flags)){
 
         //Element and Compound Tabs
-        ElementAndCompoundMenu(childWindowFontSmall,childWindowFontLarge,numberFont, symbolFont, nameFont,massFont, compoundNameFont,molecularFormulaFont,currentSearchArray);
+        elementAndCompoundMenu(childWindowFontSmall,childWindowFontLarge,numberFont, symbolFont, nameFont,massFont, compoundNameFont,molecularFormulaFont,currentSearchArray);
 
         //why the fuck is the app breaking when i put searchbar first
-        SearchBar(searchFontSmall,searchFontLarge,currentSearchArray);
+        searchBar(searchFontSmall,searchFontLarge,currentSearchArray);
 
 
         sideMenuWidthPerCent=ImGui::GetWindowSize().x/io.DisplaySize.x;
@@ -39,13 +39,13 @@ void UI::SideMenu(ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* child
     }
 
     ImGui::End();
-
+ 
     ImGui::PopStyleColor(1);
 
     prevWindowSize=io.DisplaySize;
 }
 
-void UI::ElementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont,const std::vector<std::string>& currentSearchArray){
+void UI::elementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindowFontLarge,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont,ImFont* compoundNameFont,ImFont* molecularFormulaFont,const std::vector<std::string>& currentSearchArray){
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
@@ -98,7 +98,7 @@ void UI::ElementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindo
                 std::transform(lowerSymbol.begin(),lowerSymbol.end(),lowerSymbol.begin(),::tolower);
     
                 if(std::find(currentSearchArray.begin(),currentSearchArray.end(),lowerName)!=currentSearchArray.end()||std::find(currentSearchArray.begin(),currentSearchArray.end(),lowerSymbol)!=currentSearchArray.end()){
-                    GenerateElementButton(i,sizeChange,numberFont, symbolFont, nameFont, massFont,isFirstBox);
+                    generateElementButton(i,sizeChange,numberFont, symbolFont, nameFont, massFont,isFirstBox);
                     isFirstBox=false;
                 }   
             }
@@ -115,7 +115,7 @@ void UI::ElementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindo
             std::transform(lowerSymbol.begin(),lowerSymbol.end(),lowerSymbol.begin(),::tolower);
 
             if(std::find(initialElements.begin(),initialElements.end(),i)==initialElements.end()&& (std::find(currentSearchArray.begin(),currentSearchArray.end(),lowerName)!=currentSearchArray.end()||std::find(currentSearchArray.begin(),currentSearchArray.end(),lowerSymbol)!=currentSearchArray.end())){
-                GenerateElementButton(i,sizeChange, numberFont, symbolFont, nameFont, massFont,isFirstBox);
+                generateElementButton(i,sizeChange, numberFont, symbolFont, nameFont, massFont,isFirstBox);
                 isFirstBox=false;
             }
         }   
@@ -175,13 +175,13 @@ void UI::ElementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindo
         
 
         bool isFirstBox=true;
-        for(int i=1;i<=compoundNumbers.size();i++){
-            std::string lowerName=compoundNumbers[i-1];
+        for(int i=1;i<=compoundNames.size();i++){
+            std::string lowerName=compoundNames[i-1];
             std::transform(lowerName.begin(),lowerName.end(),lowerName.begin(),::tolower);
 
             if(std::find(currentSearchArray.begin(),currentSearchArray.end(),lowerName)!=currentSearchArray.end()){
                 //std::cout<<"kjajdajdja"<<std::endl;
-                GenerateCompoundButton(i,sizeChange,compoundNameFont,molecularFormulaFont,isFirstBox);
+                generateCompoundButton(i,sizeChange,compoundNameFont,molecularFormulaFont,isFirstBox);
                 isFirstBox=false;
             }
         }
@@ -198,7 +198,7 @@ void UI::ElementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindo
     prevSideMenuSize=ImGui::GetWindowSize();
 }
 
-void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont, bool isFirstBox){
+void UI::generateElementButton(int atomicNumber, double sizeChange,ImFont* numberFont,ImFont* symbolFont,ImFont* nameFont,ImFont* massFont, bool isFirstBox){
 
     static int customElementAtomicNumber=1;
     static bool showCustomElementPopUp=false;
@@ -260,7 +260,7 @@ void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
             Render::createCompoundObject(comp); 
         }
         catch(std::invalid_argument& e){
-            error->Push(std::to_string(atomicNumber)+" is Invalid");
+            error->push(std::to_string(atomicNumber)+" is Invalid");
             std::cerr<<atomicNumber<<" is Invalid"<<std::endl;
         }    
     }
@@ -366,7 +366,7 @@ void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
                     Render::createCompoundObject(comp); 
                 }
                 catch(std::invalid_argument& e){
-                    error->Push(std::to_string(atomicNumber)+" is Invalid");
+                    error->push(std::to_string(atomicNumber)+" is Invalid");
                     // isError=true;
                     // errorMessage=std::to_string(atomicNumber)+" is Invalid";
                     std::cerr<<std::to_string(atomicNumber)<<" is Invalid"<<std::endl;
@@ -375,20 +375,24 @@ void UI::GenerateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
                 showCustomElementPopUp=false;
                 firstPopup=true;
             }
+            ImGui::EndPopup();
         }
-        ImGui::EndPopup();
+        else{
+            showCustomElementPopUp=false;
+            firstPopup=true;
+        }
     }
     ImGui::PopStyleColor(5);
 }
 
-void UI::GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* compoundNameFont,ImFont* molecularFormulaFont, bool isFirstBox){
+void UI::generateCompoundButton(int compoundNumber, double sizeChange,ImFont* compoundNameFont,ImFont* molecularFormulaFont, bool isFirstBox){
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImDrawList* draw_list = ImGui::GetWindowDrawList();
 
     std::string formula;
     try{
-        Compound comp(molecules[compoundNumbers[compoundNumber-1]]);
+        Compound comp(molecules[compoundNames[compoundNumber-1]]);
         formula=comp.getMolecularFormula();
         // std::cout<<"balls"<<std::endl;
     }
@@ -442,11 +446,11 @@ void UI::GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
             compoundButtonCurve
         ); 
         try{
-            Compound* newComp= new Compound(molecules[compoundNumbers[compoundNumber-1]]);
+            Compound* newComp= new Compound(molecules[compoundNames[compoundNumber-1]]);
             Render::createCompoundObject(newComp);
         }
         catch(std::invalid_argument& e){
-            error->Push("Invalid Compound String in Compound List"+compoundNumbers[compoundNumber-1]);
+            error->push("Invalid Compound String in Compound List"+compoundNames[compoundNumber-1]);
             // isError=true;
             // throw;
             // errorMessage="Invalid Compound String in Compound List";
@@ -464,13 +468,13 @@ void UI::GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
 
     ImGui::PushFont(compoundNameFont);
     draw_list->AddText(
-        ImVec2(ImGui::GetItemRectMin().x+(compoundButtonSize.x-ImGui::CalcTextSize(compoundNumbers[compoundNumber-1].c_str()).x)*0.5,
-            ImGui::GetItemRectMin().y+(compoundButtonSize.y-ImGui::CalcTextSize(compoundNumbers[compoundNumber-1].c_str()).y)*0.5
+        ImVec2(ImGui::GetItemRectMin().x+(compoundButtonSize.x-ImGui::CalcTextSize(compoundNames[compoundNumber-1].c_str()).x)*0.5,
+            ImGui::GetItemRectMin().y+(compoundButtonSize.y-ImGui::CalcTextSize(compoundNames[compoundNumber-1].c_str()).y)*0.5
         ),
         compoundNameColor,
-        compoundNumbers[compoundNumber-1].c_str()
+        compoundNames[compoundNumber-1].c_str()
     );
-    double nameSize=ImGui::CalcTextSize(compoundNumbers[compoundNumber-1].c_str()).y;
+    double nameSize=ImGui::CalcTextSize(compoundNames[compoundNumber-1].c_str()).y;
     ImGui::PopFont();
 
     ImGui::PushFont(molecularFormulaFont);
@@ -487,7 +491,7 @@ void UI::GenerateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
 
 }
 
-void UI::SearchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<std::string>& currentSearchArray){
+void UI::searchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<std::string>& currentSearchArray){
 
     static double searchBarHeightPerCent=initialSearchBarHeightPerCent;
 
@@ -512,7 +516,7 @@ void UI::SearchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<
     }
 
     ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarSize, 0.0f);
-    ImGui::InputTextMultiline("##Search", buffer.data(), buffer.size(),ImVec2(ImGui::GetWindowSize().x,ImGui::GetWindowSize().y*searchBarHeightPerCent),ImGuiInputTextFlags_CallbackCharFilter,FilterCharactersSearchBar);
+    ImGui::InputTextMultiline("##Search", buffer.data(), buffer.size(),ImVec2(ImGui::GetWindowSize().x,ImGui::GetWindowSize().y*searchBarHeightPerCent),ImGuiInputTextFlags_CallbackCharFilter,filterCharactersSearchBar);
     ImGui::PopStyleVar();
     searchQuery = std::string(buffer.data());
 
@@ -521,7 +525,7 @@ void UI::SearchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<
     if(searchQuery.size()==0){
         ImVec2 placeholderPos = ImGui::GetItemRectMin();
         ImGui::SetCursorScreenPos(ImVec2(placeholderPos.x, placeholderPos.y)); 
-        LoadMagnifyingGlass(searchBarHeightPerCent);
+        loadMagnifyingGlass(searchBarHeightPerCent);
 
         placeholderPos = ImGui::GetItemRectMin();
         ImGui::SetCursorScreenPos(ImVec2(placeholderPos.x + search___padding+ImGui::GetWindowSize().y*searchBarHeightPerCent, placeholderPos.y +search___padding));
@@ -529,11 +533,11 @@ void UI::SearchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<
         ImGui::TextUnformatted(searchBarLabel);
         ImGui::PopStyleColor();
 
-        currentSearchArray=searchBar;
+        currentSearchArray=searchBarArray;
     }
     else{
         currentSearchArray.clear();
-        for(auto it: searchBar){
+        for(auto it: searchBarArray){
             if(strstr(it.c_str(),searchQuery.c_str())!=NULL){
                 currentSearchArray.push_back(it);
             }
@@ -544,14 +548,14 @@ void UI::SearchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<
     ImGui::PopStyleColor(4);
 }
 
-void UI::LoadMagnifyingGlass(double searchBarHeightPerCent){
+void UI::loadMagnifyingGlass(double searchBarHeightPerCent){
 
     stbi_set_flip_vertically_on_load(false);
     int width, height, channels;
     unsigned char* data = stbi_load(SearchGlass, &width, &height, &channels, 4);
 
     if (!data){
-        error->Push("Failed to load Search Glass Image");
+        error->push("Failed to load Search Glass Image");
         // isError=true;
         // m  
         // errorMessage="Failed to load Search Glass Image";
@@ -574,7 +578,7 @@ void UI::LoadMagnifyingGlass(double searchBarHeightPerCent){
     ImGui::Image((void*)(intptr_t)texture, ImVec2(ImGui::GetWindowSize().y*searchBarHeightPerCent,ImGui::GetWindowSize().y*searchBarHeightPerCent),ImVec2(0, 0), ImVec2(1, 1),searchGlassTransparency);
 }
 
-int UI::FilterCharactersSearchBar(ImGuiInputTextCallbackData* data){
+int UI::filterCharactersSearchBar(ImGuiInputTextCallbackData* data){
     if (strchr(disallowedCharSearchBar, data->EventChar)){
         return 1;
     } 

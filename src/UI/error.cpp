@@ -2,11 +2,11 @@
 
 Error* error= nullptr;
 
-void Error::Push(std::string errorString){
+void Error::push(std::string errorString){
     errorStrings.push(errorString);
 }
 
-void Error::ErrorPopUp(){
+void Error::errorPopUp(){
     static ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     if(errorStrings.empty()){

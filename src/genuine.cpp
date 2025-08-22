@@ -83,6 +83,8 @@ int main(int argc, char* argv[]){
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+    std::cout<<"render2"<<std::endl;
+
 
         //Gives font to window size
         if(io.DisplaySize.y>largeWindowHeight){
@@ -91,21 +93,31 @@ int main(int argc, char* argv[]){
         else{
             ImGui::PushFont(windowSmallFont);
         }
+    std::cout<<"render2"<<std::endl;
 
         //Top Menu
-        UI::TopMenu();
+        UI::topMenu();
+    std::cout<<"render2"<<std::endl;
 
         //SideMenu for elements
-        UI::SideMenu(searchFontSmall,searchFontLarge,childWindowSmallFont,childWindowLargeFont, numberFont, symbolFont, nameFont,massFont,compoundNameFont,molecularFormulaFont);
+        UI::sideMenu(searchFontSmall,searchFontLarge,childWindowSmallFont,childWindowLargeFont, numberFont, symbolFont, nameFont,massFont,compoundNameFont,molecularFormulaFont);
+    std::cout<<"render2"<<std::endl;
         
         // glEnable(GL_DEPTH_TEST);
         glClear(GL_COLOR_BUFFER_BIT);
 
         //Draws all elements to screen
-        Render::Render();
+        Render::render();
+    std::cout<<"render2"<<std::endl;
 
-        error->ErrorPopUp();
+        //Renders context menu when right clicking on elements
+        Callbacks::openContextMenu(); 
+    std::cout<<"render2"<<std::endl;
 
+        //Renders error window in corner
+        error->errorPopUp();
+    std::cout<<"render2"<<std::endl;
+         
         ImGui::PopFont();
 
         //ImGui Render(Not my render, learnt that the hard way)
@@ -121,31 +133,11 @@ int main(int argc, char* argv[]){
             ImGui::RenderPlatformWindowsDefault();
             glfwMakeContextCurrent(backup_current_context);
         }
+        std::cout<<"ball"<<std::endl;
 
         //GLFW Ending
         glfwSwapBuffers(window);
-
     }
 
     Management::CleanUp(window);
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
