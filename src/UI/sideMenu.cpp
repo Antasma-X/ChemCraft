@@ -180,7 +180,6 @@ void UI::elementAndCompoundMenu(ImFont* childWindowFontSmall, ImFont* childWindo
             std::transform(lowerName.begin(),lowerName.end(),lowerName.begin(),::tolower);
 
             if(std::find(currentSearchArray.begin(),currentSearchArray.end(),lowerName)!=currentSearchArray.end()){
-                //std::cout<<"kjajdajdja"<<std::endl;
                 generateCompoundButton(i,sizeChange,compoundNameFont,molecularFormulaFont,isFirstBox);
                 isFirstBox=false;
             }
@@ -394,12 +393,9 @@ void UI::generateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
     try{
         Compound comp(molecules[compoundNames[compoundNumber-1]]);
         formula=comp.getMolecularFormula();
-        // std::cout<<"balls"<<std::endl;
     }
     catch(std::invalid_argument& e){
         throw;
-        // std::cout<<"balls"<<std::endl;
-        return;
     }
 
     //You Can:t Change Staticness

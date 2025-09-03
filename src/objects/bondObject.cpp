@@ -187,7 +187,7 @@ bool BondObject::contains(glm::vec2 pos){
     float halfThickness = 0.5f; // same
 
     // You can tighten this if you like:
-    return std::abs(localPos.x) <= 0.5f && std::abs(localPos.y) <= 0.5f;
+    return std::abs(localPos.x) <= 1.5f && std::abs(localPos.y) <= 1.5f;
 }
  
 void BondObject::hover(bool b){

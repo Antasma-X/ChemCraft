@@ -12,6 +12,7 @@
 
 #include "electronObject.h"
 #include "chargeObject.h"
+#include "bondObject.h"
  
 class Element; 
 

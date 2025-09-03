@@ -44,17 +44,11 @@ void Callbacks::cut(){
     std::string clipBoard;
 
     auto list=Render::getCompoundList();
-    std::cout<<"bdb"<<std::endl;
 
     for(auto it: list){
         try{
-    std::cout<<it->getCompoundString()<<std::endl;
-
             clipBoard.append(it->getCompoundString());
-            Render::deleteCompound(it);
-    std::cout<<it->getCompoundString()<<std::endl;
-            
-
+            Render::deleteCompound(it);            
             clipBoard.append("\n");
         }
         catch(std::runtime_error& e){
@@ -63,12 +57,10 @@ void Callbacks::cut(){
         }
     }
     ImGui::SetClipboardText(clipBoard.c_str());
-    std::cout<<"hwuhg"<<std::endl;
 }
 
 void Callbacks::copy(){
     std::string clipBoard;
-    std::cout<<"sex"<<std::endl;
 
     auto list=Render::getCompoundList();
     for(auto it: list){
@@ -81,7 +73,6 @@ void Callbacks::copy(){
         }
     }
     ImGui::SetClipboardText(clipBoard.c_str());
-    std::cout<<"sex"<<std::endl;
 }
 
 void Callbacks::paste(){
@@ -108,6 +99,11 @@ void Callbacks::openContextMenu(){
 
     static Compound* comp=nullptr;
 
+    bool openElementInfo=false;
+    bool openCompoundMass=false;
+    bool openCompoundFormula=false;
+    bool openSaveToApp=false;
+ 
     ImGui::PushStyleColor(ImGuiCol_Text,contextMenuPopUpTextColor);
     ImGui::PushStyleColor(ImGuiCol_WindowBg,contextMenuPopUpBackgroundColor);
     ImGui::PushStyleColor(ImGuiCol_TitleBg,contextMenuPopUpTitleBarColor);
@@ -115,6 +111,7 @@ void Callbacks::openContextMenu(){
     ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed,contextMenuPopUpCollapsedTitleBarColor);
 
     if(ImGui::BeginPopup("Context Menu")){
+        // throw std::runtime_error("Value cannot be negative!");
         if(selectedElementObjects.empty()&&selectedBondObjects.empty()){
             
         }
@@ -159,7 +156,7 @@ void Callbacks::openContextMenu(){
         else{
             if(selectedElementObjects.size()==1){
                 if(ImGui::MenuItem("Get Element Info")){
-                    ImGui::OpenPopup("Element Info");
+                    openElementInfo=true;
                     ImGui::CloseCurrentPopup();
                 }
                 if(ImGui::MenuItem("Delete Element")){
@@ -177,12 +174,12 @@ void Callbacks::openContextMenu(){
                 comp=Render::getCompoundIfExists(selectedElementObjects);
                 if(comp!=nullptr){
                     if(ImGui::MenuItem("Get Molecular Mass")){
-                        ImGui::OpenPopup("Compound Mass");
+                        openCompoundMass=true;
                         ImGui::CloseCurrentPopup();
                     }
 
                     if(ImGui::MenuItem("Get Molecular Formula")){
-                        ImGui::OpenPopup("Compound Formula");
+                        openCompoundFormula=true;
                         ImGui::CloseCurrentPopup();
                     }
 
@@ -252,12 +249,11 @@ void Callbacks::openContextMenu(){
                                 std::cerr<<"A Compound is Invalid"<<std::endl;
                             }      
                         }
-
                         file.close();
                     }
 
                     if(ImGui::MenuItem("Save To App")){
-                        ImGui::OpenPopup("Save To App"); 
+                        openSaveToApp=true;
                         ImGui::CloseCurrentPopup();
                     }
 
@@ -322,7 +318,23 @@ void Callbacks::openContextMenu(){
         ImGui::EndPopup();   
     }
 
+    if(openElementInfo){
+        ImGui::OpenPopup("Element Info");
+    }
+    else if(openCompoundMass){
+        ImGui::OpenPopup("Compound Mass");
+
+    }
+    else if(openCompoundFormula){
+        ImGui::OpenPopup("Compound Formula");
+
+    }
+    else if(openSaveToApp){
+        ImGui::OpenPopup("Save To App"); 
+    }
+
     if (ImGui::BeginPopup("Element Info")) {
+
         ElementObject* el = *selectedElementObjects.begin();
         ImGui::Text("Symbol: %s", el->getElement()->getSymbol().c_str());
         ImGui::Text("Name: %s", el->getElement()->getName().c_str());
@@ -371,6 +383,8 @@ void Callbacks::openContextMenu(){
             buffer=std::vector<char>(100,'\0');
             comp=nullptr;
         }
+
+        ImGui::EndPopup();
     }
 
     ImGui::PopStyleColor(5);
@@ -493,7 +507,7 @@ void Callbacks::MouseButtonCallback(GLFWwindow* window, int button, int action, 
             }
 
             if(!elementObjs.empty()||!bondObjs.empty()){
-                ImGui::OpenPopup("Context Menu");
+                openContMenu=true;
             }
         }
         else if(button==GLFW_MOUSE_BUTTON_LEFT){
@@ -596,9 +610,9 @@ void Callbacks::MouseButtonCallback(GLFWwindow* window, int button, int action, 
 
             for(auto it:selectedElectronObjects){
                 int n=Render::checkElectronShiftingOrBonding(it);
-                std::cout<<n<<std::endl;
+
                 if(n==1||n==2||n==3){
-                    // Render::resetElectronPos(it);
+                    Render::resetElectronPos(it);
                     it->select(false);
                     temp.insert(it);
                 }
@@ -621,6 +635,7 @@ void Callbacks::MouseButtonCallback(GLFWwindow* window, int button, int action, 
 
             for(auto it:selectedDativeObjects){
                 int n=Render::checkDativeBonding(it);
+
                 if(n==1){
                     // Render::resetDativePos(it);
                     it->select(false);
@@ -684,9 +699,7 @@ void Callbacks::CursorPosCallback(GLFWwindow* window, double xpos, double ypos){
     }
     hoveredElectronObjects = Render::getElectronObjectsOn(mouseWorldPos);
     for(auto it: hoveredElectronObjects){
-        if(!it->isTransparent()){
-            it->hover(true);
-        }
+        it->hover(true);
     }
     
     for(auto it: hoveredDativeObjects){

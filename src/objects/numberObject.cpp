@@ -130,7 +130,7 @@ void NumberObject::setNumber(int n){
         texture=Texture(numberBlueFilePath);
     }
     else if(n<0){
-        texture=Texture(numberRedFilePath);
+        texture=Texture(numberRedFilePath); 
     }
     else{
         throw std::runtime_error("Invalid Number");
@@ -143,6 +143,10 @@ void NumberObject::shift(GLfloat i){
     zIndex=i;
     model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
     model=glm::scale(model, glm::vec3(numberTextureHeight/2.0f,numberTextureHeight/2.0f,1.0f));
+}
+
+glm::vec2 NumberObject::getPosition(){
+    return position;
 }
 
 int NumberObject::getNumber(){

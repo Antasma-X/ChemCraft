@@ -122,6 +122,9 @@ class NumberObject{
         */
         void shift(GLfloat i);
 
+        //Returns position of object
+        glm::vec2 getPosition();
+
         //Returns number being represented
         int getNumber();
 };

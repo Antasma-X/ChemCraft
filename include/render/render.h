@@ -23,7 +23,7 @@ namespace Render{
     /*
     Vector containing all compounds being rendered
     */
- 
+
     static std::vector<Compound*> compoundList;
 
     static std::map<BondObject*,Compound*> bondObjectToCompound;
@@ -32,7 +32,6 @@ namespace Render{
 
     static std::map<ElementObject*,Compound*> elementObjectToCompound;
     
-std::vector<Compound*> getCompoundList();
     /*
     Creates Element Object for every single element in the compound passed in which is then rendered in Render()
 
@@ -197,6 +196,9 @@ std::vector<Compound*> getCompoundList();
 
     //Returns compound that contains the ElementObject passed in
     std::set<BondObject*> getCompoundBondObjectsWithElementObject(ElementObject* elObj);
+
+    //Returns vector of pointers to all compounds being rendered
+    std::vector<Compound*> getCompoundList();
 }
 
 

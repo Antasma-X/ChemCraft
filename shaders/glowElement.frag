@@ -8,7 +8,7 @@ float roundedBoxSDF(vec2 p, vec2 b, float r) {
     vec2 q = abs(p) - b + vec2(r);
     return length(max(q, 0.0)) - r;
 }
-
+ 
 void main() {
     vec2 halfBoxSize = vec2(0.5, 0.5);
     float cornerRadius = 0.1;

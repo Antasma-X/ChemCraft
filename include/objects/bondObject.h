@@ -8,6 +8,8 @@
 #include "graphics.h"
 #include "utils.h"
 
+class ElementObject;
+
 class BondObject{
 
     /*

@@ -1,9 +1,5 @@
 #include "render.h"
 
-std::vector<Compound*> Render::getCompoundList(){
-    return compoundList;
-}
-
 void Render::createCompoundObject(Compound* compound){
 
     if (!compound || compound->getAtoms().empty()){
@@ -156,19 +152,14 @@ void Render::createCompoundObject(Compound* compound){
     }
 
     Render::compoundList.push_back(compound);
-    std::cout<<"ffhushf"<<std::endl;
-
 }
 
 void Render::render(){
-    std::cout<<"render1"<<std::endl;
-
 
     //Elements and their electrons
     for(auto compound:compoundList){
         std::vector<Element*> atomList=compound->getAtoms();
         for(auto atom: atomList){
-    std::cout<<"render2"<<std::endl;
 
             if(ElementObject::getAllElementObjects()[atom]==nullptr){
 
@@ -181,8 +172,6 @@ void Render::render(){
 
     //Bonds
     for(auto it:BondObject::getAllBondObjects()){
-    std::cout<<"render3"<<std::endl;
-
         it->render();
     }
 }
@@ -328,25 +317,25 @@ int Render::createBond(ElementObject* elObj1,ElementObject* elObj2, int type, El
             return 0;
         }
 
-        elObj1->update();
-        elObj2->update();
-
         BondObject* bondObject = new BondObject({elObj1->getOriginalElectronOrDativePosition(electron),otherElectron->getPosition()},{elObj1,elObj2},-type);
         bondObjectToCompound[bondObject]=comp1;
         compoundToBondObjects[comp1].insert(bondObject);
+
+        elObj1->update();
+        elObj2->update();
     }
     else{
         if(!comp1->addElement(*elObj1->getElement(),*elObj2->getElement(),*comp2,-type)){
             return 0;
         }
 
-        elObj1->update();
-        elObj2->update();
-
         BondObject* bondObject = new BondObject({elObj1->getOriginalElectronOrDativePosition(electron),otherElectron->getPosition()},{elObj1,elObj2},type);
 
         bondObjectToCompound[bondObject]=comp1;
         compoundToBondObjects[comp1].insert(bondObject);
+
+        elObj1->update();
+        elObj2->update();
 
         auto it = std::find(compoundList.begin(), compoundList.end(), comp2);
         if (it != compoundList.end()) {
@@ -382,24 +371,24 @@ int Render::createBond(ElementObject* elObj1,ElementObject* elObj2, ElectronObje
             return 0;
         }
 
-        elObj1->update();
-        elObj2->update();
-
         BondObject* bondObject = new BondObject({elObj1->getChargePosition(),elObj2->getChargePosition()},{elObj1,elObj2},1);
         bondObjectToCompound[bondObject]=comp1;
         compoundToBondObjects[comp1].insert(bondObject);
+
+        elObj1->update();
+        elObj2->update();
     }  
     else{
         if(!comp1->addElement(*elObj1->getElement(),*elObj2->getElement(),*comp2,-1)){
             return 0;
         }
 
-        elObj1->update();
-        elObj2->update();
-
         BondObject* bondObject = new BondObject({elObj1->getChargePosition(),elObj2->getChargePosition()},{elObj1,elObj2},1);
         bondObjectToCompound[bondObject]=comp1;
         compoundToBondObjects[comp1].insert(bondObject);
+        
+        elObj1->update();
+        elObj2->update();
 
         auto it = std::find(compoundList.begin(), compoundList.end(), comp2);
         if (it != compoundList.end()) {
@@ -590,7 +579,7 @@ int Render::removeElement(ElementObject* elementObj){
 
         delete comp;
     }
-
+std::cout<<bondObjectsToBeRemoved.size()<<std::endl;
     for(auto bondObj: bondObjectsToBeRemoved){
         delete bondObj;
     }
@@ -606,36 +595,43 @@ int Render::removeElement(ElementObject* elementObj){
 }
 
 void Render::deleteCompound(Compound* comp){
-    std::cout<<"boy"<<std::endl;
+
+    if(!comp){
+        return;
+    }
+
+    bool isInList=false;
+    for(auto it = compoundList.begin(); it != compoundList.end(); ++it){
+        if(*it == comp){
+            compoundList.erase(it);
+            isInList=true;
+            break;
+        }
+    }
+
+    if(!isInList){
+        return;
+    }
 
     std::vector<Element*> atomList=comp->getAtoms();
-    std::cout<<"boy"<<std::endl;
-
+    
     for(auto& atom: atomList){
 
-        if(ElementObject::getAllElementObjects()[atom]==nullptr){
+        auto elObj=ElementObject::getAllElementObjects()[atom];
+        if(elObj==nullptr){
             error->push("Element was not rendered. Please Destroy Compound Immediately");
             continue;
         }
+
         delete ElementObject::getAllElementObjects()[atom];
+        elementObjectToCompound.erase(elObj);
+        delete atom;
     }   
 
     for(auto& bond: compoundToBondObjects[comp]){
         delete bond;
     }
-    std::cout<<"boy"<<std::endl;
 
-    for(auto it = compoundList.begin(); it != compoundList.end(); ++it){
-    std::cout<<"sndjbndjbn"<<std::endl;
-
-        if(*it == comp){
-            compoundList.erase(it);
-            break;
-        }
-    }
-    std::cout<<"boy"<<std::endl;
-
-// delete compoundelement objects too
     delete comp;
 }
 
@@ -808,4 +804,8 @@ std::set<BondObject*> Render::getCompoundBondObjectsWithElementObject(ElementObj
     Compound* comp=elementObjectToCompound[elObj];
 
     return compoundToBondObjects[comp];
+}
+
+std::vector<Compound*> Render::getCompoundList(){
+    return compoundList;
 }

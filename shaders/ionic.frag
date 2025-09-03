@@ -1,20 +1,29 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec3 color;
-flat in vec3 startPos;
 in vec3 vertPos;
+flat in vec3 startPos;
+flat in vec3 bondDir;
+in float t;
 
-uniform vec2  u_resolution;
-uniform float u_dashSize;
-uniform float u_gapSize;
 
-void main()
-{
-    vec2  dir  = (vertPos.xy-startPos.xy) * u_resolution/2.0;
-    float dist = length(dir);
 
-    if (fract(dist / (u_dashSize + u_gapSize)) > u_dashSize/(u_dashSize + u_gapSize))
-        discard; 
-    FragColor = vec4(color, 1.0); 
+void main() {
+    float u_dashSize=10;
+    float u_gapSize=10;
+    // distance along the bond axis
+    float dist = dot(vertPos - startPos, bondDir);
+
+    float patternLength = u_dashSize + u_gapSize;
+    float cycle = fract(dist / patternLength);
+
+    if (cycle > u_dashSize / patternLength)
+        discard;
+
+    // blue → red gradient
+    vec3 color = mix(vec3(0.0, 0.0, 1.0),
+                     vec3(1.0, 0.0, 0.0),
+                     clamp(t, 0.0, 1.0));
+
+    FragColor = vec4(color, 1.0);
 }

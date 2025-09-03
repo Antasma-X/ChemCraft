@@ -78,15 +78,10 @@ void UI::topMenu(){
             // }
 
             ImGui::Separator(); 
-    std::cout<<"jdbdjjngsjbhsjbskgbsegbweuigbweegbwegkhbewugwgh"<<std::endl;
 
             
             if (ImGui::MenuItem("Cut", "CTRL+X")||(ImGui::IsKeyDown(ImGuiMod_Ctrl) && ImGui::IsKeyPressed(ImGuiKey_X))){
-    std::cout<<"jdgd"<<std::endl;
-                
                 Callbacks::cut();
-    std::cout<<"jdbdjjngsjbhsjbskgbsegbweuigbweegbwegkhbewugwgh"<<std::endl;
-
             }
             if (ImGui::MenuItem("Copy", "CTRL+C")||(ImGui::IsKeyDown(ImGuiMod_Ctrl) && ImGui::IsKeyPressed(ImGuiKey_C))){
                 Callbacks::copy();
@@ -118,7 +113,6 @@ void UI::topMenu(){
             }
             ImGui::EndMenu();
         }
-    std::cout<<"jdgd"<<std::endl;
 
         if(ImGui::BeginMenu("Insert")){
             if (ImGui::MenuItem("Direct")) {
@@ -139,14 +133,11 @@ void UI::topMenu(){
         ImGui::PushStyleColor(ImGuiCol_TitleBgActive,openFilePopUpActiveTitleBarColor);
         ImGui::PushStyleColor(ImGuiCol_TitleBgCollapsed,openFilePopUpCollapsedTitleBarColor);
 
-    std::cout<<"jdgd"<<std::endl;
-
         if(ImGui::Button("Open")){
             ImGui::OpenPopup("Progress Loss Warning");
         }        
 
         bool openFile=false;
-    std::cout<<"jdgd"<<std::endl;
 
         if(ImGui::BeginPopupModal("Progress Loss Warning",nullptr,ImGuiWindowFlags_AlwaysAutoResize)){
             ImGui::Text("Warning: You will lose unsaved progress");
@@ -163,7 +154,6 @@ void UI::topMenu(){
             }
             ImGui::EndPopup();
         }
-    std::cout<<"jdbdjjngsjbhsjbskgbsegbweuigbweegbwegkhbewugwgh"<<std::endl;
 
         if(openFile){
             open();
@@ -427,9 +417,7 @@ void UI::saveAs(){
     nfdchar_t *outPath = NULL;
     nfdresult_t result = NFD_OpenDialog(NULL, NULL, &outPath);
 
-    std::cout<<"me"<<std::endl;
     if (result == NFD_OKAY){
-    std::cout<<"me"<<std::endl;
 
         if ((std::string(outPath).size()) <4 || std::string(outPath).substr(std::string(outPath).size() - 4) != ".txt"){
             currentFile=outPath+std::string(".txt");
@@ -450,13 +438,10 @@ void UI::saveAs(){
         }
         
         auto list=Render::getCompoundList();
-    std::cout<<list.size()<<std::endl;
 
         for(auto it: list){
-    std::cout<<"me"<<std::endl;
 
             try{
-                std::cout<<(it->getCompoundString()).c_str()<<std::endl;
                 file<<(it->getCompoundString()).c_str()<<std::endl;
             }
             catch(std::runtime_error& e){

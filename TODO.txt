@@ -1,3 +1,15 @@
+remove bond update
+ have to figure out removing elements and stuff
+bond not being deleted when deleting elemenet and bond itself not deleting
+
+ comments
+license
+
+
+
+
+
+
 Now:
 
 deal with selected eelections too
@@ -14,15 +26,17 @@ updateELement too
 figure out rendering
 set electron transparent after bondingafter bonding dative should not be selectable
 
-
-left click not working
- have to figure out removing elements and stuff
+Problems:
  fix shaders
  fix hover
- comments
+ ionic bond not dotted properly
+electron is being covered by bond after bond is made basically fixed but a bit glitvhy
+electron not glowing (i gave up)
+cant form ionic bond
+daive bond
+    gotta fix the fact that valency is fucked
+    this fact is probably due to the fact the compound string is fuckedfigure it out tom
 
- fix bonding
- fix rendering
 
 
 
@@ -37,11 +51,6 @@ run the app
     error messages
     memory managamenet
 
-    gotta fix the fact that valency is fucked
-    this fact is probably due to the fact the compound string is fuckedfigure it out tom
-
-    open with
-    Recheck topmenu
     
     documenration
         Include errors in h files

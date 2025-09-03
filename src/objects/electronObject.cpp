@@ -12,7 +12,7 @@ ElectronObject::ElectronObject(glm::vec2 pos,GLfloat transparency){
     std::vector<GLuint> indices={
         0,1,2,
         2,3,0
-    };
+    }; 
 
     this->position=pos;
     this->transparency=transparency;
@@ -78,9 +78,9 @@ ElectronObject::~ElectronObject(){
 
 void ElectronObject::render(){
 
-    if(isSelected||isHovered){
+    if(isSelected||isHovered||true){
         glm::mat4 glowModel = glm::translate(glm::mat4(1.0f), glm::vec3(position, zIndex));
-        glowModel = glm::scale(glowModel, glm::vec3(electronRadius * 1.1f, electronRadius * 1.1f, 1.0f));
+        glowModel = glm::scale(glowModel, glm::vec3(electronRadius * 10.1f, electronRadius * 10.1f, 1.0f));
 
         glowShaderProgram.Activate();
 
@@ -88,13 +88,13 @@ void ElectronObject::render(){
         glowShaderProgram.SetMat4Uniform(camera->GetView(), "view");
         glowShaderProgram.SetMat4Uniform(camera->GetProj(), "proj");
         if(isSelected){
-            glowShaderProgram.Set1fUniform(electronSelectedGlowLevel, "glow");
-        }
-        else if(isHovered){
-            glowShaderProgram.Set1fUniform(electronHoveredGlowLevel, "glow");
+            glowShaderProgram.Set1fUniform(elementSelectedGlowLevel, "glow");
+        } 
+        else if(isHovered||true){
+            glowShaderProgram.Set1fUniform(elementHoveredGlowLevel, "glow");
         }
 
-        vao.Bind(); 
+        vao.Bind();
 
         glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);
 

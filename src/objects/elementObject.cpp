@@ -384,7 +384,7 @@ ElementObject::~ElementObject(){
     for(auto& electron:electrons){
         electronOrDativeToElementObject.erase(&electron);
     }
-}
+} 
 
 void ElementObject::render(){
 
@@ -558,16 +558,32 @@ void ElementObject::shiftElectronToNewElectron(ElectronObject* electron, Electro
 
 void ElementObject::update(){
     int n=element->getNumberOfValenceElectrons();
-    GLfloat transparency=1.0f;
+    auto bondObjs=BondObject::getAllBondObjects();
 
-    for(int i=0;i<8;i++){
-        glm::vec2 pos;
+    int i=0;
+    for(auto &e:electrons){
 
-        if(i==n){
-            transparency=0.0f;
+        bool isInBond=false;
+        for(auto bond: bondObjs){
+            if(bond->contains(getOriginalElectronOrDativePosition(&e))){
+                // throw std::runtime_error("fnf");
+                isInBond=true;
+                break;
+            }
         }
-        electrons[i].setTransparency(transparency);
+
+        if(i<n&&!isInBond){
+            e.setTransparency(1.0f);
+            i++;
+        }
+        else{
+            e.setTransparency(0.0f); 
+        }
     }   
+
+    if(i!=n){
+        error->push("Element did not update properly. Please Destroy Compound Immediately");
+    }
 
     charge.setNumber(element->getCharge());
 }
@@ -600,7 +616,8 @@ std::vector<glm::vec2> ElementObject::getDativePositions(){
 }
 
 glm::vec2 ElementObject::getChargePosition(){
-    return {position[0]+width/2,position[1]-elementTextureHeight};
+    return charge.getPosition();
+    //return {position[0]+width/2,position[1]-elementTextureHeight/2};
 }
 
 glm::vec2 ElementObject::getOriginalElectronOrDativePosition(ElectronObject* electron){

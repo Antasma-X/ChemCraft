@@ -12,7 +12,7 @@ void Error::errorPopUp(){
     if(errorStrings.empty()){
         return;
     }
-    std::cout<<errorStrings.size()<<std::endl;
+    
     ImGui::SetNextWindowPos(ImVec2(errorMessageOffsetX,io.DisplaySize.y-errorMessageOffsetY),ImGuiCond_Always, ImVec2(0.0f, 1.0f));
     ImGui::SetNextWindowSize(ImVec2(300.0f, 0.0f));
 

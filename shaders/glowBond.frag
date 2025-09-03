@@ -18,3 +18,4 @@ void main() {
 
     FragColor = vec4(glowColor, alpha);
 }
+ 

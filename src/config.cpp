@@ -49,6 +49,8 @@ std::string glowBondFragShaderFilePath="../shaders/glowBond.frag";
 
 std::map<std::string,Shader> shaders;
 
+bool openContMenu=false;
+
 std::string elementFilePath1="../Assets/Elements/";
 std::string elementFilePath2=".png";
 

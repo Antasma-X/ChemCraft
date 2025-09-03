@@ -82,6 +82,9 @@ class ChargeObject{
         */ 
         void shift(GLfloat i); 
 
+        //Returns position of charge object(left side middle)
+        glm::vec2 getPosition();
+        
         //Returns number being represented
         int getNumber();
 };

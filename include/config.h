@@ -195,6 +195,8 @@ extern std::string glowBondFragShaderFilePath;
 
 extern std::map<std::string,Shader> shaders;
 
+extern bool openContMenu;
+
 //Element Assets
 extern std::string elementFilePath1;
 extern std::string elementFilePath2;

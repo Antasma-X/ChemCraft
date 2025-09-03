@@ -74,6 +74,14 @@ void ChargeObject::shift(GLfloat i){
     signObj.shift(i);
 }
 
+glm::vec2 ChargeObject::getPosition(){
+    glm::vec2 pos=numberObj.getPosition();
+    pos.x-=numberTextureWidth/2;
+    // pos.y-=numberTextureHeight/2;
+    //idk why im not adding height
+    return pos;
+}
+
 int ChargeObject::getNumber(){
     return numberObj.getNumber();
 }

@@ -3,14 +3,14 @@
 SignObject::SignObject(glm::vec2 pos,bool isPositive){
 
     if(isPositive){
-        position.x+=plusSignTextureWidth/2;
+        pos.x+=plusSignTextureWidth/2;
         texture=Texture(plusFilePath);
 
         width=plusSignTextureWidth;
         height=plusSignTextureHeight;
     }
     else{
-        position.x+=minusSignTextureWidth/2;
+        pos.x+=minusSignTextureWidth/2;
         texture=Texture(minusFilePath);
  
         width=minusSignTextureWidth;
@@ -40,7 +40,8 @@ SignObject::SignObject(glm::vec2 pos,bool isPositive){
     vbo=VBO(vertices);
     ebo=EBO(indices);
 
-    vao.LinkVBO(vbo,0,2,GL_FLOAT,2*sizeof(GLfloat),0);
+    vao.LinkVBO(vbo,0,2,GL_FLOAT,4*sizeof(GLfloat),0);
+    vao.LinkVBO(vbo,1,2,GL_FLOAT,4*sizeof(GLfloat),(void*)(2*sizeof(GLfloat)));
 
     vbo.UnBind();
     vao.UnBind();
@@ -139,6 +140,7 @@ void SignObject::setCharge(bool isPositive){
             height=minusSignTextureHeight;
         }
 
+        this->isPositive=isPositive;
         model=glm::translate(glm::mat4(1.0f),glm::vec3(position,zIndex));
         model=glm::scale(model, glm::vec3(width/2.0f,height/2.0f,1.0f));
     }
