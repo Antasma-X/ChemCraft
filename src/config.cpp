@@ -4,7 +4,7 @@ using json = nlohmann::json;
 
 //orderm of map doesnt matter but compoundNumber is order you want displayed in documentation
 
-const char* windowName="Nomenclature";
+const char* windowName="ChemCraft";
 
 const ImWchar ranges[] = {
     0x0020, 0x007E,  //ASCII
@@ -61,7 +61,7 @@ std::string plusFilePath="../Assets/plusBlue.png";
 std::string minusFilePath="../Assets/minusRed.png";
 
 const char* disallowedCharCompoundNames="!@#$%^&*\n\t0123456789";
-
+ 
 std::map<std::string,std::string> molecules;
 std::vector<std::string> compoundNames;
 

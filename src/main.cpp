@@ -5,9 +5,6 @@
 #include "management.h"
 #define GL_SILENCE_DEPRECATION
 
-
-
-
 int main(int argc, char* argv[]){
 //need quotes for space in path
 

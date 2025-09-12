@@ -78,7 +78,6 @@ void Compound::printCompoundUtil(Element* current,std::vector<Element*>& travers
 	
 	int pos=0;
 	for(auto [key,value]: edges){
-		//std::cout<<BONDSYMBOL[value-1]<<key->getSymbol();
 		if(pos==0){
 			structure[location[0]].insert(location[1],BONDSYMBOL[value-1]+key->getSymbol());
 			location[1]+=1+key->getSymbol().size();
@@ -483,7 +482,7 @@ std::vector<Compound> Compound::removeElement(Element& firstElement){
 		}
 	}
 
-//fucking crybaby compiler
+//istg crybaby compiler
 	for(auto bond:firstElementBonds){
 		for(int i=-1;i<2;i++){
 			auto it = std::find(bonds[bond].begin(),bonds[bond].end(),std::make_pair(&firstElement,i));

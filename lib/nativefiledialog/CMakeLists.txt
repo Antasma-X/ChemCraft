@@ -11,4 +11,3 @@ target_include_directories(nativefiledialog PRIVATE ${GTK3_INCLUDE_DIRS})
 target_link_libraries(nativefiledialog PRIVATE ${GTK3_LIBRARIES})
 target_compile_options(nativefiledialog PRIVATE ${GTK3_CFLAGS_OTHER})
 
-

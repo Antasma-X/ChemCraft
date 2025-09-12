@@ -83,7 +83,7 @@ GLFWwindow* Management::SetUp(){
         style.WindowRounding = 0.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
-
+ 
     //OpenGl Set Up
     const char* glsl_version = "#version 330";
     ImGui_ImplGlfw_InitForOpenGL(window, false);
@@ -96,7 +96,7 @@ GLFWwindow* Management::SetUp(){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
-    glEnable(0x8642); //idk why i did this but im not fucking with it
+    glEnable(0x8642); //idr why i did this but im not messing with it
 
     //Shaders
     Shader elementShader= Shader(elementVertShaderFilePath,elementFragShaderFilePath);

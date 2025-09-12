@@ -1,101 +1,75 @@
-remove bond update
- have to figure out removing elements and stuff
-bond not being deleted when deleting elemenet and bond itself not deleting
 
- comments
-license
+settings should be more expansive
 
+put a pic
+complete readme
+pick a nice name
+colors
 
-
-
-
-
-Now:
-
-deal with selected eelections too
-shifting and dragging electrons
-you cant move transparent elecetrons have to enforce
-
-iff bond is failure you gotta check and error push
-in callbacks check removebnds success and shit
-
-error checking implement more
-we need errors we dative vs electron
-updateELement too
-
-figure out rendering
-set electron transparent after bondingafter bonding dative should not be selectable
-
-Problems:
- fix shaders
- fix hover
- ionic bond not dotted properly
-electron is being covered by bond after bond is made basically fixed but a bit glitvhy
-electron not glowing (i gave up)
-cant form ionic bond
-daive bond
-    gotta fix the fact that valency is fucked
-    this fact is probably due to the fact the compound string is fuckedfigure it out tom
-
-
-
-
-Organization:
-run the app
-    Comments
-    errors
-    c_str 
-    fix up rendering
-    check if everything rendering
-    then confirm everything and organize
-    error messages
-    memory managamenet
-
-    
-    documenration
-        Include errors in h files
-        Show Examples
-
-
-    use the actual app
-
-Post:
- 6   Organize
- acale config and offest
-adjust sizes
+photos
+name
+color
+129
+167
+116
+names
+electron glow
+https://github.com/Antasma-X/Nomenclature
+    Use Itch.io
+-7
  cross platform ending
     make multiplatform
-
-   7 Custom Themes
-    Use Itch.io
-    domain daddy
-
-
-
-
+-9
+make readme.made
+make itch.io page
+-11
+make people download
 
 Notes:
-        "Limestone": "6&12.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/20&40.000000&0&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)4&-1)/2&1)3&1)/",
-        "Limestone",
+    "Limestone": "6&12.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/8&16.000000&0&0/20&40.000000&0&0/;1&0)1&0)2&0)3&0)/0&0)0&0)/0&0)4&-1)/0&0)4&-1)/2&1)3&1)/",
+    "Limestone",
 
-        comp=new Compound(atomicNumber);
-        Render::createCompoundObject(comp); 
-        must go together
+    comp=new Compound(atomicNumber);
+    Render::createCompoundObject(comp); 
+    must go together
 
-        electron used to make bond
-
-
-
-Assets:
-    170 is font for gimp
-    2 sets
-    one single latter
-    one double letteer
+    Assets:
+        170 is font for gimp
+        2 sets
+        one single letter
+        one double letter
 
 Future:
     Nomenclature:
         Make nomenclaature a seperate tab that only supports a few elements
         Functional Group Creator
+
+    Problems:
+        If the bond fails to create or remove, check success and error
+        More Error Checking
+        Need to differnetiate datives and electrons better
+        Need to Improve Rendering
+        c_str 
+        error messages
+        memory managamenet
+        Ionic bond not dotted properly
+        Electron is being covered by bond after bond is made. This is basically fixed but it's still a bit glitchy
+        Electron, bond, charge not glowing (istg i spent hours trying to figure this out, i gave up)
+        Can't form ionic bond nicely
+        Can't form dative bond 
+        gotta fix the fact that valency is fucked
+        this fact is probably due to the fact the compound string is fuckedfigure it out tom
+        Comments
+        Documenration
+        Include errors in h files
+        Show Examples
+        Scale config and offest
+        Adjust sizes
+        Custom Themes
+        Domain Daddy
+        app is randomly crasshing at the end?
+        go back to the beginning and use smart pointers
+        go back to the beginning and check everything
 
     General Code:
         Get rid of all the maps and vectors

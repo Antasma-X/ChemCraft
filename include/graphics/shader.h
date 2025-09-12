@@ -40,6 +40,8 @@ struct Shader{
 
     void Set1fUniform(float n, const char* uniform);
 
+    void Set1iUniform(int i, const char* uniform);
+
     private:
 
         //Gets the shader info from the file pass in as a string

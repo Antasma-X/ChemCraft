@@ -308,8 +308,6 @@ class Compound{
 		//quit
 		void printCompound();
 
-
-
 };
 
 #endif

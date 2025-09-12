@@ -133,7 +133,4 @@ namespace UI
     static int filterCharactersSearchBar(ImGuiInputTextCallbackData* data);
 } 
 
-
-
-
 #endif

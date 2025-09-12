@@ -121,11 +121,30 @@ void Callbacks::openContextMenu(){
                     Render::removeBond(bond);
                 }
                 selectedBondObjects.clear();
+                hoveredBondObjects.clear();
 
                 for(auto el: selectedElementObjects){
                     Render::removeElement(el);
                 }
                 selectedElementObjects.clear();
+                hoveredElementObjects.clear();
+
+                for(auto it:selectedElectronObjects){
+                    Render::resetElectronPos(it);
+                    it->select(false);
+                }
+
+
+                for(auto it:selectedDativeObjects){
+                    Render::resetElectronPos(it);
+                    it->select(false);
+                }
+                
+                selectedDativeObjects.clear();
+                selectedElectronObjects.clear();
+                hoveredDativeObjects.clear();
+                hoveredElectronObjects.clear();
+
                 ImGui::CloseCurrentPopup();
             }
             //Delete All 
@@ -138,6 +157,8 @@ void Callbacks::openContextMenu(){
                         Render::removeBond(bond);
                     }
                     selectedBondObjects.clear();
+                    hoveredBondObjects.clear();
+
                     ImGui::CloseCurrentPopup();
                 }
                 //Delete Bond
@@ -148,6 +169,8 @@ void Callbacks::openContextMenu(){
                         Render::removeBond(bond);
                     }
                     selectedBondObjects.clear();
+                    hoveredBondObjects.clear();
+
                     ImGui::CloseCurrentPopup();
                 }
             }
@@ -164,6 +187,29 @@ void Callbacks::openContextMenu(){
                         Render::removeElement(el);
                     }
                     selectedElementObjects.clear();
+                    hoveredElementObjects.clear();
+
+                    for(auto bond: selectedBondObjects){
+                        bond->select(false);
+                    }
+                    selectedBondObjects.clear();
+                    hoveredBondObjects.clear();
+
+                    for(auto it:selectedElectronObjects){
+                        Render::resetElectronPos(it);
+                        it->select(false);
+                    }
+
+                    for(auto it:selectedDativeObjects){
+                        Render::resetElectronPos(it);
+                        it->select(false);
+                    }
+                    
+                    selectedDativeObjects.clear();
+                    selectedElectronObjects.clear();
+                    hoveredDativeObjects.clear();
+                    hoveredElectronObjects.clear();
+
                     ImGui::CloseCurrentPopup();
                 }
 
@@ -259,7 +305,34 @@ void Callbacks::openContextMenu(){
 
                     if(ImGui::MenuItem("Delete Compound")){
                         Render::deleteCompound(comp);
-                        //save to file
+
+                        for(auto bond: selectedBondObjects){
+                            bond->select(false);
+                        }
+                        selectedBondObjects.clear();
+                        hoveredBondObjects.clear();
+
+                        for(auto el: selectedElementObjects){
+                            el->select(false);
+                        }
+                        selectedElementObjects.clear();
+                        hoveredElementObjects.clear();
+
+                        for(auto it:selectedElectronObjects){
+                            Render::resetElectronPos(it);
+                            it->select(false);
+                        }
+
+                        for(auto it:selectedDativeObjects){
+                            Render::resetElectronPos(it);
+                            it->select(false);
+                        }
+                        
+                        selectedDativeObjects.clear();
+                        selectedElectronObjects.clear();
+                        hoveredDativeObjects.clear();
+                        hoveredElectronObjects.clear();
+
                         ImGui::CloseCurrentPopup();
                     }
                     //Get Moleculor Mass
@@ -293,8 +366,31 @@ void Callbacks::openContextMenu(){
                         for(auto el: selectedElementObjects){
                             Render::removeElement(el);
                         }
-
                         selectedElementObjects.clear();
+                        hoveredElementObjects.clear();
+
+                        for(auto bond: selectedBondObjects){
+                            bond->select(false);
+                        }
+                        selectedBondObjects.clear();
+                        hoveredBondObjects.clear();
+
+                        for(auto it:selectedElectronObjects){
+                            Render::resetElectronPos(it);
+                            it->select(false);
+                        }
+
+
+                        for(auto it:selectedDativeObjects){
+                            Render::resetElectronPos(it);
+                            it->select(false);
+                        }
+                        
+                        selectedDativeObjects.clear();
+                        selectedElectronObjects.clear();
+                        hoveredDativeObjects.clear();
+                        hoveredElectronObjects.clear();
+
                         ImGui::CloseCurrentPopup();
                     }
 
@@ -307,8 +403,31 @@ void Callbacks::openContextMenu(){
                         for(auto el: selectedElementObjects){
                             Render::removeElement(el);
                         }
-
                         selectedElementObjects.clear();
+                        hoveredElementObjects.clear();
+
+                        for(auto bond: selectedBondObjects){
+                            bond->select(false);
+                        }
+                        selectedBondObjects.clear();
+                        hoveredBondObjects.clear();
+
+                        for(auto it:selectedElectronObjects){
+                            Render::resetElectronPos(it);
+                            it->select(false);
+                        }
+
+
+                        for(auto it:selectedDativeObjects){
+                            Render::resetElectronPos(it);
+                            it->select(false);
+                        }
+                        
+                        selectedDativeObjects.clear();
+                        selectedElectronObjects.clear();
+                        hoveredDativeObjects.clear();
+                        hoveredElectronObjects.clear();
+                        
                         ImGui::CloseCurrentPopup();
                     }
                     //Delete Elements
@@ -422,11 +541,37 @@ void Callbacks::KeyCallBack(GLFWwindow* window, int key, int scancode, int actio
                 Render::removeBond(bond);
             }
             selectedBondObjects.clear();
+            hoveredBondObjects.clear();
 
             for(auto el: selectedElementObjects){
                 Render::removeElement(el);
             }
             selectedElementObjects.clear();
+            hoveredElementObjects.clear();
+
+            isDragging = false;
+            isElementsDragging=false;
+
+            if(isElectronDragging){
+                for(auto it:selectedElectronObjects){
+                    Render::resetElectronPos(it);
+                    it->select(false);
+                }
+            }
+            isElectronDragging=false;
+
+            if(isDativeDragging){
+                for(auto it:selectedDativeObjects){
+                    Render::resetElectronPos(it);
+                    it->select(false);
+                }
+            }
+            isDativeDragging=false;
+
+            selectedDativeObjects.clear();
+            selectedElectronObjects.clear();
+            hoveredDativeObjects.clear();
+            hoveredElectronObjects.clear();
         }
         if (key == GLFW_KEY_A && (mods & GLFW_MOD_CONTROL)){
             for(auto bond: BondObject::getAllBondObjects()){

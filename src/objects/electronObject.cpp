@@ -80,7 +80,7 @@ void ElectronObject::render(){
 
     if(isSelected||isHovered||true){
         glm::mat4 glowModel = glm::translate(glm::mat4(1.0f), glm::vec3(position, zIndex));
-        glowModel = glm::scale(glowModel, glm::vec3(electronRadius * 10.1f, electronRadius * 10.1f, 1.0f));
+        glowModel = glm::scale(glowModel, glm::vec3(electronRadius * 1.1f, electronRadius * 1.1f, 1.0f));
 
         glowShaderProgram.Activate();
 
@@ -108,6 +108,12 @@ void ElectronObject::render(){
     shaderProgram.SetMat4Uniform(camera->GetView(),"view");
     shaderProgram.SetMat4Uniform(camera->GetProj(),"proj");
 
+    if(isHovered&&!isSelected&&isTransparent()){
+        shaderProgram.Set1iUniform(1,"hover");
+    }
+    else{
+        shaderProgram.Set1iUniform(0,"hover");
+    }
     vao.Bind();
 
     glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);

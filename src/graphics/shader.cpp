@@ -3,7 +3,7 @@
 std::string Shader::getShaderFromFile(std::string filePath){
     std::ifstream file(filePath);
     if (!file.is_open()) {
-        std::cout<<"bitv";
+        std::cerr<<"File Path does not exist"<<std::endl;
     }
     std::stringstream buffer;
     buffer << file.rdbuf(); 
@@ -88,4 +88,10 @@ void Shader::Set1fUniform(float n, const char* uniform){
     Activate();
     int loc=glGetUniformLocation(shaderProgram,uniform);
     glUniform1f(loc,n);
+}
+
+void Shader::Set1iUniform(int i, const char* uniform){
+    Activate();
+    int loc=glGetUniformLocation(shaderProgram,uniform);
+    glUniform1i(loc,i);
 }

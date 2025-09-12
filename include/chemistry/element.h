@@ -104,12 +104,10 @@ class Element{
 	Returns: true if atom has acheived noble gas configuration
 			 false if atom hasn't achieved noble gas configuration
 
-	im lazy as fuck (change later)
+	im lazy (change later)
 	*/
     bool isNobleGasConfig();
 
-
-	
 	/*
 	Function will add a number of electrons to the valence shell of the atom
 	Function will update electrons and shells variable

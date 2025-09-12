@@ -10,4 +10,4 @@ out vec2 localPos;
 void main() {
     gl_Position = proj * view * model * vec4(aPos, 0.0, 1.0);
     localPos = aPos;
-}
+} 

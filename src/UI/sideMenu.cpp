@@ -28,9 +28,8 @@ void UI::sideMenu(ImFont* searchFontSmall, ImFont* searchFontLarge,ImFont* child
         //Element and Compound Tabs
         elementAndCompoundMenu(childWindowFontSmall,childWindowFontLarge,numberFont, symbolFont, nameFont,massFont, compoundNameFont,molecularFormulaFont,currentSearchArray);
 
-        //why the fuck is the app breaking when i put searchbar first
+        //why is the app breaking when i put searchbar first
         searchBar(searchFontSmall,searchFontLarge,currentSearchArray);
-
 
         sideMenuWidthPerCent=ImGui::GetWindowSize().x/io.DisplaySize.x;
 
@@ -210,7 +209,7 @@ void UI::generateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
     static ImVec2 buttonCorner = ImGui::GetCursorScreenPos();
 
     //its gettong strecthe and stuff
-    //holy shit im dumb
+    //omg im dumb
     if(sizeChange && isFirstBox){
         initialButtonCorner.x=ImGui::GetCursorScreenPos().x;
         buttonCorner.x=ImGui::GetCursorScreenPos().x;
@@ -356,8 +355,10 @@ void UI::generateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
     
             ImGui::Text("Enter desired Charge: ");
             bool C=ImGui::InputInt("##Charge", &charge,-8,8);
-    
-            if((C || AM)&&ImGui::IsKeyPressed(ImGuiKey_Enter)){
+
+            //if((C || AM)&&(ImGui::Button("OK")||ImGui::IsKeyPressed(ImGuiKey_Enter))){
+
+            if((ImGui::Button("OK")||ImGui::IsKeyPressed(ImGuiKey_Enter))){
                 ImGui::CloseCurrentPopup();
                 Compound* comp;
                 try{
@@ -371,6 +372,12 @@ void UI::generateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
                     std::cerr<<std::to_string(atomicNumber)<<" is Invalid"<<std::endl;
                 }    
 
+                showCustomElementPopUp=false;
+                firstPopup=true;
+            }
+
+            if(ImGui::Button("Cancel")){
+                ImGui::CloseCurrentPopup();
                 showCustomElementPopUp=false;
                 firstPopup=true;
             }

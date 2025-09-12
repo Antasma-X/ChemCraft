@@ -360,11 +360,9 @@
 //     std::cout<<chargedCations.size()<<std::endl;
 //     std::cout<<"shgugugsugudg"<<std::endl;
 //     auto it2=chargedCations.begin();
-//     std::cout<<"fuck"<<std::endl;
 
 //     for(auto anion: anionArray){
 //         chargedAnions=anion->getChargedAnions();
-//         std::cout<<"fuck"<<std::endl;
 //         std::cout<<chargedAnions.size()<<std::endl;
 //         std::cout<<chargedCations.size()<<"mwahhhh"<<std::endl;
 //         // while(true) {}
@@ -372,16 +370,12 @@
 
 //             if(it2==chargedCations.end()){
 //                 it++;
-//                 std::cout<<"fuckher"<<std::endl;
 //                 chargedCations=(*it)->getChargedCations();
-//                 std::cout<<"fuckhim"<<std::endl;
 //                 std::cout<<chargedCations.size()<<std::endl;
 
 //                 it2=chargedCations.begin();
 //             }
-//             std::cout<<"fuckme"<<std::endl;
 //             newCompound->addElement(*chargedAnion,**it2,**it,-1);
-//             std::cout<<"fuckyou"<<std::endl;
 
 //             if((((**it2).getValency()[0]==0 || (**it2).getValency()[1]==0) && (**it2).getAtomicNumber()<18)||(**it2).getAtomicNumber()>18 && ((**it2).getValency()[0]==cationValency || (**it2).getValency()[1]==cationValency)){
 //                 it2++;

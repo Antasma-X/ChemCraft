@@ -228,7 +228,6 @@ int Element::doesDativeBondExist(const Element* secondElement){
 std::array<int,2> Element::findValency(int atomicNumber,int charge,int v){
 	//here
 	std::array<int,2> valency;
-	//std::cout<<atomicNumber<<"  "<<v<<std::endl;
 	//v-=charge;
 	if(doesFollowOctet(atomicNumber)){
 		if (atomicNumber<=2){
@@ -241,18 +240,16 @@ std::array<int,2> Element::findValency(int atomicNumber,int charge,int v){
 			valency={atomicNumber-10,atomicNumber-18};
 		}
 	}
-	//fuck the other weird valencies im loyal
+	//leave the other weird valencies im loyal
 	else if(atomicNumber==35||atomicNumber==53||atomicNumber==85||atomicNumber==117){
 		valency={7,-1};
 	}
 	else{
 		if(std::find(higherValencies[atomicNumber].begin(),higherValencies[atomicNumber].end(),v)!=higherValencies[atomicNumber].end()){
 			valency={v,1000};
-			//std::cout<<"hhsd"<<std::endl;
 		}
 		else{
 			error->push("Valency could not be found. Default valency will be used");
-			//std::cout<<"sexxxyyyyyyy"<<v<<"   "<<atomicNumber<<std::endl;
 			valency={higherValencies[atomicNumber][0],1000};
 		}
 	}
