@@ -64,6 +64,7 @@ const char* disallowedCharCompoundNames="!@#$%^&*\n\t0123456789";
  
 std::map<std::string,std::string> molecules;
 std::vector<std::string> compoundNames;
+std::map<std::string,std::string> molecularFormulae;
 
 std::vector<std::string> searchBarArray={
     "h", "he", "li", "be", "b", "c", "n", "o", "f", "ne", "na", "mg", "al", "si", "p", "s", "cl", "ar", "k", "ca", "sc", "ti", "v", "cr", "mn", "fe", "co", "ni", "cu", "zn", "ga", "ge", "as", "se", "br", "kr", "rb", "sr", "y", "zr", "nb", "mo", "tc", "ru", "rh", "pd", "ag",
@@ -574,6 +575,11 @@ int Config(){
         searchBarArray.push_back(name);
     }
 
+    for(auto [key,value]: molecules){
+        Compound comp(value);
+        molecularFormulae[key]=comp.getMolecularFormula();
+    }
+    
     sideMenuWidthPerCentCopy=initialSideMenuWidthPerCent;
     return 1;
 }

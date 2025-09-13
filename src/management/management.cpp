@@ -9,7 +9,7 @@ void Management::SetCallBacks(GLFWwindow* window){
     glfwSetCursorPosCallback(window, Callbacks::CursorPosCallback);
     glfwSetFramebufferSizeCallback(window, Callbacks::FrameSizeCallback);
 }
-
+ 
 const char* Management::My_GetClipboardText(void* user_data) {
     return glfwGetClipboardString((GLFWwindow*)user_data);
 }
@@ -57,7 +57,7 @@ GLFWwindow* Management::SetUp(){
     }
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
@@ -69,6 +69,11 @@ GLFWwindow* Management::SetUp(){
     
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cerr << "Failed to initialize GLAD\n";
+        return nullptr;
+    }
 
     //Imgui Setup
     IMGUI_CHECKVERSION();

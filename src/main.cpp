@@ -4,7 +4,7 @@
 #include "shader.h"
 #include "management.h"
 #define GL_SILENCE_DEPRECATION
-
+ 
 int main(int argc, char* argv[]){
 //need quotes for space in path
 
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
     GLFWwindow* window= Management::SetUp();
     if(window==nullptr){
         return 1;
-    }
+    } 
 
     if(argc>1){
         if(argc>2){

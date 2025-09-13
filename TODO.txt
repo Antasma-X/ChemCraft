@@ -1,7 +1,6 @@
 
 settings should be more expansive
 
-put a pic
 complete readme
 pick a nice name
 colors
@@ -15,7 +14,7 @@ color
 names
 electron glow
 https://github.com/Antasma-X/Nomenclature
-    Use Itch.io
+    Use Itch.io 
 -7
  cross platform ending
     make multiplatform

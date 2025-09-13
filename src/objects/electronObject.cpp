@@ -96,7 +96,7 @@ void ElectronObject::render(){
 
         vao.Bind();
 
-        glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);
+        // glDrawElements(GL_TRIANGLES, ebo.noOfIndices, GL_UNSIGNED_INT, 0);
 
         vao.UnBind();
         glowShaderProgram.Deactivate();

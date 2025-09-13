@@ -1,8 +1,10 @@
-# BondsLab
-BondsLab is an application that is used to visually create and interact with chemical compounds and molecules. 
+# ChemCraft
+ChemCraft is an application that is used to visually create and interact with chemical compounds and molecules. 
+
+![](Assets/thumbnail.png)
 
 It models how individual atoms behave to acheive stability, including their ability to create bonds, their valence electrons, and their charges, allowing users to create and experiemnt with the incredible variety of possible unique compounds out there.
-![](Assets/thumbnail.png)
+
 The goal I had in mind while making this app was to help make chemistry feel more intuitive to students and learners, by allowing them to use this app to visualize how electrons interact and how atoms create and destroy chemical bonds.
 
 This app gives learners the chance to gain a deeper and more conceptual understanding of chemistry and the behaviour of atoms
@@ -11,7 +13,7 @@ This app gives learners the chance to gain a deeper and more conceptual understa
 This project has been written in C++ and mainly uses OpenGL, GLFW, and Dear ImGui for its rendering.
 
 This project is currently under development and still has many bugs. Since this is a personal project of mine, I'm not really accepting contributions, but if you have any feedback or recommendations, please feel free to let me know. This is the first major project I've ever undertaken, and I've learnt a lot while making this project.
-
+ 
 ## Usage
 
 Once you launch the app, you can use it to create and explore a variety of compounds:

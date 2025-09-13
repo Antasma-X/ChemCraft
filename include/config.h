@@ -6,6 +6,8 @@
 
 #include "json.hpp"
 
+#include "compound.h"
+
 #include "shader.h"
 #include "error.h"
 
@@ -261,6 +263,8 @@ extern const char* disallowedCharCompoundNames;
 //Values
 extern std::map<std::string,std::string> molecules;
 extern std::vector<std::string> compoundNames;
+extern std::map<std::string,std::string> molecularFormulae;
+
 extern std::vector<std::string> searchBarArray;
 
 extern double sideMenuWidthPerCentCopy;

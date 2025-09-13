@@ -231,8 +231,9 @@ void UI::generateElementButton(int atomicNumber, double sizeChange,ImFont* numbe
         elementButtonColor,
         elementButtonCurve
     );
-    
-    ImGui::InvisibleButton(std::to_string(atomicNumber).c_str(), elementButtonSize);
+    std::string id = std::to_string(atomicNumber);
+    ImGui::InvisibleButton(id.c_str(), elementButtonSize);
+    //ImGui::InvisibleButton(std::to_string(atomicNumber).c_str(), elementButtonSize);
 
     if (ImGui::IsItemHovered()) {
         draw_list->AddRectFilled(
@@ -398,8 +399,10 @@ void UI::generateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
 
     std::string formula;
     try{
-        Compound comp(molecules[compoundNames[compoundNumber-1]]);
-        formula=comp.getMolecularFormula();
+        // Compound comp(molecules[compoundNames[compoundNumber-1]]);
+        // formula=comp.getMolecularFormula();
+
+        formula=molecularFormulae[compoundNames[compoundNumber-1]];
     }
     catch(std::invalid_argument& e){
         throw;
@@ -430,8 +433,9 @@ void UI::generateCompoundButton(int compoundNumber, double sizeChange,ImFont* co
         compoundButtonColors[compoundNumber-1],
         compoundButtonCurve
     );
-    
-    ImGui::InvisibleButton(std::to_string(compoundNumber).c_str(), compoundButtonSize);
+    std::string id = std::to_string(compoundNumber);
+    ImGui::InvisibleButton(id.c_str(), elementButtonSize);
+    // ImGui::InvisibleButton(std::to_string(compoundNumber).c_str(), compoundButtonSize);
 
     if (ImGui::IsItemHovered()) {
         draw_list->AddRectFilled(
@@ -540,7 +544,7 @@ void UI::searchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<
     }
     else{
         currentSearchArray.clear();
-        for(auto it: searchBarArray){
+        for(const auto& it: searchBarArray){
             if(strstr(it.c_str(),searchQuery.c_str())!=NULL){
                 currentSearchArray.push_back(it);
             }
@@ -553,30 +557,36 @@ void UI::searchBar(ImFont* searchFontSmall, ImFont* searchFontLarge,std::vector<
 
 void UI::loadMagnifyingGlass(double searchBarHeightPerCent){
 
-    stbi_set_flip_vertically_on_load(false);
-    int width, height, channels;
-    unsigned char* data = stbi_load(SearchGlass, &width, &height, &channels, 4);
+    static GLuint texture=0;
+    static bool firstTime=true;
 
-    if (!data){
-        error->push("Failed to load Search Glass Image");
-        // isError=true;
-        // m  
-        // errorMessage="Failed to load Search Glass Image";
-        std::cerr<<"Failed to load image: "<< SearchGlass<<std::endl;
+    if(firstTime){
+        stbi_set_flip_vertically_on_load(false);
+        int width, height, channels;
+        unsigned char* data = stbi_load(SearchGlass, &width, &height, &channels, 4);
 
-        return;
+        if (!data){
+            error->push("Failed to load Search Glass Image");
+            // isError=true;
+            // m  
+            // errorMessage="Failed to load Search Glass Image";
+            std::cerr<<"Failed to load image: "<< SearchGlass<<std::endl;
+
+            return;
+        }
+
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+
+        firstTime=false;
     }
-
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_image_free(data);
 
     ImGui::Image((void*)(intptr_t)texture, ImVec2(ImGui::GetWindowSize().y*searchBarHeightPerCent,ImGui::GetWindowSize().y*searchBarHeightPerCent),ImVec2(0, 0), ImVec2(1, 1),searchGlassTransparency);
 }
