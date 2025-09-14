@@ -1,7 +1,7 @@
 # ChemCraft
 ChemCraft is an application that is used to visually create and interact with chemical compounds and molecules. 
 
-![](Assets/thumbnail.png)
+![](assets/thumbnail.png)
 
 It models how individual atoms behave to acheive stability, including their ability to create bonds, their valence electrons, and their charges, allowing users to create and experiemnt with the incredible variety of possible unique compounds out there.
 
