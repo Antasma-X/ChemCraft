@@ -137,12 +137,12 @@ If using NSIS Installer on Windows:
     cmake --build . --config Release 
     cd bin
 -Linux/MacOS:
-    ```bash
-    mkdir build
-    cd build
-    cmake ..
-    cmake --build . --config Release 
-    cd bin
+    
+     mkdir build
+     cd build
+     cmake ..
+     cmake --build . --config Release 
+     cd bin
 4. **Run The App**
 - Windows:
     ```bash
