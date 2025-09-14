@@ -19,7 +19,7 @@ const char* disallowedCharCompoundString="!@#$%^";
  
 const char* helpLink="github.com/Antasma-X/ChemCraft";
 
-const char* SearchGlass="Assets/SearchGlass.png";
+const char* SearchGlass="assets/searchGlass.png";
 const char* searchBarLabel="Search..";
 
 const char* disallowedCharSearchBar="!@#$%^&*\n\t0123456789";
@@ -51,14 +51,14 @@ std::map<std::string,Shader> shaders;
 
 bool openContMenu=false;
 
-std::string elementFilePath1="Assets/Elements/";
+std::string elementFilePath1="assets/elements/";
 std::string elementFilePath2=".png";
 
-std::string numberBlueFilePath="Assets/numberAtlasBlue.png";
-std::string numberRedFilePath="Assets/numberAtlasRed.png";
+std::string numberBlueFilePath="assets/numberAtlasBlue.png";
+std::string numberRedFilePath="assets/numberAtlasRed.png";
 
-std::string plusFilePath="Assets/plusBlue.png";
-std::string minusFilePath="Assets/minusRed.png";
+std::string plusFilePath="assets/plusBlue.png";
+std::string minusFilePath="assets/minusRed.png";
 
 const char* disallowedCharCompoundNames="!@#$%^&*\n\t0123456789";
  
