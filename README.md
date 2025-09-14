@@ -136,8 +136,8 @@ If using NSIS Installer on Windows:
     cmake -G "Visual Studio 17 2022" -DCMAKE_BUILD_TYPE=Release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=bin -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG=bin -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=bin ..
     cmake --build . --config Release 
     cd bin
--Linux/MacOS:
-    
+- Linux/MacOS:
+     ```bash
      mkdir build
      cd build
      cmake ..
