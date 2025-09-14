@@ -115,7 +115,7 @@ If you don’t want to build from source, grab the latest prebuilt release for y
    - **Linux:** run `./ChemCraft` in terminal  in bin folder
    - **macOS:** open `bin/ChemCraft.app` (or run `./ChemCraft`) in bin folder
 
-If using NSIS Installer on Windows: 
+If using NSIS Installer on Windows:  
 1. Run installer exe
 2. Open ChemCraft 0.1.1 in Program Files,
 3. Go to bin 
