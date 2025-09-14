@@ -409,7 +409,7 @@ void UI::openHelpLink() {
         system(command.c_str());
     #else
         std::string command = "xdg-open " + std::string(helpLink);  // Linux
-        system(command.c_str());
+        int i=system(command.c_str());
     #endif
 }
 

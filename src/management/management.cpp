@@ -59,6 +59,7 @@ GLFWwindow* Management::SetUp(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 
     window = glfwCreateWindow(windowWidth, windowHeight, windowName, nullptr, nullptr);
     if (window == nullptr){
@@ -67,6 +68,8 @@ GLFWwindow* Management::SetUp(){
         return window;
     }
     
+    glfwSetWindowAttrib(window, GLFW_FLOATING, GLFW_FALSE);
+
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 

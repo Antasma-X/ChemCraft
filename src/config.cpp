@@ -17,48 +17,48 @@ const char* elementTitle="Elements";
 const char* compoundTitle="Common Compounds";
 const char* disallowedCharCompoundString="!@#$%^";
  
-const char* helpLink="github.com/";
+const char* helpLink="github.com/Antasma-X/ChemCraft";
 
-const char* SearchGlass="../Assets/SearchGlass.png";
+const char* SearchGlass="Assets/SearchGlass.png";
 const char* searchBarLabel="Search..";
 
 const char* disallowedCharSearchBar="!@#$%^&*\n\t0123456789";
 
  
-std::string elementVertShaderFilePath="../shaders/texture.vert";
-std::string elementFragShaderFilePath="../shaders/texture.frag";
-std::string glowElementVertShaderFilePath="../shaders/glowElement.vert";
-std::string glowElementFragShaderFilePath="../shaders/glowElement.frag";
-std::string electronVertShaderFilePath="../shaders/electron.vert";
-std::string electronFragShaderFilePath="../shaders/electron.frag";
-std::string glowElectronVertShaderFilePath="../shaders/glowElectron.vert";
-std::string glowElectronFragShaderFilePath="../shaders/glowElectron.frag";
-std::string numberVertShaderFilePath="../shaders/texture.vert";
-std::string numberFragShaderFilePath="../shaders/texture.frag";
-std::string signVertShaderFilePath="../shaders/texture.vert";
-std::string signFragShaderFilePath="../shaders/texture.frag";
+std::string elementVertShaderFilePath="shaders/texture.vert";
+std::string elementFragShaderFilePath="shaders/texture.frag";
+std::string glowElementVertShaderFilePath="shaders/glowElement.vert";
+std::string glowElementFragShaderFilePath="shaders/glowElement.frag";
+std::string electronVertShaderFilePath="shaders/electron.vert";
+std::string electronFragShaderFilePath="shaders/electron.frag";
+std::string glowElectronVertShaderFilePath="shaders/glowElectron.vert";
+std::string glowElectronFragShaderFilePath="shaders/glowElectron.frag";
+std::string numberVertShaderFilePath="shaders/texture.vert";
+std::string numberFragShaderFilePath="shaders/texture.frag";
+std::string signVertShaderFilePath="shaders/texture.vert";
+std::string signFragShaderFilePath="shaders/texture.frag";
  
-std::string covalentVertShaderFilePath="../shaders/covalent.vert";
-std::string covalentFragShaderFilePath="../shaders/covalent.frag";
-std::string ionicVertShaderFilePath="../shaders/ionic.vert";
-std::string ionicFragShaderFilePath="../shaders/ionic.frag";
-std::string dativeVertShaderFilePath="../shaders/dative.vert"; 
-std::string dativeFragShaderFilePath="../shaders/dative.frag";
-std::string glowBondVertShaderFilePath="../shaders/glowBond.vert";
-std::string glowBondFragShaderFilePath="../shaders/glowBond.frag";
+std::string covalentVertShaderFilePath="shaders/covalent.vert";
+std::string covalentFragShaderFilePath="shaders/covalent.frag";
+std::string ionicVertShaderFilePath="shaders/ionic.vert";
+std::string ionicFragShaderFilePath="shaders/ionic.frag";
+std::string dativeVertShaderFilePath="shaders/dative.vert"; 
+std::string dativeFragShaderFilePath="shaders/dative.frag";
+std::string glowBondVertShaderFilePath="shaders/glowBond.vert";
+std::string glowBondFragShaderFilePath="shaders/glowBond.frag";
 
 std::map<std::string,Shader> shaders;
 
 bool openContMenu=false;
 
-std::string elementFilePath1="../Assets/Elements/";
+std::string elementFilePath1="Assets/Elements/";
 std::string elementFilePath2=".png";
 
-std::string numberBlueFilePath="../Assets/numberAtlasBlue.png";
-std::string numberRedFilePath="../Assets/numberAtlasRed.png";
+std::string numberBlueFilePath="Assets/numberAtlasBlue.png";
+std::string numberRedFilePath="Assets/numberAtlasRed.png";
 
-std::string plusFilePath="../Assets/plusBlue.png";
-std::string minusFilePath="../Assets/minusRed.png";
+std::string plusFilePath="Assets/plusBlue.png";
+std::string minusFilePath="Assets/minusRed.png";
 
 const char* disallowedCharCompoundNames="!@#$%^&*\n\t0123456789";
  
@@ -340,8 +340,8 @@ int Config(){
     //ngl im a genius
     json configData;
 
-    std::ifstream defaultConfigFile("../config/defaultConfig.json");
-    std::ifstream customConfigFile("../config/config.json");
+    std::ifstream defaultConfigFile("config/defaultConfig.json");
+    std::ifstream customConfigFile("config/config.json");
     if (!defaultConfigFile.is_open() && !customConfigFile.is_open()) {
         std::cerr << "Could not find any config file\n";
         return 0;
@@ -588,7 +588,7 @@ int addCompoundToConfigFile(std::string name, std::string compoundString){
 
     json configData;
 
-    std::ifstream customConfigFile("../config/config.json");
+    std::ifstream customConfigFile("config/config.json");
     if (!customConfigFile.is_open()) {
         error->push("Could not find custom config file");
         std::cerr << "Could not find any config file\n";
@@ -620,7 +620,7 @@ int addCompoundToConfigFile(std::string name, std::string compoundString){
     std::transform(name.begin(),name.end(),name.begin(),::tolower);
     searchBarArray.push_back(name);
 
-    std::ofstream outFile("../config/config.json");
+    std::ofstream outFile("config/config.json");
     if (!outFile.is_open()) {
         error->push("Could not find custom config file");
         std::cerr << "Could not find any config file\n";

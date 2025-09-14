@@ -61,39 +61,87 @@ Once you launch the app, you can use it to create and explore a variety of compo
 
   - Compounds can be represented as plain text (compound string) which is how this app saves the details of compounds to files and copies, cuts, or pastes them.
 
----
 ## Dependencies
 
 This project uses both bundled libraries (included in the repository) and external dependencies (must be installed on your system).
 
-### Bundled Libraries (included in `lib/`)
+### Bundled Libraries:
 - [ImGui](https://github.com/ocornut/imgui) – Used for UI
-- [stb_image](https://github.com/nothings/stb) – Used for Image Loading (header-only)  
-- [nlohmann/json](https://github.com/nlohmann/json) – Used for JSON parsing (header-only)  
+- [GLFW 3.4+](https://www.glfw.org/) – Used for window creation & input handling  
+- [stb_image](https://github.com/nothings/stb) – Used for Image Loading  
+- [nlohmann/json](https://github.com/nlohmann/json) – Used for JSON parsing
+- [glm](https://github.com/g-truc/glm) – Used for math in graphics  
+- [nativefiledialog](https://github.com/mlabbe/nativefiledialog) – Used for file dialogs  
+- [glad](https://glad.dav1d.de/) – Used to load OpenGl
 
 These do not need to be installed in your system
 
-### External Dependencies (must be installed globally)
-- [GLFW 3.4+](https://www.glfw.org/) – Window creation & input handling  
+### External Dependencies:
+
+#### Linux:
 - [OpenGL 3.3+](https://www.opengl.org/) – Rendering backend  
 - [GTK](https://www.gtk.org/) (optional, for file dialogs if enabled)  
 
+Install with:
+
+    sudo apt install build-essential cmake xorg-dev libglu1-mesa-dev libgtk-3-dev
+
+#### Windows:
+These should already be installed in your system by default so no need for installation. Required Packages are:
+- OpenGL32
+- Win32
+
+#### MacOS:
+These should already be installed in your system by default so no need for installation. Required Packages are:
+- Cocoa
+- IOKit
+- CoreVideo
+- OpenGL
 ## Installation
 
+### Quick Install:
+If you don’t want to build from source, grab the latest prebuilt release for your OS:
+
+
+- [Windows Release (ZIP/NSIS)](https://github.com/Antasma-X/ChemCraft/releases)
+- [Linux Release (TAR.GZ/DEB/RPM)](https://github.com/Antasma-X/ChemCraft/releases)
+- [macOS Release (DMG/TGZ)](https://github.com/Antasma-X/ChemCraft/releases)
+
+1. Download the archive for your OS.  
+2. Extract it.  
+3. Run the executable from the `bin/` folder:
+
+   - **Windows:** double-click `bin\ChemCraft.exe`  
+   - **Linux:** run `./bin/ChemCraft` in terminal  
+   - **macOS:** open `bin/ChemCraft.app` (or run `./bin/ChemCraft`)
+
+### From Source:
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Antasma-X/BondsLab
+   git clone https://github.com/Antasma-X/ChemCraft
 2. **Navigate to the Repository**
     ```bash
-    cd BondsLab
+    cd ChemCraft
 3. **Build the App**
+- Windows:
+    ```bash
+    mkdir build
+    cd build
+    cmake -G "Visual Studio 17 2022" -DCMAKE_BUILD_TYPE=Release -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=bin -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG=bin -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=bin ..
+    cmake --build . --config Release 
+    cd bin
+-Linux/MacOS:
     ```bash
     mkdir build
     cd build
     cmake ..
-    make
+    cmake --build . --config Release 
+    cd bin
 4. **Run The App**
+- Windows:
     ```bash
-    ./BondsLab
-
+    ChemCraft
+- Linux/MacOS:
+   ```bash
+   ./ChemCraft
 ---

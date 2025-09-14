@@ -11,8 +11,8 @@
 
     "largeWindowHeight":950,
 
-    "fontFile":"../Assets/Fonts/ARIAL.ttf",
-    "molecularFormulaFontFile":"../Assets/Fonts/NotoSans-Regular.ttf",
+    "fontFile":"Assets/Fonts/ARIAL.ttf",
+    "molecularFormulaFontFile":"Assets/Fonts/NotoSans-Regular.ttf",
 
     "windowSmallFontSize":18.0,
     "windowLargeFontSize":25.0,
